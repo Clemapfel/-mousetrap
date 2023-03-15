@@ -13,6 +13,19 @@ namespace mousetrap
         glGenTextures(1, &_native_handle);
     }
 
+    Texture::Texture(GLNativeHandle handle)
+        : _native_handle(handle)
+    {
+        glBindTexture(GL_TEXTURE_2D, handle);
+
+        int width = 0;
+        int height = 0;
+
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+        _size = {width, height};
+    }
+
     Texture::~Texture()
     {
         if (_native_handle != 0)
@@ -47,7 +60,7 @@ namespace mousetrap
         create_from_image(image);
     }
 
-    Texture::Texture(Texture&& other)
+    Texture::Texture(Texture&& other) noexcept
     {
         _native_handle = other._native_handle;
         _size = other._size;
@@ -57,7 +70,7 @@ namespace mousetrap
         other._size = {0, 0};
     }
 
-    Texture& Texture::operator=(Texture&& other)
+    Texture& Texture::operator=(Texture&& other) noexcept
     {
         _native_handle = other._native_handle;
         _size = other._size;

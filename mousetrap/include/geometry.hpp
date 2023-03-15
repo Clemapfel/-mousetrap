@@ -21,6 +21,33 @@ namespace mousetrap
     {
         Vector2f top_left;
         Vector2f size;
+
+        Vector2f get_top_left() const;
+        void set_top_left(Vector2f);
+
+        Vector2f get_center_top() const;
+        void set_top_center(Vector2f);
+
+        Vector2f get_top_right() const;
+        void set_top_right(Vector2f);
+
+        Vector2f get_center_left() const;
+        void set_center_left(Vector2f);
+
+        Vector2f get_center() const;
+        void set_center(Vector2f);
+
+        Vector2f get_center_right() const;
+        void set_center_right(Vector2f);
+
+        Vector2f get_bottom_left() const;
+        void set_bottom_left(Vector2f);
+
+        Vector2f get_center_bottom() const;
+        void set_center_bottom(Vector2f);
+
+        Vector2f get_bottom_right() const;
+        void set_bottom_right(Vector2f);
     };
 
     struct Circle

@@ -18,18 +18,17 @@ namespace mousetrap
     {
         public:
             Texture();
+            Texture(GLNativeHandle);
             virtual ~Texture();
 
             Texture(const Texture&) = delete;
             Texture& operator=(const Texture&) = delete;
-
-            Texture(Texture&&);
-            Texture& operator=(Texture&&);
+            Texture(Texture&&) noexcept;
+            Texture& operator=(Texture&&) noexcept;
 
             [[nodiscard]] Image download() const;
 
             void bind(size_t texture_unit) const;
-
             void bind() const override;
             void unbind() const override;
 
@@ -44,7 +43,6 @@ namespace mousetrap
             ScaleMode get_scale_mode();
 
             Vector2i get_size() const;
-
             GLNativeHandle get_native_handle() const;
 
         private:

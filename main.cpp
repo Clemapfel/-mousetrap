@@ -3,10 +3,14 @@
 #include <mousetrap/include/shape.hpp>
 #include <mousetrap/include/render_task.hpp>
 #include <mousetrap/include/image.hpp>
+#include <mousetrap/include/signals.hpp>
 
 #include <iostream>
 
 using namespace mousetrap;
+
+struct Test : public HasWoofSignal
+{};
 
 int main()
 {
@@ -15,6 +19,12 @@ int main()
     ));
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
+
+    auto instance = Test();
+    instance.connect_signal_woof([](auto){
+        std::cout << "woof" << std::endl;
+    }, nullptr);
+    instance.emit_signal_woof();
 
     initialize_opengl();
 

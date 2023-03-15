@@ -7,6 +7,96 @@
 
 namespace mousetrap
 {
+    Vector2f Rectangle::get_top_left() const
+    {
+        return top_left;
+    }
+    
+    void Rectangle::set_top_left(Vector2f pos)
+    {
+        top_left = pos;
+    }
+
+    Vector2f Rectangle::get_center_top() const
+    {
+        return {top_left.x + 0.5 * size.x, top_left.y};
+    }
+
+    void Rectangle::set_top_center(Vector2f pos)
+    {
+        top_left = {pos.x - 0.5 * size.x, pos.y};
+    }
+
+    Vector2f Rectangle::get_top_right() const
+    {
+        return {top_left.x + size.x, top_left.y};
+    }
+
+    void Rectangle::set_top_right(Vector2f pos)
+    {
+        top_left = {pos.x - size.x, pos.y};
+    }
+
+    Vector2f Rectangle::get_center_left() const
+    {
+        return {top_left.x, top_left.y + 0.5 * size.y};
+    }
+
+    void Rectangle::set_center_left(Vector2f pos)
+    {
+        top_left = {pos.x, pos.y - 0.5 * size.y};
+    }
+
+    Vector2f Rectangle::get_center() const
+    {
+        return {top_left.x + 0.5 + size.x, top_left.y + 0.5 * size.y};
+    }
+
+    void Rectangle::set_center(Vector2f pos)
+    {
+        top_left = {pos.x - 0.5 * size.x, pos.y - 0.5 * size.y};
+    }
+
+    Vector2f Rectangle::get_center_right() const
+    {
+        return {top_left.x + size.x, top_left.y + 0.5 * size.y};
+    }
+
+    void Rectangle::set_center_right(Vector2f pos)
+    {
+        top_left = {pos.x - size.x, pos.y - 0.5 * size.y};
+    }
+
+    Vector2f Rectangle::get_bottom_left() const
+    {
+        return {top_left.x, top_left.y + size.y};
+    }
+
+    void Rectangle::set_bottom_left(Vector2f pos)
+    {
+        top_left = {pos.x, pos.y - size.y};
+    }
+
+    Vector2f Rectangle::get_center_bottom() const
+    {
+        return {top_left.x + 0.5 * size.x, top_left.y + size.y};
+    }
+
+    void Rectangle::set_center_bottom(Vector2f pos)
+    {
+        top_left = {pos.x - 0.5 * size.x, pos.y - size.y};
+    }
+
+    Vector2f Rectangle::get_bottom_right() const
+    {
+        return {top_left.x + size.x, top_left.y + size.y};
+    }
+
+    void Rectangle::set_bottom_right(Vector2f pos)
+    {
+        top_left = {pos.x - size.x, pos.y - size.y};
+    }
+    
     bool is_point_in_rectangle(Vector2f point, Rectangle rectangle)
     {
         return point.x >= rectangle.top_left.x and point.x <= rectangle.top_left.x + rectangle.size.x and

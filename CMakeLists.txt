@@ -29,6 +29,8 @@ configure_file(
         IMMEDIATE @ONLY
 )
 
+## LIBRARY
+
 add_library(mousetrap STATIC
     mousetrap/include/shape.hpp
     mousetrap/src/shape.cpp
@@ -73,7 +75,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/scale_mode.hpp
     mousetrap/include/wrap_mode.hpp
-)
+        mousetrap/include/msaa_render_texture.hpp mousetrap/src/msaa_render_texture.cpp mousetrap/include/signals.hpp mousetrap/include/alignable.hpp mousetrap/src/alignable.cpp mousetrap/include/resizable.hpp mousetrap/src/resizable.cpp mousetrap/include/movable.hpp mousetrap/include/widget.hpp mousetrap/src/widget.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -84,6 +86,7 @@ target_link_libraries(mousetrap PUBLIC
     ${OpenGL}
     ${GLEW}
     ${GTK_LIBRARIES}
+    sfml-window
 )
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)
@@ -92,12 +95,8 @@ set_target_properties(mousetrap PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+## EXECUTABLE
+
 add_executable(debug main.cpp)
-target_link_libraries(debug PUBLIC
-    mousetrap
-    sfml-window
-    sfml-system
-)
-target_include_directories(debug PUBLIC
-    "${CMAKE_SOURCE_DIR}"
-)
+target_link_libraries(debug PUBLIC mousetrap)
+target_include_directories(debug PUBLIC "${CMAKE_SOURCE_DIR}")
