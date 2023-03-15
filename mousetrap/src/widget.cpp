@@ -3,27 +3,79 @@
 //
 
 #include <include/widget.hpp>
+#include <iostream>
 
 namespace mousetrap
 {
-    Rectangle Widget::get_bounds() const
+    Widget::Widget()
+    {}
+
+    Widget* Widget::get_parent() const
     {
-        auto size = get_size();
-        auto center = get_centroid();
-        return Rectangle{{center.x - 0.5 * size.x, center.y - 0.5 * size.y}, size};
+        return _parent;
     }
 
-    Rectangle Widget::get_bounds_with_margin() const
+    void Widget::set_parent(Widget* parent)
     {
-        auto size = get_size();
-        Vector2f top_left = {get_centroid().x - 0.5 * size.x, get_centroid().y - 0.5 * size.y};
+        if (_parent != nullptr)
+            _parent->remove_child(this);
 
-        auto margin = get_margin();
-        size.x += margin.right;
-        size.y += margin.bottom;
-        top_left.x -= margin.left;
-        top_left.y -= margin.top;
+        _parent = parent;
+    }
 
-        return Rectangle{top_left, size};
+    void Widget::append_child(Widget* child)
+    {
+        _children.push_back(child);
+
+        if (not _reformatting_blocked)
+            reformat();
+    }
+
+    void Widget::prepend_child(Widget* child)
+    {
+        _children.push_front(child);
+
+        if (not _reformatting_blocked)
+            reformat();
+    }
+
+    void Widget::remove_child(Widget* widget)
+    {
+        for (auto it = _children.begin(); it != _children.end(); ++it)
+        {
+            if (*it == widget)
+            {
+                _children.erase(it);
+                widget->set_parent(nullptr);
+                return;
+            }
+        }
+
+        std::cerr << "[WARNING] In Widget::remove_child: Widget " << widget << " is not a child of this (" << this << ")" << std::endl;
+    }
+
+    bool Widget::has_child(Widget* widget)
+    {
+        for (auto it = _children.begin(); it != _children.end(); ++it)
+        {
+            if (*it == widget)
+                return true;
+        }
+
+        return false;
+    }
+
+    const std::deque<Widget*>& Widget::get_children() const
+    {
+        return _children;
+    }
+
+    void Widget::set_reformatting_blocked(bool next)
+    {
+        auto before = _reformatting_blocked;
+        _reformatting_blocked = next;
+
+        if (before == false and next == true)
+            reformat();
     }
 }

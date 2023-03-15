@@ -4,10 +4,11 @@
 //
 
 #include <include/render_task.hpp>
+#include <iostream>
 
 namespace mousetrap
 {
-    RenderTask::RenderTask(Shape* shape, Shader* shader, GLTransform* transform, BlendMode blend_mode)
+    RenderTask::RenderTask(const Shape* shape, const Shader* shader, const GLTransform* transform, BlendMode blend_mode)
     {
         if (noop_shader == nullptr)
             noop_shader = new Shader();
@@ -21,7 +22,7 @@ namespace mousetrap
         _blend_mode = blend_mode;
     }
 
-    void RenderTask::render()
+    void RenderTask::render() const
     {
         if (_shape == nullptr)
             return;
@@ -159,17 +160,17 @@ namespace mousetrap
         _colors_hsva.insert({uniform_name, value});
     }
 
-    Shape* RenderTask::get_shape()
+    const Shape* RenderTask::get_shape() const
     {
         return _shape;
     }
 
-    Shader* RenderTask::get_shader()
+    const Shader* RenderTask::get_shader() const
     {
         return _shader == nullptr ? noop_shader : _shader;
     }
 
-    GLTransform* RenderTask::get_transform()
+    const GLTransform* RenderTask::get_transform() const
     {
         return _transform == nullptr ? noop_transform : _transform;
     }

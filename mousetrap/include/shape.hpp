@@ -18,7 +18,7 @@
 
 #include <include/gl_common.hpp>
 #include <include/shader.hpp>
-#include <include/colors.hpp>
+#include <include/color.hpp>
 #include <include/gl_transform.hpp>
 #include <include/texture.hpp>
 #include <include/geometry.hpp>
@@ -49,7 +49,7 @@ namespace mousetrap
             void as_wireframe(const std::vector<Vector2f>&);
             void as_wireframe(const Shape&);
 
-            void render(Shader& shader, GLTransform transform);
+            void render(const Shader& shader, GLTransform transform) const;
 
             RGBA get_vertex_color(size_t) const;
             void set_vertex_color(size_t, RGBA);
@@ -79,7 +79,7 @@ namespace mousetrap
             void rotate(Angle);
 
             void set_texture(const TextureObject*);
-            const TextureObject* get_texture();
+            const TextureObject* get_texture() const;
 
         protected:
             struct Vertex
@@ -100,9 +100,9 @@ namespace mousetrap
             std::vector<int> _indices;
             GLenum _render_type = GL_TRIANGLE_STRIP;
 
-            void update_position();
-            void update_color();
-            void update_texture_coordinate();
+            void update_position() const;
+            void update_color() const;
+            void update_texture_coordinate() const;
             void initialize();
 
             std::vector<Vector2f> sort_by_angle(const std::vector<Vector2f>&);
@@ -119,9 +119,9 @@ namespace mousetrap
             bool update_position = true,
             bool update_color = true,
             bool update_tex_coords = true
-            );
+            ) const;
 
-            std::vector<VertexInfo> _vertex_data;
+            mutable std::vector<VertexInfo> _vertex_data;
 
             GLNativeHandle _vertex_array_id = 0,
             _vertex_buffer_id = 0;

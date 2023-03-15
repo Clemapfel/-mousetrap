@@ -43,8 +43,8 @@ add_library(mousetrap STATIC
     mousetrap/include/shader.hpp
     mousetrap/src/shader.cpp
 
-    mousetrap/include/colors.hpp
-    mousetrap/src/colors.cpp
+        mousetrap/include/color.hpp
+        mousetrap/src/color.cpp
 
     mousetrap/include/gl_transform.hpp
     mousetrap/src/gl_transform.cpp
@@ -75,7 +75,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/scale_mode.hpp
     mousetrap/include/wrap_mode.hpp
-        mousetrap/include/msaa_render_texture.hpp mousetrap/src/msaa_render_texture.cpp mousetrap/include/signals.hpp mousetrap/include/alignable.hpp mousetrap/src/alignable.cpp mousetrap/include/resizable.hpp mousetrap/src/resizable.cpp mousetrap/include/movable.hpp mousetrap/include/widget.hpp mousetrap/src/widget.cpp)
+        mousetrap/include/msaa_render_texture.hpp mousetrap/src/msaa_render_texture.cpp mousetrap/include/signals.hpp mousetrap/include/alignable.hpp mousetrap/src/alignable.cpp mousetrap/include/resizable.hpp mousetrap/src/resizable.cpp mousetrap/include/movable.hpp mousetrap/include/widget.hpp mousetrap/src/widget.cpp mousetrap/include/rectangle_shape.hpp mousetrap/src/rectangle_shape.cpp mousetrap/include/box.hpp mousetrap/include/orientation.hpp mousetrap/src/box.cpp mousetrap/include/overlay.hpp mousetrap/src/overlay.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

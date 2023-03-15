@@ -149,37 +149,37 @@ namespace mousetrap
         return id;
     }
 
-    void Shader::set_uniform_float(const std::string& uniform_name, float value)
+    void Shader::set_uniform_float(const std::string& uniform_name, float value) const
     {
         glUniform1f(get_uniform_location(uniform_name), value);
     }
 
-    void Shader::set_uniform_int(const std::string& uniform_name, int value)
+    void Shader::set_uniform_int(const std::string& uniform_name, int value) const
     {
         glUniform1i(get_uniform_location(uniform_name), value);
     }
 
-    void Shader::set_uniform_uint(const std::string& uniform_name, glm::uint value)
+    void Shader::set_uniform_uint(const std::string& uniform_name, glm::uint value) const
     {
         glUniform1ui(get_uniform_location(uniform_name), value);
     }
 
-    void Shader::set_uniform_vec2(const std::string& uniform_name, Vector2f value)
+    void Shader::set_uniform_vec2(const std::string& uniform_name, Vector2f value) const
     {
         glUniform2f(get_uniform_location(uniform_name), value.x, value.y);
     }
 
-    void Shader::set_uniform_vec3(const std::string& uniform_name, Vector3f value)
+    void Shader::set_uniform_vec3(const std::string& uniform_name, Vector3f value) const
     {
         glUniform3f(get_uniform_location(uniform_name), value.x, value.y, value.z);
     }
 
-    void Shader::set_uniform_vec4(const std::string& uniform_name, Vector4f value)
+    void Shader::set_uniform_vec4(const std::string& uniform_name, Vector4f value) const
     {
         glUniform4f(get_uniform_location(uniform_name), value.x, value.y, value.z, value.w);
     }
 
-    void Shader::set_uniform_transform(const std::string& uniform_name, GLTransform value)
+    void Shader::set_uniform_transform(const std::string& uniform_name, GLTransform value) const
     {
         glUniformMatrix4fv(get_uniform_location(uniform_name), 1, false, &value.transform[0][0]);
     }

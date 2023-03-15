@@ -49,7 +49,7 @@ namespace mousetrap
         update_data(true, true, true);
     }
 
-    void Shape::update_data(bool update_position, bool update_color, bool update_tex_coords)
+    void Shape::update_data(bool update_position, bool update_color, bool update_tex_coords) const
     {
         glBindVertexArray(_vertex_array_id);
         glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer_id);
@@ -99,7 +99,7 @@ namespace mousetrap
         glBindVertexArray(0);
     }
 
-    void Shape::update_position()
+    void Shape::update_position() const
     {
         for (size_t i = 0; i < _vertices.size(); ++i)
         {
@@ -116,7 +116,7 @@ namespace mousetrap
         update_data(true, false, false);
     }
 
-    void Shape::update_color()
+    void Shape::update_color() const
     {
         for (size_t i = 0; i < _vertices.size(); ++i)
         {
@@ -132,7 +132,7 @@ namespace mousetrap
         update_data(false, true, false);
     }
 
-    void Shape::update_texture_coordinate()
+    void Shape::update_texture_coordinate() const
     {
         for (size_t i = 0; i < _vertices.size(); ++i)
         {
@@ -146,7 +146,7 @@ namespace mousetrap
         update_data(false, false, true);
     }
 
-    void Shape::render(Shader& shader, GLTransform transform)
+    void Shape::render(const Shader& shader, GLTransform transform) const
     {
         if (not _visible)
             return;
@@ -695,7 +695,7 @@ namespace mousetrap
         update_data(true, false, false);
     }
 
-    const TextureObject* Shape::get_texture()
+    const TextureObject* Shape::get_texture() const
     {
         return _texture;
     }

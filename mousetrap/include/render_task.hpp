@@ -17,7 +17,7 @@ namespace mousetrap
     class RenderTask
     {
         public:
-            RenderTask(Shape*, Shader* = nullptr, GLTransform* = nullptr, BlendMode blend_mode = BlendMode::NORMAL);
+            explicit RenderTask(const Shape*, const Shader* = nullptr, const GLTransform* = nullptr, BlendMode blend_mode = BlendMode::NORMAL);
 
             void register_float(const std::string& uniform_name, float*);
             void register_int(const std::string& uniform_name, int*);
@@ -39,16 +39,16 @@ namespace mousetrap
             void register_color(const std::string& uniform_name, const RGBA*);
             void register_color(const std::string& uniform_name, const HSVA* will_not_be_converted);
 
-            void render();
+            void render() const;
 
-            Shape* get_shape();
-            Shader* get_shader();
-            GLTransform* get_transform();
+            const Shape* get_shape() const;
+            const Shader* get_shader() const;
+            const GLTransform* get_transform() const;
 
         private:
-            Shape* _shape = nullptr;
-            Shader* _shader = nullptr;
-            GLTransform* _transform = nullptr;
+            const Shape* _shape = nullptr;
+            const Shader* _shader = nullptr;
+            const GLTransform* _transform = nullptr;
             BlendMode _blend_mode;
 
             static inline Shader* noop_shader = nullptr;

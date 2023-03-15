@@ -4,7 +4,7 @@
 //
 
 #include <include/gl_common.hpp>
-#include <include/colors.hpp>
+#include <include/color.hpp>
 #include <sstream>
 #include <iostream>
 #include <cctype>

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/colors.hpp>
+#include <include/color.hpp>
 #include <include/vector.hpp>
 #include <include/scale_mode.hpp>
 

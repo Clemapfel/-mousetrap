@@ -41,13 +41,13 @@ namespace mousetrap
             int get_uniform_location(const std::string&) const;
 
             //
-            void set_uniform_float(const std::string& uniform_name, float);
-            void set_uniform_int(const std::string& uniform_name, int);
-            void set_uniform_uint(const std::string& uniform_name, glm::uint);
-            void set_uniform_vec2(const std::string& uniform_name, Vector2f);
-            void set_uniform_vec3(const std::string& uniform_name, Vector3f);
-            void set_uniform_vec4(const std::string& uniform_name, Vector4f);
-            void set_uniform_transform(const std::string& uniform_name, GLTransform);
+            void set_uniform_float(const std::string& uniform_name, float) const;
+            void set_uniform_int(const std::string& uniform_name, int) const;
+            void set_uniform_uint(const std::string& uniform_name, glm::uint) const;
+            void set_uniform_vec2(const std::string& uniform_name, Vector2f) const;
+            void set_uniform_vec3(const std::string& uniform_name, Vector3f) const;
+            void set_uniform_vec4(const std::string& uniform_name, Vector4f) const;
+            void set_uniform_transform(const std::string& uniform_name, GLTransform) const;
 
             //
             static int get_vertex_position_location();

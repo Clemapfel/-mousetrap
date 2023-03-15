@@ -4,6 +4,8 @@
 #include <mousetrap/include/render_task.hpp>
 #include <mousetrap/include/image.hpp>
 #include <mousetrap/include/signals.hpp>
+#include <mousetrap/include/rectangle_shape.hpp>
+#include <mousetrap/include/box.hpp>
 
 #include <iostream>
 
@@ -20,30 +22,28 @@ int main()
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
 
-    auto instance = Test();
-    instance.connect_signal_woof([](auto){
-        std::cout << "woof" << std::endl;
-    }, nullptr);
-    instance.emit_signal_woof();
-
     initialize_opengl();
 
-    auto shape = Shape();
-    shape.as_rectangle({0.25, 0.25}, {0.5, 0.5});
+    std::deque<RectangleShape> shapes;
+    for (size_t x = 0; x < 4; ++x)
+    {
+        shapes.emplace_back(Vector2f{0.25, 0.25}, Vector2f{0.5, 0.5});
+        shapes.back().set_color(HSVA(rand() / float(RAND_MAX), 1, 1, 1));
+    }
 
-    auto image = Image();
-    image.create_from_file("/home/clem/Workspace/mousetrap/resources/icons/bucket_fill.png");
+    Box box = Box(Orientation::HORIZONTAL);
+    box.set_reformatting_blocked(true);
 
-    for (size_t x = 0; x < image.get_size().x; ++x)
-        for (size_t y = 0; y < image.get_size().y; ++y)
-            if (x == y)
-                image.set_pixel(x, y, RGBA(1, 0, 1, 1));
+    std::deque<RenderTask> tasks;
+    for (auto& shape : shapes)
+    {
+        tasks.push_back(RenderTask(shape.get_shape()));
+        //box.push_back(&shape);
+    }
 
-    auto texture = Texture();
-    texture.create_from_image(image);
-    shape.set_texture(&texture);
-
-    auto task = RenderTask(&shape);
+    box.set_centroid({0.5, 0.5});
+    box.set_size({1, 1});
+    box.set_reformatting_blocked(false);
 
     bool running = true;
     while (running)
@@ -58,7 +58,10 @@ int main()
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        task.render();
+
+        for (auto& task : tasks)
+            task.render();
+
         glFlush();
         window.display();
     }

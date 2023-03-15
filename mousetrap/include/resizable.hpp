@@ -12,7 +12,7 @@ namespace mousetrap
     class Resizable
     {
         public:
-            using SizeRequest = struct
+            struct SizeRequest
             {
                 float min_width = 0;
                 float max_width = std::numeric_limits<float>::max();
@@ -33,7 +33,7 @@ namespace mousetrap
             void set_should_expand_vertically(bool);
             bool get_should_expand_vertically() const;
 
-            using Margin = struct
+            struct Margin
             {
                 float left = 0;
                 float right = 0;
