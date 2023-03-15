@@ -7,7 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include "mousetrap/include/shader.hpp"
+#include <include/shader.hpp>
 
 namespace mousetrap
 {

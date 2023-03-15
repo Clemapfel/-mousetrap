@@ -12,8 +12,8 @@
 #pragma once
 
 #include <string>
-#include "gl_common.hpp"
-#include "gl_transform.hpp"
+#include <include/gl_common.hpp>
+#include <include/gl_transform.hpp>
 
 namespace mousetrap
 {

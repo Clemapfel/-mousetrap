@@ -3,8 +3,8 @@
 // Created on 9/26/22 by clem (mail@clemens-cords.com)
 //
 
-#include "mousetrap/include/blend_mode.hpp"
-#include "mousetrap/include/gl_common.hpp"
+#include <include/blend_mode.hpp>
+#include <include/gl_common.hpp>
 
 namespace mousetrap
 {

@@ -3,7 +3,7 @@
 // Created on 8/6/22 by clem (mail@clemens-cords.com)
 //
 
-#include "mousetrap/include/image.hpp"
+#include <include/image.hpp>
 #include <iostream>
 
 namespace mousetrap

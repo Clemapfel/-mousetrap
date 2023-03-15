@@ -6,18 +6,18 @@
 #pragma once
 
 #include <string>
-#include "gl_common.hpp"
-#include "image.hpp"
-#include "texture_object.hpp"
-#include "wrap_mode.hpp"
-#include "scale_mode.hpp"
+#include <include/gl_common.hpp>
+#include <include/image.hpp>
+#include <include/texture_object.hpp>
+#include <include/wrap_mode.hpp>
+#include <include/scale_mode.hpp>
 
 namespace mousetrap
 {
     class Texture : public TextureObject
     {
         public:
-            Texture(); // should be called while gl context is bound
+            Texture();
             virtual ~Texture();
 
             Texture(const Texture&) = delete;

@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "shape.hpp"
-#include "shader.hpp"
-#include "gl_transform.hpp"
-#include "blend_mode.hpp"
+#include <include/shape.hpp>
+#include <include/shader.hpp>
+#include <include/gl_transform.hpp>
+#include <include/blend_mode.hpp>
 
 #include <map>
 

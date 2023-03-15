@@ -76,7 +76,7 @@ add_library(mousetrap STATIC
 )
 
 target_include_directories(mousetrap PUBLIC
-    "${CMAKE_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/mousetrap"
     "${GTK_INCLUDE_DIRS}"
 )
 
@@ -97,4 +97,7 @@ target_link_libraries(debug PUBLIC
     mousetrap
     sfml-window
     sfml-system
+)
+target_include_directories(debug PUBLIC
+    "${CMAKE_SOURCE_DIR}"
 )

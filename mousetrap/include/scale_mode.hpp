@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "gl_common.hpp"
+#include <include/gl_common.hpp>
 
 namespace mousetrap
 {

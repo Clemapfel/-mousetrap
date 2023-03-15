@@ -1,8 +1,8 @@
 #include <SFML/Window.hpp>
 
-#include "mousetrap/include/shape.hpp"
-#include "mousetrap/include/render_task.hpp"
-#include "mousetrap/include/image.hpp"
+#include <mousetrap/include/shape.hpp>
+#include <mousetrap/include/render_task.hpp>
+#include <mousetrap/include/image.hpp>
 
 #include <iostream>
 

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "colors.hpp"
-#include "vector.hpp"
-#include "scale_mode.hpp"
+#include <include/colors.hpp>
+#include <include/vector.hpp>
+#include <include/scale_mode.hpp>
 
 #include <gtk/gtk.h>
 #include <vector>

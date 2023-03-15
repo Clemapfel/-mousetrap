@@ -10,7 +10,7 @@
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 
-#include "vector.hpp"
+#include <include/vector.hpp>
 
 inline bool GL_INITIALIZED = false;
 using GLNativeHandle = GLuint;

@@ -1,4 +1,4 @@
-#include "mousetrap/include/render_texture.hpp"
+#include <include/render_texture.hpp>
 
 namespace mousetrap
 {

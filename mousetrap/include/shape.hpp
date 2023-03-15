@@ -16,12 +16,12 @@
 #include <algorithm>
 #include <mutex>
 
-#include "gl_common.hpp"
-#include "shader.hpp"
-#include "colors.hpp"
-#include "gl_transform.hpp"
-#include "texture.hpp"
-#include "geometry.hpp"
+#include <include/gl_common.hpp>
+#include <include/shader.hpp>
+#include <include/colors.hpp>
+#include <include/gl_transform.hpp>
+#include <include/texture.hpp>
+#include <include/geometry.hpp>
 
 namespace mousetrap
 {

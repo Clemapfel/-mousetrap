@@ -3,8 +3,8 @@
 // Created on 8/1/22 by clem (mail@clemens-cords.com)
 //
 
-#include "mousetrap/include/gl_common.hpp"
-#include "mousetrap/include/colors.hpp"
+#include <include/gl_common.hpp>
+#include <include/colors.hpp>
 #include <sstream>
 #include <iostream>
 #include <cctype>

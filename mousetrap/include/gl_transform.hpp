@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "angle.hpp"
-#include "gl_common.hpp"
+#include <include/angle.hpp>
+#include <include/gl_common.hpp>
 
 #include <glm/gtx/transform.hpp>
 
