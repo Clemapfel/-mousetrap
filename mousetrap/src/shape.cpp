@@ -17,8 +17,54 @@ namespace mousetrap
 
     Shape::~Shape()
     {
-        glDeleteVertexArrays(1, &_vertex_array_id);
-        glDeleteBuffers(1, &_vertex_buffer_id);
+        if (_vertex_array_id != 0)
+            glDeleteVertexArrays(1, &_vertex_array_id);
+
+        if (_vertex_buffer_id != 0)
+            glDeleteBuffers(1, &_vertex_buffer_id);
+    }
+
+    Shape::Shape(const Shape& other)
+    {
+        glGenVertexArrays(1, &_vertex_array_id);
+        glGenBuffers(1, &_vertex_buffer_id);
+
+        _vertex_data = other._vertex_data;
+        update_data(true, true, true);
+    }
+
+    Shape& Shape::operator=(const Shape& other)
+    {
+        if (&other == this)
+            return *this;
+
+        _vertex_data = other._vertex_data;
+        update_data();
+        return *this;
+    }
+
+    Shape::Shape(Shape&& other) noexcept
+    {
+        _vertex_array_id = other._vertex_array_id;
+        _vertex_buffer_id = other._vertex_buffer_id;
+        _vertex_data = std::move(other._vertex_data);
+
+        other._vertex_buffer_id = 0;
+        other._vertex_array_id = 0;
+
+        update_data();
+    }
+
+    Shape& Shape::operator=(Shape&& other) noexcept
+    {
+        _vertex_array_id = other._vertex_array_id;
+        _vertex_buffer_id = other._vertex_buffer_id;
+        _vertex_data = std::move(other._vertex_data);
+
+        other._vertex_buffer_id = 0;
+        other._vertex_array_id = 0;
+
+        update_data();
     }
 
     void Shape::initialize()

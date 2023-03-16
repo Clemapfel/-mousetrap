@@ -29,14 +29,19 @@ int main()
 
     initialize_opengl();
 
-    auto buffer = SoundBuffer();
-    buffer.create_from_file("/home/clem/Workspace/rat_game/test.wav");
+    std::vector<Shape> shapes;
+    std::vector<RenderTask> tasks;
+    for (size_t x = 0; x < 4; ++x)
+    {
+        shapes.emplace_back();
+        shapes.back().as_rectangle({0, 0}, {1, 1});
+        tasks.emplace_back(shapes.back());
+    }
 
-    for (size_t i = 0; i < buffer.get_n_samples(); ++i)
-        std::cout << buffer.get_samples()[i] << std::endl;
+    auto shader = Shader();
+    auto transform = GLTransform();
 
-    return 0;
-
+    /*
     std::deque<RectangleShape> shapes;
     for (size_t x = 0; x < 4; ++x)
     {
@@ -57,7 +62,7 @@ int main()
     box.set_centroid({0.5, 0.5});
     box.set_size({1, 1});
     box.set_reformatting_blocked(false);
-
+    */
     bool running = true;
     while (running)
     {

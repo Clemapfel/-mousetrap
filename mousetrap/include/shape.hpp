@@ -1,10 +1,4 @@
 //
-// Copyright (c) Clemens Cords (mail@clemens-cords.com), created 3/15/23
-//
-
-#pragma once
-
-//
 // Copyright 2022 Clemens Cords
 // Created on 7/16/22 by clem (mail@clemens-cords.com)
 //
@@ -25,12 +19,33 @@
 
 namespace mousetrap
 {
-    //
+    /// @brief opengl shape primitive, variable number of vertices
     class Shape
     {
         public:
+            /// @brief ctor, allocates vertex buffer gpu-side
             Shape();
+
+            /// @brief dtor, deallocated vertex buffer gpu-side
             ~Shape();
+
+            /// @brief copy ctor, allocates new vertex array with identical vertex data
+            /// @param other
+            Shape(const Shape&);
+
+            /// @brief copy assignment, allocates new vertex array with identical vertex data
+            /// @param other
+            /// @returns reference to self after assignment
+            Shape& operator=(const Shape&);
+
+            /// @brief move ctor
+            /// @param other
+            Shape(Shape&&) noexcept;
+
+            /// @brief move assignment
+            /// @param other
+            /// @returns reference to self after assignment
+            Shape& operator=(Shape&&) noexcept;
 
             void as_point(Vector2f);
             void as_points(const std::vector<Vector2f>&);
@@ -81,7 +96,7 @@ namespace mousetrap
             void set_texture(const TextureObject*);
             const TextureObject* get_texture() const;
 
-        protected:
+        private:
             struct Vertex
             {
                 Vertex(float x, float y, RGBA rgba)
@@ -107,7 +122,6 @@ namespace mousetrap
 
             std::vector<Vector2f> sort_by_angle(const std::vector<Vector2f>&);
 
-        private:
             struct VertexInfo
             {
                 float _position[3];
@@ -116,9 +130,9 @@ namespace mousetrap
             };
 
             void update_data(
-            bool update_position = true,
-            bool update_color = true,
-            bool update_tex_coords = true
+                bool update_position = true,
+                bool update_color = true,
+                bool update_tex_coords = true
             ) const;
 
             mutable std::vector<VertexInfo> _vertex_data;
