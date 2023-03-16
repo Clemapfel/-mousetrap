@@ -7,6 +7,8 @@
 #include <include/gl_common.hpp>
 #include <include/shape.hpp>
 
+#include <iostream>
+
 namespace mousetrap
 {
     Shape::Shape()
@@ -30,6 +32,13 @@ namespace mousetrap
         glGenBuffers(1, &_vertex_buffer_id);
 
         _vertex_data = other._vertex_data;
+        _color = other._color;
+        _visible = other._visible;
+        _render_type = other._render_type;
+        _vertices = other._vertices;
+        _indices = other._indices;
+        _texture = other._texture;
+
         update_data(true, true, true);
     }
 
@@ -38,7 +47,17 @@ namespace mousetrap
         if (&other == this)
             return *this;
 
+        glGenVertexArrays(1, &_vertex_array_id);
+        glGenBuffers(1, &_vertex_buffer_id);
+
         _vertex_data = other._vertex_data;
+        _color = other._color;
+        _visible = other._visible;
+        _render_type = other._render_type;
+        _vertices = other._vertices;
+        _indices = other._indices;
+        _texture = other._texture;
+
         update_data();
         return *this;
     }
@@ -47,7 +66,14 @@ namespace mousetrap
     {
         _vertex_array_id = other._vertex_array_id;
         _vertex_buffer_id = other._vertex_buffer_id;
+
         _vertex_data = std::move(other._vertex_data);
+        _color = std::move(other._color);
+        _visible = std::move(other._visible);
+        _render_type = std::move(other._render_type);
+        _vertices = std::move(other._vertices);
+        _indices = std::move(other._indices);
+        _texture = std::move(other._texture);
 
         other._vertex_buffer_id = 0;
         other._vertex_array_id = 0;
@@ -59,12 +85,19 @@ namespace mousetrap
     {
         _vertex_array_id = other._vertex_array_id;
         _vertex_buffer_id = other._vertex_buffer_id;
+
         _vertex_data = std::move(other._vertex_data);
+        _color = std::move(other._color);
+        _visible = std::move(other._visible);
+        _render_type = std::move(other._render_type);
+        _vertices = std::move(other._vertices);
+        _indices = std::move(other._indices);
+        _texture = std::move(other._texture);
 
         other._vertex_buffer_id = 0;
         other._vertex_array_id = 0;
 
-        update_data();
+        return *this;
     }
 
     void Shape::initialize()
@@ -196,8 +229,6 @@ namespace mousetrap
     {
         if (not _visible)
             return;
-
-        update_data(false, true, false); // TODO: optimize this away
 
         glUseProgram(shader.get_program_id());
         glUniformMatrix4fv(shader.get_uniform_location("_transform"), 1, GL_FALSE, &(transform.transform[0][0]));

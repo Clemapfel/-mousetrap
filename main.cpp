@@ -31,12 +31,17 @@ int main()
 
     std::vector<Shape> shapes;
     std::vector<RenderTask> tasks;
-    for (size_t x = 0; x < 4; ++x)
+    const size_t n = 10;
+    for (size_t x = 0; x < n; ++x)
     {
         shapes.emplace_back();
-        shapes.back().as_rectangle({0, 0}, {1, 1});
-        tasks.emplace_back(shapes.back());
+        std::cout << (x / float(n+1)) << std::endl;
+        shapes.back().as_rectangle({x / float(n), x / float(n)}, {0.05, 0.05});
+        shapes.back().set_color(HSVA((x+1) / float(n), 1, 1, 1));
     }
+
+    for (auto& shape : shapes)
+        tasks.emplace_back(&shape, nullptr, nullptr, BlendMode::NORMAL);
 
     auto shader = Shader();
     auto transform = GLTransform();
