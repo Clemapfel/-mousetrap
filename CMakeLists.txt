@@ -5,8 +5,9 @@ project(rat_game VERSION 0.0.1 LANGUAGES CXX)
 
 find_library(OpenGL REQUIRED NAMES GL)
 find_library(GLEW REQUIRED NAMES GLEW)
-find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
-include(CheckIncludeFileCXX)
+find_package(SFML COMPONENTS window audio REQUIRED)
+find_library(soundio REQUIRED NAMES soundio)
+
 
 find_package(PkgConfig)
 pkg_check_modules(GTK gtk4)
@@ -15,6 +16,7 @@ if (NOT GTK_FOUND)
     message(FATAL_ERROR "Missing Dependency: unable to locate gtk4")
 endif()
 
+include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX(glm/glm.hpp GLM_FOUND)
 if(NOT GLM_FOUND)
     message(WARNING "Missing Dependency: glm headers were not detected")
@@ -43,8 +45,8 @@ add_library(mousetrap STATIC
     mousetrap/include/shader.hpp
     mousetrap/src/shader.cpp
 
-        mousetrap/include/color.hpp
-        mousetrap/src/color.cpp
+    mousetrap/include/color.hpp
+    mousetrap/src/color.cpp
 
     mousetrap/include/gl_transform.hpp
     mousetrap/src/gl_transform.cpp
@@ -75,7 +77,33 @@ add_library(mousetrap STATIC
 
     mousetrap/include/scale_mode.hpp
     mousetrap/include/wrap_mode.hpp
-        mousetrap/include/msaa_render_texture.hpp mousetrap/src/msaa_render_texture.cpp mousetrap/include/signals.hpp mousetrap/include/alignable.hpp mousetrap/src/alignable.cpp mousetrap/include/resizable.hpp mousetrap/src/resizable.cpp mousetrap/include/movable.hpp mousetrap/include/widget.hpp mousetrap/src/widget.cpp mousetrap/include/rectangle_shape.hpp mousetrap/src/rectangle_shape.cpp mousetrap/include/box.hpp mousetrap/include/orientation.hpp mousetrap/src/box.cpp mousetrap/include/overlay.hpp mousetrap/src/overlay.cpp)
+
+    mousetrap/include/msaa_render_texture.hpp
+    mousetrap/src/msaa_render_texture.cpp
+
+    mousetrap/include/signals.hpp
+
+    mousetrap/include/alignable.hpp
+    mousetrap/src/alignable.cpp
+
+    mousetrap/include/resizable.hpp
+    mousetrap/src/resizable.cpp
+
+    mousetrap/include/movable.hpp
+
+    mousetrap/include/widget.hpp
+    mousetrap/src/widget.cpp
+
+    mousetrap/include/rectangle_shape.hpp
+    mousetrap/src/rectangle_shape.cpp
+
+    mousetrap/include/box.hpp
+    mousetrap/src/box.cpp
+
+    mousetrap/include/orientation.hpp
+
+    mousetrap/include/overlay.hpp
+    mousetrap/src/overlay.cpp mousetrap/include/sound_buffer.hpp mousetrap/include/sound.hpp mousetrap/src/sound_buffer.cpp mousetrap/src/sound.cpp mousetrap/include/time.hpp mousetrap/src/time.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -87,6 +115,8 @@ target_link_libraries(mousetrap PUBLIC
     ${GLEW}
     ${GTK_LIBRARIES}
     sfml-window
+    sfml-audio
+    soundio
 )
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)

@@ -6,13 +6,18 @@
 #include <mousetrap/include/signals.hpp>
 #include <mousetrap/include/rectangle_shape.hpp>
 #include <mousetrap/include/box.hpp>
+#include <mousetrap/include/sound.hpp>
 
 #include <iostream>
 
-using namespace mousetrap;
+#include <soundio/soundio.h>
 
-struct Test : public HasWoofSignal
-{};
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+using namespace mousetrap;
 
 int main()
 {
@@ -23,6 +28,14 @@ int main()
     window.setActive(true);
 
     initialize_opengl();
+
+    auto buffer = SoundBuffer();
+    buffer.create_from_file("/home/clem/Workspace/rat_game/test.wav");
+
+    for (size_t i = 0; i < buffer.get_n_samples(); ++i)
+        std::cout << buffer.get_samples()[i] << std::endl;
+
+    return 0;
 
     std::deque<RectangleShape> shapes;
     for (size_t x = 0; x < 4; ++x)
