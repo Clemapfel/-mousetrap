@@ -38,7 +38,7 @@ int main()
     for (auto& shape : shapes)
     {
         tasks.push_back(RenderTask(shape.get_shape()));
-        //box.push_back(&shape);
+        box.push_back(&shape);
     }
 
     box.set_centroid({0.5, 0.5});

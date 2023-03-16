@@ -50,15 +50,33 @@ namespace mousetrap
 
     void Box::reformat()
     {
-
         const auto& children = get_children();
+
+        float min_x_sum = 0;
+        float min_y_sum = 0;
 
         for (auto* child : children)
         {
-            child->set_size(_size);
-            child->set_centroid(_centroid);
+            auto size = child->get_size();
+            auto margin = child->get_margin();
 
-            std::cout << child->get_size().x << " " << child->get_size().y << std::endl;
+            min_x_sum += size.x + margin.left + margin.right;
+            min_y_sum += size.y + margin.top + margin.bottom;
+        }
+
+        float left = _centroid.x - 0.5 * _size.x;
+        float right = _centroid.x + 0.5 * _size.x;
+        float x_space = (right - left) - min_x_sum / children.size();
+
+        for (auto* child : children)
+        {
+            auto size = child->get_size();
+            auto margin = child->get_margin();
+            left += x_space;
+            child->set_reformatting_blocked(true);
+            child->set_size(size);
+            child->set_centroid({left + x_space + margin.left + 0.5 * size.x, _centroid.y});
+            child->set_reformatting_blocked(false);
         }
 
         /*
