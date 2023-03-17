@@ -9,6 +9,24 @@
 
 namespace mousetrap
 {
+    Widget& Widget::operator=(Widget&& other) noexcept
+    {
+        _native = other._native;
+        other._native = nullptr;
+
+        _tick_callback_f = other._tick_callback_f;
+        other._tick_callback_f = nullptr;
+
+        _destroy_notify_f = other._destroy_notify_f;
+        other._destroy_notify_f = nullptr;
+    }
+
+    Widget::Widget(Widget&& other) noexcept
+    {
+        _native = other._native;
+        other._native = nullptr;
+    }
+
     Widget::operator GObject*()
     {
         return G_OBJECT(operator GtkWidget*());
@@ -28,11 +46,8 @@ namespace mousetrap
 
     Widget::~Widget()
     {
-        if (gtk_widget_get_parent(_native) == nullptr)
+        if (gtk_widget_get_parent(_native) == nullptr and _native != nullptr)
             g_object_unref(_native);
-
-        for (auto* ref : _refs)
-            g_object_unref(ref);
     }
 
     Vector2f Widget::get_size_request()

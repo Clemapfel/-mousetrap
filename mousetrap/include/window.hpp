@@ -9,11 +9,12 @@
 
 namespace mousetrap
 {
+    class Application;
+
     class Window : public WidgetImplementation<GtkWindow>
     {
         public:
-            Window();
-            Window(GtkWindow*);
+            Window(Application*);
 
             void set_maximized(bool);
             void set_fullscreen(bool);

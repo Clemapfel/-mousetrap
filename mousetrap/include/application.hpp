@@ -17,7 +17,10 @@
 
 namespace mousetrap
 {
-    class Application : public SignalEmitter//, public ActionMap
+    class Application : public SignalEmitter,
+        HAS_SIGNAL(Application, activate),
+        HAS_SIGNAL(Application, startup),
+        HAS_SIGNAL(Application, shutdown)
     {
         public:
             Application();
@@ -29,7 +32,6 @@ namespace mousetrap
             operator GtkApplication*();
 
             //void set_menubar(MenuModel*);
-            void add_window(Window*);
 
         private:
             GtkApplication* _native;

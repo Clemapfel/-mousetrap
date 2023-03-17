@@ -4,8 +4,11 @@
 //
 
 #include <include/window.hpp>
+#include <include/application.hpp>
 
-namespace mousetrap {
+namespace mousetrap
+{
+    /*
     Window::Window()
         : Window(GTK_WINDOW(gtk_window_new()))
     {
@@ -14,6 +17,11 @@ namespace mousetrap {
 
     Window::Window(GtkWindow* window)
         : WidgetImplementation<GtkWindow>(window)
+    {}
+     */
+
+    Window::Window(Application* app)
+        : WidgetImplementation<GtkWindow>(GTK_WINDOW(gtk_application_window_new(app->operator GtkApplication*())))
     {}
 
     void Window::present()

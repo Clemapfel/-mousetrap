@@ -32,6 +32,12 @@ namespace mousetrap
         friend struct WidgetImplementation;
 
         public:
+            Widget(const Widget&) = delete;
+            Widget(Widget&&) noexcept;
+
+            Widget& operator=(const Widget&) = delete;
+            Widget& operator=(Widget&&) noexcept;
+
             virtual operator GtkWidget*() const; // can be overridden if template argument is not parent widget type of compound widget
             operator GObject*() override;
 
@@ -97,10 +103,6 @@ namespace mousetrap
 
         protected:
             Widget() = delete;
-
-            template<typename GObject_t>
-            void add_reference(GObject_t*);
-
             void override_native(GtkWidget*);
 
         private:
@@ -110,7 +112,6 @@ namespace mousetrap
             virtual ~Widget();
 
             GtkWidget* _native;
-            std::vector<GObject*> _refs;
 
             std::function<bool(GdkFrameClock*)> _tick_callback_f;
             std::function<void(void*)> _destroy_notify_f;
@@ -161,15 +162,6 @@ namespace mousetrap
     }
 
     /*
-    template<typename GObject_t>
-    void Widget::add_reference(GObject_t* ref)
-    {
-        if (not G_IS_OBJECT(ref))
-            throw std::invalid_argument("[FATAL] In Widget::add_reference: Attempting to increase the reference count on an object that does not support it.");
-
-        _refs.push_back(g_object_ref(G_OBJECT(ref)));
-    }
-
     template<typename Function_t, typename Arg_t>
     void Widget::add_tick_callback(Function_t f_in, Arg_t arg_in)
     {

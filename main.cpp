@@ -24,7 +24,7 @@ static bool on_close(GtkWindow* window, void*)
 
 static void startup(GApplication*)
 {
-    window = new Window(GTK_WINDOW(gtk_application_window_new(*app)));
+    window = new Window(app);
 
     window->show();
     window->present();
@@ -32,16 +32,16 @@ static void startup(GApplication*)
     window->grab_focus();
 }
 
-static void activate(GtkApplication* app, void*)
-{}
-
-
 int main()
 {
     app = new Application();
-    app->connect_signal("activate", activate);
+    app->connect_signal_activate([](Application* app){
+        std::cout << "activate " << app << std::endl;
+    });
+
     app->connect_signal("startup", startup);
 
+    std::cout << app << std::endl;
     return app->run();
 
     delete app;

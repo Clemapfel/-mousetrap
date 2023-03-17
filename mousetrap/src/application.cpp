@@ -8,6 +8,7 @@
 namespace mousetrap
 {
     Application::Application()
+        : HasActivateSignal<Application>(this)
     {
         _native = gtk_application_new(nullptr, G_APPLICATION_DEFAULT_FLAGS);
         _native = g_object_ref(_native);
@@ -36,11 +37,6 @@ namespace mousetrap
     Application::operator GtkApplication*()
     {
         return GTK_APPLICATION(_native);
-    }
-
-    void Application::add_window(Window* window)
-    {
-        gtk_application_add_window(_native, window->operator  GtkWindow*());
     }
 
     /*
