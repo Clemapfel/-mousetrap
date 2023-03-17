@@ -16,15 +16,24 @@ using namespace mousetrap;
 inline Window* window = nullptr;
 inline Application* app = nullptr;
 
-static bool on_close(GtkWindow* window, void*)
-{
-    std::cout << "shutdown" << std::endl;
-    return false;
-}
-
 static void startup(GApplication*)
 {
     window = new Window(app);
+
+    auto action = Action("global.test_action");
+    action.set_function([](){
+        std::cout << "test" << std::endl;
+    });
+    action.add_shortcut("<Control>c");
+
+    window->connect_signal_close_request([](Window*) -> bool {
+        std::cout << "close" << std::endl;
+        return false;
+    });
+
+    ([]() -> void {
+        return void();
+    })();
 
     window->show();
     window->present();

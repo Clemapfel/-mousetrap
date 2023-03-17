@@ -26,7 +26,14 @@ namespace mousetrap
     template<typename GtkWidget_t>
     struct WidgetImplementation;
 
-    class Widget : public SignalEmitter
+    class Widget : public SignalEmitter,
+        HAS_SIGNAL(Widget, realize),
+        HAS_SIGNAL(Widget, unrealize),
+        HAS_SIGNAL(Widget, destroy),
+        HAS_SIGNAL(Widget, hide),
+        HAS_SIGNAL(Widget, show),
+        HAS_SIGNAL(Widget, map),
+        HAS_SIGNAL(Widget, unmap)
     {
         template<typename T>
         friend struct WidgetImplementation;
@@ -106,8 +113,7 @@ namespace mousetrap
             void override_native(GtkWidget*);
 
         private:
-            template<typename GtkWidget_t>
-            Widget(GtkWidget_t*);
+            Widget(GtkWidget*);
 
             virtual ~Widget();
 
@@ -117,7 +123,6 @@ namespace mousetrap
             std::function<void(void*)> _destroy_notify_f;
 
             static gboolean tick_callback_wrapper(GtkWidget*, GdkFrameClock*, Widget* instance);
-            static void tick_callback_destroy_notify(void*);
 
             Widget* _tooltip_widget = nullptr;
             static gboolean on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, Widget* instance);
@@ -132,51 +137,6 @@ namespace mousetrap
     };
 };
 
-namespace mousetrap
-{
-    template<typename T>
-    Widget::Widget(T* in)
-    //: HasRealizeSignal<Widget>(this), HasMapSignal<Widget>(this), HasShowSignal<Widget>(this)
-    {
-        _native = g_object_ref(GTK_WIDGET(in));
-    }
-
-    template<typename T>
-    WidgetImplementation<T>::WidgetImplementation(T* in)
-    : Widget(in)
-    {
-        //if (not GTK_IS_WIDGET(in))
-          //  throw std::invalid_argument("[FATAL] In WidgetImplementation::WidgetImplementation(T*): Object is not a widget.");
-    }
-
-    template<typename T>
-    WidgetImplementation<T>::operator T*() const
-    {
-        return (T*) Widget::operator GtkWidget*();
-    }
-
-    template<typename T>
-    T* WidgetImplementation<T>::get_native() const
-    {
-        return (T*) Widget::operator GtkWidget*();
-    }
-
-    /*
-    template<typename Function_t, typename Arg_t>
-    void Widget::add_tick_callback(Function_t f_in, Arg_t arg_in)
-    {
-        _tick_callback_f = [f = f_in, arg = arg_in](GdkFrameClock* clock) -> bool{
-            return f(FrameClock(clock), arg);
-        };
-
-        gtk_widget_add_tick_callback(
-        _native,
-        (GtkTickCallback) G_CALLBACK(tick_callback_wrapper),
-        this,
-        (GDestroyNotify) G_CALLBACK(tick_callback_destroy_notify)
-        );
-    }
-     */
-}
+#include <src/widget.inl>
 
 
