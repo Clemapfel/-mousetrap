@@ -20,6 +20,7 @@
 using namespace mousetrap;
 
 #include <soundio/soundio.h>
+#include <thread>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +52,7 @@ int frame_count_min, int frame_count_max)
             break;
 
         float pitch = 440.0f;
+
         float radians_per_second = pitch * 2.0f * PI;
         for (int frame = 0; frame < frame_count; frame += 1) {
             float sample = sinf((seconds_offset + frame * seconds_per_frame) * radians_per_second);
@@ -59,8 +61,7 @@ int frame_count_min, int frame_count_max)
                 *ptr = sample;
             }
         }
-        seconds_offset = fmodf(seconds_offset +
-                               seconds_per_frame * frame_count, 1.0f);
+        seconds_offset = fmodf(seconds_offset + seconds_per_frame * frame_count, 1.0f);
 
         if ((err = soundio_outstream_end_write(outstream))) {
             fprintf(stderr, "%s\n", soundio_strerror(err));
@@ -73,14 +74,19 @@ int frame_count_min, int frame_count_max)
 
 struct SoundStream
 {
-    SoundIo* _soundio = nullptr;
+    static inline SoundIo* _soundio = nullptr;
     int _output_device_index = -1;
-    SoundIoDevice* _output_device = nullptr;
+    static inline SoundIoDevice* _output_device = nullptr;
+
+    std::atomic<bool> _is_open = false;
     SoundIoOutStream* _outstream = nullptr;
+    std::jthread _thread;
 
     SoundStream()
     {
-        _soundio = soundio_create();
+        if (_soundio == nullptr)
+            _soundio = soundio_create();
+
         if (_soundio == nullptr)
             std::cerr << "[ERROR] In SoundStream::SoundStream: Unable to create soundio" << std::endl;
 
@@ -94,102 +100,71 @@ struct SoundStream
         if (_output_device_index < 0)
             std::cerr << "[ERROR] In SoundStream::SoundStream: Unable to detect default output device" << std::endl;
 
-        _output_device = soundio_get_output_device(_soundio, _output_device_index);
+        if (_output_device == nullptr)
+            _output_device = soundio_get_output_device(_soundio, _output_device_index);
+
         if (_output_device == nullptr)
             std::cerr << "[ERROR] In SoundStream::SoundStream: Unable to create output device" << std::endl;
-
-        _outstream = soundio_outstream_create(_output_device);
-        _outstream->format = std::endian::native == std::endian::little ? SoundIoFormatS16LE : SoundIoFormatS16BE;
-        _outstream->write_callback = write_callback;
     }
 
     ~SoundStream()
+    {}
+
+    static void _open_callback(SoundStream* instance)
     {
-        if (_outstream != nullptr)
-            soundio_outstream_destroy(_outstream);
+        instance->_is_open = true;
 
-        if (_output_device != nullptr)
-            soundio_device_unref(_output_device);
+        int error = soundio_outstream_start(instance->_outstream);
+        if (error != 0)
+            std::cerr << "[ERROR] In SoundStream::_open_callback: " << soundio_strerror(error) << std::endl;
 
-        if (_soundio != nullptr)
-            soundio_destroy(_soundio);
+        soundio_wait_events(instance->_soundio);
     }
 
     void open()
     {
+        if (_is_open)
+            return;
+
+        _outstream = soundio_outstream_create(_output_device);
+        _outstream->format = SoundIoFormatFloat32BE; //std::endian::native == std::endian::little ? SoundIoFormatS16LE : SoundIoFormatS16BE;
+        _outstream->write_callback = write_callback;
+
         int error = soundio_outstream_open(_outstream);
-        if (error != 0)
-            goto error;
+        if (error != 0 or _outstream->layout_error)
+            std::cerr << "[ERROR] In SoundStream::open: " << soundio_strerror(error) << std::endl;
 
-        if (_outstream->layout_error)
-            goto error;
+        _thread = std::jthread(_open_callback, this);
+    }
 
-        error = soundio_outstream_start(_outstream);
-        if (error != 0)
-            goto error;
+    void close()
+    {
+        if (not _is_open)
+            return;
 
-        while (true)
-            soundio_wait_events(_soundio);
+        soundio_outstream_destroy(_outstream);
+        _outstream = nullptr;
 
-        error:
-            std::cout << "[ERROR] In SoundStream::open: " << soundio_strerror(error) << std::endl;
+        _thread.request_stop();
+        _thread.join();
+
+        _is_open = false;
     }
 };
 
 int main(int argc, char **argv)
 {
-    int err;
-    struct SoundIo *soundio = soundio_create();
-    if (!soundio) {
-        fprintf(stderr, "out of memory\n");
-        return 1;
+    auto stream = SoundStream();
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        std::cout << "open" << std::endl;
+        stream.open();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        stream.close();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     }
-
-    if ((err = soundio_connect(soundio))) {
-        fprintf(stderr, "error connecting: %s", soundio_strerror(err));
-        return 1;
-    }
-
-    soundio_flush_events(soundio);
-
-    int default_out_device_index = soundio_default_output_device_index(soundio);
-    if (default_out_device_index < 0) {
-        fprintf(stderr, "no output device found");
-        return 1;
-    }
-
-    struct SoundIoDevice *device = soundio_get_output_device(soundio, default_out_device_index);
-    if (!device) {
-        fprintf(stderr, "out of memory");
-        return 1;
-    }
-
-    fprintf(stderr, "Output device: %s\n", device->name);
-
-    struct SoundIoOutStream *outstream = soundio_outstream_create(device);
-    outstream->format = SoundIoFormatFloat32NE;
-    outstream->write_callback = write_callback;
-
-    //
-    if ((err = soundio_outstream_open(outstream))) {
-        fprintf(stderr, "unable to open device: %s", soundio_strerror(err));
-        return 1;
-    }
-
-    if (outstream->layout_error)
-        fprintf(stderr, "unable to set channel layout: %s\n", soundio_strerror(outstream->layout_error));
-
-    if ((err = soundio_outstream_start(outstream))) {
-        fprintf(stderr, "unable to start device: %s", soundio_strerror(err));
-        return 1;
-    }
-
-    for (;;)
-        soundio_wait_events(soundio);
-
-    soundio_outstream_destroy(outstream);
-    soundio_device_unref(device);
-    soundio_destroy(soundio);
+    std::cout << "quit" << std::endl;
     return 0;
 }
 
