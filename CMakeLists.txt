@@ -108,7 +108,14 @@ add_library(mousetrap STATIC
     mousetrap/src/window.cpp
 
     mousetrap/include/widget.hpp
-    mousetrap/src/widget.cpp mousetrap/include/cursor_type.hpp)
+    mousetrap/src/widget.inl
+    mousetrap/src/widget.cpp
+
+    mousetrap/include/cursor_type.hpp
+
+    mousetrap/include/action.hpp
+
+    mousetrap/include/frame_clock.hpp mousetrap/src/frame_clock.cpp mousetrap/src/action.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

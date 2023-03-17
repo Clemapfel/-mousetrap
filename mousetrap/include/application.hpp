@@ -9,6 +9,7 @@
 
 #include <include/signal_emitter.hpp>
 #include <include/window.hpp>
+#include <include/action.hpp>
 
 //#include <include/menu_model.hpp>
 //#include <include/action_map.hpp>
@@ -30,10 +31,17 @@ namespace mousetrap
             operator GObject*() override;
             operator GApplication*();
             operator GtkApplication*();
+            operator GActionMap*();
+
+            void add_action(const Action&);
+            void remove_action(const ActionID&);
+            const Action& get_action(const ActionID&);
+            bool has_action(const ActionID&);
 
             //void set_menubar(MenuModel*);
 
         private:
             GtkApplication* _native;
+            std::unordered_map<ActionID, Action> _actions;
     };
 }
