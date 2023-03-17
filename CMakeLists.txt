@@ -94,7 +94,21 @@ add_library(mousetrap STATIC
 
     mousetrap/include/sound_stream.hpp
     mousetrap/src/sound_stream.cpp
-)
+
+    mousetrap/include/signal_emitter.hpp
+    mousetrap/src/signal_emitter.inl
+    mousetrap/src/signal_emitter.cpp
+
+    mousetrap/include/signal_component.hpp
+
+    mousetrap/include/application.hpp
+    mousetrap/src/application.cpp
+
+    mousetrap/include/window.hpp
+    mousetrap/src/window.cpp
+
+    mousetrap/include/widget.hpp
+    mousetrap/src/widget.cpp mousetrap/include/cursor_type.hpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

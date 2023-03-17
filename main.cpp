@@ -5,13 +5,37 @@
 #include <mousetrap/include/image.hpp>
 #include <mousetrap/include/sound.hpp>
 #include <mousetrap/include/sound_stream.hpp>
+#include <mousetrap/include/application.hpp>
+#include <mousetrap/include/window.hpp>
 
 #include <deque>
 
 using namespace mousetrap;
 
+inline Window* window = nullptr;
+inline Application* app = nullptr;
+
+static void startup(GApplication*)
+{
+    window = new Window();
+    app->add_window(window);
+    window->present();
+}
+
+static void activate(GtkApplication* app, void*)
+{}
+
 int main()
 {
+    app = new Application();
+    app->connect_signal("activate", activate);
+    app->connect_signal("startup", startup);
+
+    app->run();
+
+    delete app;
+    delete window;
+
     return 0;
     /*
     sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(0, 0, 8, 3, 2));
