@@ -5,9 +5,8 @@ project(rat_game VERSION 0.0.1 LANGUAGES CXX)
 
 find_library(OpenGL REQUIRED NAMES GL)
 find_library(GLEW REQUIRED NAMES GLEW)
-find_package(SFML COMPONENTS window audio REQUIRED)
+find_package(SFML COMPONENTS audio REQUIRED)
 find_library(soundio REQUIRED NAMES soundio)
-
 
 find_package(PkgConfig)
 pkg_check_modules(GTK gtk4)
@@ -26,9 +25,9 @@ endif()
 
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/resources/")
 configure_file(
-        "${CMAKE_SOURCE_DIR}/mousetrap/include/resource_path.hpp.in"
-        "${CMAKE_SOURCE_DIR}/mousetrap/include/resource_path.hpp"
-        IMMEDIATE @ONLY
+    "${CMAKE_SOURCE_DIR}/mousetrap/include/resource_path.hpp.in"
+    "${CMAKE_SOURCE_DIR}/mousetrap/include/resource_path.hpp"
+    IMMEDIATE @ONLY
 )
 
 ## LIBRARY
@@ -81,29 +80,21 @@ add_library(mousetrap STATIC
     mousetrap/include/msaa_render_texture.hpp
     mousetrap/src/msaa_render_texture.cpp
 
-    mousetrap/include/signals.hpp
-
-    mousetrap/include/alignable.hpp
-    mousetrap/src/alignable.cpp
-
-    mousetrap/include/resizable.hpp
-    mousetrap/src/resizable.cpp
-
-    mousetrap/include/movable.hpp
-
-    mousetrap/include/widget.hpp
-    mousetrap/src/widget.cpp
-
-    mousetrap/include/rectangle_shape.hpp
-    mousetrap/src/rectangle_shape.cpp
-
-    mousetrap/include/box.hpp
-    mousetrap/src/box.cpp
-
+    mousetrap/include/alignment.hpp
     mousetrap/include/orientation.hpp
 
-    mousetrap/include/overlay.hpp
-    mousetrap/src/overlay.cpp mousetrap/include/sound_buffer.hpp mousetrap/include/sound.hpp mousetrap/src/sound_buffer.cpp mousetrap/src/sound.cpp mousetrap/include/time.hpp mousetrap/src/time.cpp mousetrap/include/sound_stream.hpp mousetrap/src/sound_stream.cpp)
+    mousetrap/include/sound_buffer.hpp
+    mousetrap/src/sound_buffer.cpp
+
+    mousetrap/include/sound.hpp
+    mousetrap/src/sound.cpp
+
+    mousetrap/include/time.hpp
+    mousetrap/src/time.cpp
+
+    mousetrap/include/sound_stream.hpp
+    mousetrap/src/sound_stream.cpp
+)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -114,7 +105,6 @@ target_link_libraries(mousetrap PUBLIC
     ${OpenGL}
     ${GLEW}
     ${GTK_LIBRARIES}
-    sfml-window
     sfml-audio
     soundio
 )

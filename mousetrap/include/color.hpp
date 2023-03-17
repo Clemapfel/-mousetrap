@@ -75,6 +75,4 @@ namespace mousetrap
     HSVA quantize(HSVA in, size_t n_values_per_component);
     RGBA invert(RGBA in);
     HSVA invert(HSVA in);
-
-    static inline const RGBA YELLOW = RGBA(1, 232 / 255.f, 15 / 255.f, 1);
 }

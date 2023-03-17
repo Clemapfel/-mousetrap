@@ -19,6 +19,8 @@ namespace mousetrap
             SoundStream& operator=(const SoundStream&) noexcept = delete;
             SoundStream& operator=(SoundStream&&) noexcept = delete;
 
+            // TODO: how to generate composable signals?
+
             void open();
             void close();
 

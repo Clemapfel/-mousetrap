@@ -8,9 +8,10 @@
 
 namespace mousetrap
 {
-    enum class Orientation
+    enum class Alignment
     {
-        HORIZONTAL = GTK_ORIENTATION_HORIZONTAL,
-        VERTICAL = GTK_ORIENTATION_VERTICAL
+        START = GTK_ALIGN_START,
+        CENTER = GTK_ALIGN_CENTER,
+        END = GTK_ALIGN_END
     };
 }
