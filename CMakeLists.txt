@@ -103,7 +103,7 @@ add_library(mousetrap STATIC
     mousetrap/include/orientation.hpp
 
     mousetrap/include/overlay.hpp
-    mousetrap/src/overlay.cpp mousetrap/include/sound_buffer.hpp mousetrap/include/sound.hpp mousetrap/src/sound_buffer.cpp mousetrap/src/sound.cpp mousetrap/include/time.hpp mousetrap/src/time.cpp)
+    mousetrap/src/overlay.cpp mousetrap/include/sound_buffer.hpp mousetrap/include/sound.hpp mousetrap/src/sound_buffer.cpp mousetrap/src/sound.cpp mousetrap/include/time.hpp mousetrap/src/time.cpp mousetrap/include/sound_stream.hpp mousetrap/src/sound_stream.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
