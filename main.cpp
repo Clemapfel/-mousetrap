@@ -9,21 +9,32 @@
 #include <mousetrap/include/window.hpp>
 
 #include <deque>
+#include <iostream>
 
 using namespace mousetrap;
 
 inline Window* window = nullptr;
 inline Application* app = nullptr;
 
+static bool on_close(GtkWindow* window, void*)
+{
+    std::cout << "shutdown" << std::endl;
+    return false;
+}
+
 static void startup(GApplication*)
 {
-    window = new Window();
-    app->add_window(window);
+    window = new Window(GTK_WINDOW(gtk_application_window_new(*app)));
+
+    window->show();
     window->present();
+    window->set_focusable(true);
+    window->grab_focus();
 }
 
 static void activate(GtkApplication* app, void*)
 {}
+
 
 int main()
 {
@@ -31,7 +42,7 @@ int main()
     app->connect_signal("activate", activate);
     app->connect_signal("startup", startup);
 
-    app->run();
+    return app->run();
 
     delete app;
     delete window;

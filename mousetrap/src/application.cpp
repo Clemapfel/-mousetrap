@@ -28,6 +28,16 @@ namespace mousetrap
         return G_OBJECT(_native);
     }
 
+    Application::operator GApplication*()
+    {
+        return G_APPLICATION(_native);
+    }
+
+    Application::operator GtkApplication*()
+    {
+        return GTK_APPLICATION(_native);
+    }
+
     void Application::add_window(Window* window)
     {
         gtk_application_add_window(_native, window->operator  GtkWindow*());
