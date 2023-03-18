@@ -7,6 +7,7 @@
 #include <mousetrap/include/sound_stream.hpp>
 #include <mousetrap/include/application.hpp>
 #include <mousetrap/include/window.hpp>
+#include <mousetrap/include/motion_event_controller.hpp>
 
 #include <deque>
 #include <iostream>
@@ -15,6 +16,19 @@ using namespace mousetrap;
 
 inline Window* window = nullptr;
 inline Application* app = nullptr;
+
+#define test(signal_name, function) \
+template<typename Owner_t>                                    \
+struct has_##signal_name##_signal {  \
+    int test_01() {                \
+        return 1234;                \
+    }\
+    function             \
+};\
+
+test(name, std::string wrapper(Owner_t, std::string str) {
+    return str;
+})
 
 static void startup(GApplication*)
 {
@@ -26,14 +40,19 @@ static void startup(GApplication*)
     });
     action.add_shortcut("<Control>c");
 
+    auto instance = has_name_signal<std::string>();
+    instance.wrapper("abc", "def");
+
     window->connect_signal_close_request([](Window*) -> bool {
         std::cout << "close" << std::endl;
         return false;
     });
 
-    ([]() -> void {
-        return void();
-    })();
+    auto* motion_controller = new MotionEventController();
+    motion_controller->connect_signal_motion([](MotionEventController*, float x, float y) -> void {
+        std::cout << x << " " << y << std::endl;
+    }, nullptr);
+    window->add_controller(motion_controller);
 
     window->show();
     window->present();

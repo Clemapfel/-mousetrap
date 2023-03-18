@@ -32,20 +32,4 @@ namespace mousetrap
     {
         gtk_event_controller_set_propagation_phase(_native, (GtkPropagationPhase) phase);
     }
-
-    KeyEventController::KeyEventController()
-        : EventController(GTK_EVENT_CONTROLLER(gtk_event_controller_key_new())),
-          CTOR_SIGNAL(KeyEventController, key_pressed),
-          CTOR_SIGNAL(KeyEventController, key_released),
-          CTOR_SIGNAL(KeyEventController, modifiers_changed)
-    {}
-
-    bool KeyEventController::should_shortcut_trigger_trigger(const std::string& shortcut)
-    {
-        auto* trigger = gtk_shortcut_trigger_parse_string(shortcut.c_str());
-        auto* event = gtk_event_controller_get_current_event(_native);
-        bool out = gtk_shortcut_trigger_trigger(trigger, event, false);
-        g_object_unref(trigger);
-        return out;
-    };
 }

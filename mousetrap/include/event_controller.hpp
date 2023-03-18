@@ -34,14 +34,4 @@ namespace mousetrap
             EventController(GtkEventController*);
             GtkEventController* _native;
     };
-
-    class KeyEventController : public EventController,
-        HAS_SIGNAL(KeyEventController, key_pressed),
-        HAS_SIGNAL(KeyEventController, key_released),
-        HAS_SIGNAL(KeyEventController, modifiers_changed)
-    {
-        public:
-            KeyEventController();
-            bool should_shortcut_trigger_trigger(const std::string& shortcut);
-    };
 }

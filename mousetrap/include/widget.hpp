@@ -25,6 +25,7 @@ namespace mousetrap
 {
     template<typename GtkWidget_t>
     struct WidgetImplementation;
+    struct EventController;
 
     class Widget : public SignalEmitter,
         HAS_SIGNAL(Widget, realize),
@@ -85,7 +86,7 @@ namespace mousetrap
 
             void hide();
             void show();
-            //void add_controller(EventController*);
+            void add_controller(EventController*);
 
             void set_focusable(bool);
             void grab_focus();
