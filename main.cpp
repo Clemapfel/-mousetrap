@@ -8,6 +8,7 @@
 #include <mousetrap/include/application.hpp>
 #include <mousetrap/include/window.hpp>
 #include <mousetrap/include/motion_event_controller.hpp>
+#include <mousetrap/include/label.hpp>
 
 #include <deque>
 #include <iostream>
@@ -32,7 +33,7 @@ test(name, std::string wrapper(Owner_t, std::string str) {
 
 static void startup(GApplication*)
 {
-    window = new Window(app);
+    window = new Window(*app);
 
     auto action = Action("global.test_action");
     action.set_function([](){
@@ -53,6 +54,11 @@ static void startup(GApplication*)
         std::cout << x << " " << y << std::endl;
     }, nullptr);
     window->add_controller(motion_controller);
+
+    auto label = Label();
+    label.set_text("askdbaöusdböaosudöasoubdaibslidbaisubdöaiusbdöasubdöasoubdöaoudbaöowbföwoubÖOUBöoaubwöUOBAFÖOUWBöAOUWBFÖOAWUBFöOAWUbÖFOUWABöoAWUBFöOAWUBFÖOAUWFbÖOWUBÖAOUWfbÖAOUWFbÖAOWUFbÖWAOUFbÖOAUWBFöoWUFBWÖOWAUFBÖOWUAB");
+    label.set_wrap_mode(LabelWrapMode::ONLY_ON_CHAR);
+    window->set_child(&label);
 
     window->show();
     window->present();

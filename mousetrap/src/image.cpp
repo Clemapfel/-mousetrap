@@ -59,6 +59,11 @@ namespace mousetrap
         return *this;
     }
 
+    Image::operator GdkPixbuf*() const
+    {
+        return _data;
+    }
+
     void Image::create(size_t width, size_t height, RGBA default_color)
     {
         _data = gdk_pixbuf_new(GDK_COLORSPACE_RGB, GL_TRUE, 8, width, height);

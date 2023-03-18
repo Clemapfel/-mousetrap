@@ -100,6 +100,7 @@ add_library(mousetrap STATIC
     mousetrap/src/signal_emitter.cpp
 
     mousetrap/include/signal_component.hpp
+    mousetrap/src/signal_component.inl
 
     mousetrap/include/application.hpp
     mousetrap/src/application.cpp
@@ -114,8 +115,56 @@ add_library(mousetrap STATIC
     mousetrap/include/cursor_type.hpp
 
     mousetrap/include/action.hpp
+    mousetrap/src/action.cpp
 
-    mousetrap/include/frame_clock.hpp mousetrap/src/frame_clock.cpp mousetrap/src/action.cpp mousetrap/include/event_controller.hpp mousetrap/src/event_controller.cpp mousetrap/include/key_event_controller.hpp mousetrap/include/key_event_controller.hpp mousetrap/src/key_event_controller.cpp mousetrap/src/signal_component.inl mousetrap/include/motion_event_controller.hpp)
+    mousetrap/include/frame_clock.hpp
+    mousetrap/src/frame_clock.cpp
+
+    mousetrap/include/event_controller.hpp
+    mousetrap/src/event_controller.cpp
+
+    mousetrap/include/key_event_controller.hpp
+    mousetrap/src/key_event_controller.cpp
+
+    mousetrap/include/motion_event_controller.hpp
+    mousetrap/src/motion_event_controller.cpp
+
+    mousetrap/include/aspect_frame.hpp
+    mousetrap/src/aspect_frame.cpp
+
+    mousetrap/include/box.hpp
+    mousetrap/src/box.cpp
+
+    mousetrap/include/button.hpp
+    mousetrap/src/button.cpp
+
+    mousetrap/include/check_button.hpp
+    mousetrap/src/check_button.cpp
+
+    mousetrap/include/toggle_button.hpp
+    mousetrap/src/toggle_button.cpp
+
+    mousetrap/include/entry.hpp
+    mousetrap/src/entry.cpp
+
+    mousetrap/include/expander.hpp
+    mousetrap/src/expander.cpp
+
+    mousetrap/include/revealer.hpp
+    mousetrap/src/revealer.cpp
+
+    mousetrap/include/frame.hpp
+    mousetrap/src/frame.cpp
+
+    mousetrap/include/image_display.hpp
+    mousetrap/src/image_display.cpp
+
+    mousetrap/include/key_file.hpp
+    mousetrap/src/key_file.cpp
+
+    mousetrap/include/label.hpp
+    mousetrap/src/label.cpp
+)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

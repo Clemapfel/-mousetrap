@@ -17,7 +17,7 @@ namespace mousetrap
         HAS_SIGNAL(Window, activate_focused_widget)
     {
         public:
-            Window(Application*);
+            Window(Application&);
 
             void set_maximized(bool);
             void set_fullscreen(bool);

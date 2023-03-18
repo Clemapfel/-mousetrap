@@ -33,6 +33,8 @@ namespace mousetrap
             Image& operator=(const Image&);
             Image& operator=(Image&&) noexcept;
 
+            operator GdkPixbuf*() const;
+
             void create(size_t width, size_t height, RGBA default_color = RGBA(0, 0, 0, 1));
             bool create_from_file(const std::string&);
 

@@ -8,20 +8,8 @@
 
 namespace mousetrap
 {
-    /*
-    Window::Window()
-        : Window(GTK_WINDOW(gtk_window_new()))
-    {
-        gtk_window_set_hide_on_close(get_native(), true);
-    }
-
-    Window::Window(GtkWindow* window)
-        : WidgetImplementation<GtkWindow>(window)
-    {}
-     */
-
-    Window::Window(Application* app)
-        : WidgetImplementation<GtkWindow>(GTK_WINDOW(gtk_application_window_new(app->operator GtkApplication*()))),
+    Window::Window(Application& app)
+        : WidgetImplementation<GtkWindow>(GTK_WINDOW(gtk_application_window_new(app.operator GtkApplication*()))),
           CTOR_SIGNAL(Window, close_request),
           CTOR_SIGNAL(Window, activate_default_widget),
           CTOR_SIGNAL(Window, activate_focused_widget)
@@ -70,7 +58,8 @@ namespace mousetrap
 
     void Window::set_focused_widget(Widget* widget)
     {
-        gtk_window_set_focus(get_native(), widget->operator GtkWidget*());
+        if (widget != nullptr)
+            gtk_window_set_focus(get_native(), widget->operator GtkWidget*());
     }
 
     void Window::set_hide_on_close(bool b)
@@ -107,7 +96,8 @@ namespace mousetrap
 
     void Window::set_transient_for(Window* partner)
     {
-        gtk_window_set_transient_for(get_native(), partner->operator GtkWindow*());
+        if (partner != nullptr)
+            gtk_window_set_transient_for(get_native(), partner->operator GtkWindow*());
     }
 
     void Window::set_decorated(bool b)

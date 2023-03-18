@@ -160,6 +160,21 @@ namespace mousetrap
     /// @see https://docs.gtk.org/gtk4/signal.Window.activate-focus.html
     DECLARE_SIGNAL(activate_focused_widget, "activate-focus", void);
 
+    /// @see https://docs.gtk.org/gtk4/signal.Button.activate.html
+    DECLARE_SIGNAL(clicked, "clicked", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.ToggleButton.toggled.html
+    DECLARE_SIGNAL(toggled, "toggled", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.Editable.changed.html
+    DECLARE_SIGNAL(text_changed, "changed", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.Editable.insert-text.html
+    DECLARE_SIGNAL_MANUAL(text_inserted, "insert-text", void, int32_t start_pos, int32_t end_pos);
+
+    /// @see https://docs.gtk.org/gtk4/signal.Editable.delete-text.html
+    DECLARE_SIGNAL_MANUAL(text_deleted, "delete-text", void, int32_t start_pos, int32_t end_pos);
+
     using ModifierState = GdkModifierType;
     using KeyValue = guint;
     using KeyCode = guint;
