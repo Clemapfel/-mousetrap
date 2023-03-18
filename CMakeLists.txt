@@ -115,7 +115,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/action.hpp
 
-    mousetrap/include/frame_clock.hpp mousetrap/src/frame_clock.cpp mousetrap/src/action.cpp)
+    mousetrap/include/frame_clock.hpp mousetrap/src/frame_clock.cpp mousetrap/src/action.cpp mousetrap/include/event_controller.hpp mousetrap/src/event_controller.cpp mousetrap/include/key_event_controller.hpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

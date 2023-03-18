@@ -121,4 +121,13 @@ namespace mousetrap
 
     /// @see https://docs.gtk.org/gtk4/signal.Window.activate-focus.html
     DECLARE_SIGNAL(activate_focused_widget, "activate-focus", void)
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-pressed.html
+    DECLARE_SIGNAL(key_pressed, "key-pressed", bool);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-released.html
+    DECLARE_SIGNAL(key_released, "key-released", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-pressed.html
+    DECLARE_SIGNAL(modifiers_changed, "modifiers", bool);
 }
