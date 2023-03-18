@@ -70,7 +70,7 @@ namespace mousetrap
                                                                                                       \
                 return_type emit_signal_activate()                                                           \
                 {                                                                             \
-                    if (not _blocked)                                                                 \
+                    if (not _blocked and _function)                                                                 \
                         return _function(_instance);                                          \
                     else                                                                      \
                         return return_type(); \
@@ -83,7 +83,7 @@ namespace mousetrap
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                         \
-                std::function<return_type(T*)> _function;                                              \
+                std::function<return_type(T*, __VA_ARGS__)> _function;                                              \
                 bool _blocked = false;                                                                \
                                                                                                       \
                 static return_type wrapper(void*, __VA_ARGS__, has_##signal_name##_signal<T>* instance);\

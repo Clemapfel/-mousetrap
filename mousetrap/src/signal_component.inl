@@ -2,6 +2,8 @@
 // Copyright (c) Clemens Cords (mail@clemens-cords.com), created 3/18/23
 //
 
+#include <iostream>
+
 namespace mousetrap
 {
     // KEY PRESSED
@@ -10,7 +12,7 @@ namespace mousetrap
     bool has_key_pressed_signal<T>::wrapper(void*, uint32_t keyval, uint32_t keycode, ModifierState modifier, has_key_pressed_signal<T>* instance)
     {
         if (instance->_blocked)
-            return instance->_function(instance, keyval, keycode, modifier);
+            return instance->_function(instance->_instance, keyval, keycode, modifier);
         else
             return false;
     }
@@ -43,7 +45,7 @@ namespace mousetrap
     void has_key_released_signal<T>::wrapper(void*, uint32_t keyval, uint32_t keycode, ModifierState modifier, has_key_released_signal<T>* instance)
     {
         if (instance->_blocked)
-            instance->_function(instance, keyval, keycode, modifier);
+            instance->_function(instance->_instance, keyval, keycode, modifier);
     }
 
     template<typename T>
@@ -74,7 +76,7 @@ namespace mousetrap
     bool has_modifiers_changed_signal<T>::wrapper(void*, uint32_t keyval, uint32_t keycode, ModifierState modifier, has_modifiers_changed_signal<T>* instance)
     {
         if (instance->_blocked)
-            return instance->_function(instance, keyval, keycode, modifier);
+            return instance->_function(instance->_instance, keyval, keycode, modifier);
         else
             return false;
     }
@@ -107,7 +109,7 @@ namespace mousetrap
     void has_motion_enter_signal<T>::wrapper(void*, float x, float y, has_motion_enter_signal<T>* instance)
     {
         if (instance->_blocked)
-            instance->_function(instance, x, y);
+            instance->_function(instance->_instance, x, y);
     }
 
     template<typename T>
@@ -138,7 +140,7 @@ namespace mousetrap
     void has_motion_signal<T>::wrapper(void*, float x, float y, has_motion_signal<T>* instance)
     {
         if (instance->_blocked)
-            instance->_function(instance, x, y);
+            instance->_function(instance->_instance, x, y);
     }
 
     template<typename T>
