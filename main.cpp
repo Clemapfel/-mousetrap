@@ -9,6 +9,8 @@
 #include <mousetrap/include/window.hpp>
 #include <mousetrap/include/motion_event_controller.hpp>
 #include <mousetrap/include/label.hpp>
+#include <mousetrap/include/text_view.hpp>
+#include <mousetrap/include/frame.hpp>
 
 #include <deque>
 #include <iostream>
@@ -17,19 +19,6 @@ using namespace mousetrap;
 
 inline Window* window = nullptr;
 inline Application* app = nullptr;
-
-#define test(signal_name, function) \
-template<typename Owner_t>                                    \
-struct has_##signal_name##_signal {  \
-    int test_01() {                \
-        return 1234;                \
-    }\
-    function             \
-};\
-
-test(name, std::string wrapper(Owner_t, std::string str) {
-    return str;
-})
 
 static void startup(GApplication*)
 {
@@ -40,9 +29,6 @@ static void startup(GApplication*)
         std::cout << "test" << std::endl;
     });
     action.add_shortcut("<Control>c");
-
-    auto instance = has_name_signal<std::string>();
-    instance.wrapper("abc", "def");
 
     window->connect_signal_close_request([](Window*) -> bool {
         std::cout << "close" << std::endl;
@@ -55,10 +41,10 @@ static void startup(GApplication*)
     }, nullptr);
     window->add_controller(motion_controller);
 
-    auto label = Label();
-    label.set_text("askdbaöusdböaosudöasoubdaibslidbaisubdöaiusbdöasubdöasoubdöaoudbaöowbföwoubÖOUBöoaubwöUOBAFÖOUWBöAOUWBFÖOAWUBFöOAWUbÖFOUWABöoAWUBFöOAWUBFÖOAUWFbÖOWUBÖAOUWfbÖAOUWFbÖAOWUFbÖWAOUFbÖOAUWBFöoWUFBWÖOWAUFBÖOWUAB");
-    label.set_wrap_mode(LabelWrapMode::ONLY_ON_CHAR);
-    window->set_child(&label);
+    auto text_view = TextView();
+    auto frame = Frame();
+    frame.set_child(&text_view);
+    window->set_child(&frame);
 
     window->show();
     window->present();

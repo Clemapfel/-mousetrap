@@ -100,7 +100,6 @@ add_library(mousetrap STATIC
     mousetrap/src/signal_emitter.cpp
 
     mousetrap/include/signal_component.hpp
-    mousetrap/src/signal_component.inl
 
     mousetrap/include/application.hpp
     mousetrap/src/application.cpp
@@ -164,7 +163,8 @@ add_library(mousetrap STATIC
 
     mousetrap/include/label.hpp
     mousetrap/src/label.cpp
-)
+
+    mousetrap/include/text_view.hpp mousetrap/src/text_view.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
