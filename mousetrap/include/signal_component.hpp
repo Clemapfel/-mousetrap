@@ -43,7 +43,7 @@ namespace mousetrap
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance) -> return_type                        \
                     {                                                                                 \
-                        return f(instance, d);                                                               \
+                        return f(d);                                                               \
                     };                                                                                \
                                                                                                       \
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
@@ -72,25 +72,25 @@ namespace mousetrap
                                                                                                       \
                 return_type emit_signal_activate()                                                           \
                 {                                                                             \
-                    if (not _blocked and _function)                                                                 \
+                    if (not _blocked)                                                                 \
                         return _function(_instance);                                          \
                     else                                                                      \
                         return return_type(); \
                 }                                                                                     \
         }
 
-    #define DECLARE_SIGNAL_MANUAL(signal_name, return_type, arg_list, arg_name_list) \
-    template<typename T>                                                                    \
+    #define DECLARE_SIGNAL_MANUAL(signal_name, g_signal_id, return_t, arg_list, arg_name_list) \
+        template<typename T>                                                                    \
         class has_##signal_name##_signal                                                            \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                         \
-                std::function<return_type(T*, arg_list)> _function;                                              \
+                std::function<return_t(T* instance, arg_list)> _function;                                              \
                 bool _blocked = false;                                                                \
                                                                                                                               \
-                return_type has_##signal_name##_signal<T>::wrapper(void*, arg_list, has_##signal_name##_signal<T>* instance) \
+                static return_t wrapper(void*, arg_list, has_##signal_name##_signal<T>* self) \
                 {                                                                 \
-                    instance->emit_signal_activate(arg_name_list);                                             \
+                    self->emit_signal_activate(arg_name_list);                                             \
                 }                                                                        \
     \
             protected:                                                                                \
@@ -102,7 +102,7 @@ namespace mousetrap
                 static inline constexpr const char* signal_id = g_signal_id;                         \
                                                                                                       \
                 template<typename Function_t, typename Data_t>                              \
-                void has_##signal_name##_signal<T>::connect_signal_##signal_name(Function_t function, Data_t data) \
+                void connect_signal_##signal_name(Function_t function, Data_t data) \
                 {                                                                           \
                     _function = [f = function, d = data](T* instance, arg_list)             \
                     {                                                                       \
@@ -112,7 +112,7 @@ namespace mousetrap
                 }                                                                                                             \
                 \
                 template<typename Function_t>                              \
-                void has_##signal_name##_signal<T>::connect_signal_##signal_name(Function_t function) \
+                void connect_signal_##signal_name(Function_t function) \
                 {                                                                           \
                     _function = [f = function](T* instance, arg_list)             \
                     {                                                                       \
@@ -131,17 +131,16 @@ namespace mousetrap
                     return _blocked;                                                                  \
                 }                                                                                     \
                                                                                                       \
-                return_type emit_signal_activate(arg_list); \
+                return_t emit_signal_activate(arg_list) \
                 { \
-                    if (_blocked)                                       \
+                    if (not _blocked and _function != nullptr)                                       \
                         return _function(_instance, arg_name_list);                               \
                     else                                                          \
                         return return_t();     \
                 } \
         }
-
-
-/// @see https://docs.gtk.org/gio/signal.Application.activate.html
+    
+    /// @see https://docs.gtk.org/gio/signal.Application.activate.html
     DECLARE_SIGNAL(activate, "activate", void);
 
     /// @see https://docs.gtk.org/gio/signal.Application.startup.html
@@ -211,25 +210,39 @@ namespace mousetrap
     using KeyValue = guint;
     using KeyCode = guint;
 
-    /*
     /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-pressed.html
-    DECLARE_SIGNAL_MANUAL(key_pressed, "key-pressed", bool, KeyValue keyval, KeyCode keycode, ModifierState modifier);
+    DECLARE_SIGNAL_MANUAL(key_pressed, "key-pressed", bool,
+        SPLAT(KeyValue keyval, KeyCode keycode, ModifierState modifier),
+        SPLAT(keyval, keycode, modifier)
+    );
 
     /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-released.html
-    DECLARE_SIGNAL_MANUAL(key_released, "key-released", void, KeyValue keyval, KeyCode keycode, ModifierState modifier);
+    DECLARE_SIGNAL_MANUAL(key_released, "key-released", void,
+        SPLAT(KeyValue keyval, KeyCode keycode, ModifierState modifier),
+        SPLAT(keyval, keycode, modifier)
+    );
 
     /// @see https://docs.gtk.org/gtk4/signal.EventControllerKey.key-pressed.html
-    DECLARE_SIGNAL_MANUAL(modifiers_changed, "modifiers", bool, KeyValue keyval, KeyCode keycode, ModifierState modifier);
+    DECLARE_SIGNAL_MANUAL(modifiers_changed, "modifiers", bool,
+        SPLAT(KeyValue keyval, KeyCode keycode, ModifierState modifier),
+        SPLAT(keyval, keycode, modifier)
+    );
 
     /// @see https://docs.gtk.org/gtk4/signal.EventControllerMotion.enter.html
-    DECLARE_SIGNAL_MANUAL(motion_enter, "enter", void, float x, float y);
+    DECLARE_SIGNAL_MANUAL(motion_enter, "enter", void,
+        SPLAT(double x, double y),
+        SPLAT(x, y)
+    );
 
-    /// @see https://docs.gtk.org/gtk4/signal.EventControllerMotion.enter.html
-    DECLARE_SIGNAL_MANUAL(motion, "motion", void, float x, float y);
-    */
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerMotion.motion.html
+    DECLARE_SIGNAL_MANUAL(motion, "motion", void,
+        SPLAT(double x, double y),
+        SPLAT(x, y)
+    );
 
     /// @see https://docs.gtk.org/gtk4/signal.EventControllerMotion.leave.html
-    DECLARE_SIGNAL(motion_leave, "leave", void);
+    DECLARE_SIGNAL_MANUAL(motion_leave, "leave", void,
+        SPLAT(double x, double y),
+        SPLAT(x, y)
+    );
 }
-
-#include <src/signal_component.inl>

@@ -50,7 +50,7 @@ static void startup(GApplication*)
     });
 
     auto* motion_controller = new MotionEventController();
-    motion_controller->connect_signal_motion([](MotionEventController*, float x, float y) -> void {
+    motion_controller->connect_signal_motion([](MotionEventController*, double x, double y) -> void {
         std::cout << x << " " << y << std::endl;
     }, nullptr);
     window->add_controller(motion_controller);

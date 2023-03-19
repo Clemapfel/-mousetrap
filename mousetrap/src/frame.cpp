@@ -42,6 +42,6 @@ namespace mousetrap
 
     float Frame::get_label_x_alignment() const
     {
-        gtk_frame_get_label_align(get_native());
+        return gtk_frame_get_label_align(get_native());
     }
 }
