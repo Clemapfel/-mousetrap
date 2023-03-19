@@ -47,7 +47,7 @@ namespace mousetrap
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance) -> return_type                  \
                     {                                                                                 \
-                        return f(d);                                                                  \
+                        return f(instance, d);                                                                  \
                     };                                                                                \
                                                                                                       \
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
@@ -116,7 +116,7 @@ namespace mousetrap
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance, arg_list)                       \
                     {                                                                                 \
-                        return f(instance, arg_name_list);                                            \
+                        return f(instance, arg_name_list, d);                                            \
                     };                                                                                \
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
@@ -216,6 +216,18 @@ namespace mousetrap
           SPLAT(start_pos, end_pos)
     );
 
+    /// @see https://docs.gtk.org/gtk4/signal.TextBuffer.undo.html
+    DECLARE_SIGNAL(undo, "undo", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.TextBuffer.redo.html
+    DECLARE_SIGNAL(redo, "redo", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.SelectionModel.selection-changed.html
+    DECLARE_SIGNAL_MANUAL(selection_changed, "selection-changed", void,
+        SPLAT(int32_t position, int32_t n_items),
+        SPLAT(position, n_items)
+    );
+
     using ModifierState = GdkModifierType;
     using KeyValue = guint;
     using KeyCode = guint;
@@ -255,19 +267,4 @@ namespace mousetrap
         SPLAT(double x, double y),
         SPLAT(x, y)
     );
-
-    /// @see https://docs.gtk.org/gtk4/signal.TextView.backspace.html
-    DECLARE_SIGNAL(backspace, "backspace", void);
-
-    /// @see https://docs.gtk.org/gtk4/signal.TextView.copy-clipboard.html
-    DECLARE_SIGNAL(copy_clipboard, "copy-clipboard", void);
-
-    /// @see https://docs.gtk.org/gtk4/signal.TextView.cut-clipboard.html
-    DECLARE_SIGNAL(cut_clipboard, "cut-clipboard", void);
-
-    /// @see https://docs.gtk.org/gtk4/signal.TextView.paste-clipboard.html
-    DECLARE_SIGNAL(paste_clipboard, "paste-clipboard", void);
-
-    /// @see https://docs.gtk.org/gtk4/signal.TextView.select-all.html
-    DECLARE_SIGNAL_MANUAL(select_all, "select-all", void, bool select, select);
 }

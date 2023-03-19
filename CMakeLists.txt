@@ -164,7 +164,7 @@ add_library(mousetrap STATIC
     mousetrap/include/label.hpp
     mousetrap/src/label.cpp
 
-    mousetrap/include/text_view.hpp mousetrap/src/text_view.cpp)
+    mousetrap/include/text_view.hpp mousetrap/src/text_view.cpp mousetrap/include/list_view.hpp mousetrap/include/selection_model.hpp mousetrap/src/selection_model.cpp mousetrap/src/list_view.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -187,6 +187,6 @@ set_target_properties(mousetrap PROPERTIES
 
 ## EXECUTABLE
 
-add_executable(debug main.cpp)
+add_executable(debug main.cpp mousetrap/include/justify_mode.hpp)
 target_link_libraries(debug PUBLIC mousetrap)
 target_include_directories(debug PUBLIC "${CMAKE_SOURCE_DIR}")

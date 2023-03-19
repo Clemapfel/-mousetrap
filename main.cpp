@@ -10,7 +10,10 @@
 #include <mousetrap/include/motion_event_controller.hpp>
 #include <mousetrap/include/label.hpp>
 #include <mousetrap/include/text_view.hpp>
+#include <mousetrap/include/box.hpp>
 #include <mousetrap/include/frame.hpp>
+#include <mousetrap/include/button.hpp>
+#include <mousetrap/include/list_view.hpp>
 
 #include <deque>
 #include <iostream>
@@ -35,16 +38,21 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto* motion_controller = new MotionEventController();
-    motion_controller->connect_signal_motion([](MotionEventController*, double x, double y) -> void {
-        std::cout << x << " " << y << std::endl;
-    }, nullptr);
-    window->add_controller(motion_controller);
+    auto list = ListView(Orientation::VERTICAL);
 
-    auto text_view = TextView();
-    auto frame = Frame();
-    frame.set_child(&text_view);
-    window->set_child(&frame);
+    static auto* text_view = new TextView();
+    text_view->set_text("test");
+    std::cout << text_view->get_text() << std::endl;
+
+    list.push_back(text_view);
+
+    auto* button = new Button();
+    button->connect_signal_clicked([](Button* instance, TextView* text_view){
+        std::cout << text_view->get_text() << std::endl;
+    }, text_view);
+    list.push_back(button);
+
+    window->set_child(&list);
 
     window->show();
     window->present();
