@@ -267,4 +267,73 @@ namespace mousetrap
         SPLAT(double x, double y),
         SPLAT(x, y)
     );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureClick.pressed.html
+    DECLARE_SIGNAL_MANUAL(click_pressed, "pressed", void,
+        SPLAT(int32_t n_press, double x, double y),
+        SPLAT(n_press, x, y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureClick.released.html
+    DECLARE_SIGNAL_MANUAL(click_released, "released", void,
+        SPLAT(int32_t n_press, double x, double y),
+        SPLAT(n_press, x, y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureClick.stopped.html
+    DECLARE_SIGNAL(click_stopped, "stopped", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerScroll.decelerate.html
+    DECLARE_SIGNAL_MANUAL(kinetic_scroll_decelerate, "decelerate", void,
+        SPLAT(double x_velocity, double y_velocity),
+        SPLAT(x_velocity, y_velocity)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll-begin.html
+    DECLARE_SIGNAL(scroll_begin, "scroll-begin", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll.html
+    DECLARE_SIGNAL_MANUAL(scroll, "scroll", bool,
+       SPLAT(double delta_x, double delta_y),
+       SPLAT(delta_x, delta_y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll-begin.html
+    DECLARE_SIGNAL(scroll_end, "scroll-end", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerFocus.enter.html
+    DECLARE_SIGNAL(focus_gained, "enter", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.EventControllerFocus.leave.html
+    DECLARE_SIGNAL(focus_lost, "leave", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureDrag.drag-begin.html
+    DECLARE_SIGNAL_MANUAL(drag_begin, "drag-begin", void,
+        SPLAT(double start_x, double start_y),
+        SPLAT(start_x, start_y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureDrag.drag-update.html
+    DECLARE_SIGNAL_MANUAL(drag, "drag-update", void,
+        SPLAT(double offset_x, double offset_y),
+        SPLAT(offset_x, offset_y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureDrag.drag-end.html
+    DECLARE_SIGNAL_MANUAL(drag_end, "drag-end", void,
+        SPLAT(double offset_x, double offest_y),
+        SPLAT(offset_x, offest_y)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureZoom.scale-changed.html
+    DECLARE_SIGNAL_MANUAL(scale_changed, "scale-changed", void,
+        double scale,
+        scale
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.GestureRotate.angle-changed.html
+    DECLARE_SIGNAL_MANUAL(rotation_changed, "angle-changed", void,
+        SPLAT(double angle_absolute_radians, double angle_delta_radians),
+        SPLAT(angle_absolute_radians, angle_delta_radians)
+    );
 }
