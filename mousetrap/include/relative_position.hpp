@@ -8,7 +8,7 @@
 
 namespace mousetrap
 {
-    enum class PopoverPosition
+    enum class RelativePosition
     {
         ABOVE = GTK_POS_TOP,
         LEFT_OF = GTK_POS_LEFT,

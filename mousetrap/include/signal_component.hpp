@@ -354,4 +354,28 @@ namespace mousetrap
         SPLAT(int32_t width, int32_t height),
         SPLAT(width, height)
     );
+
+    /// @see https://docs.gtk.org/gtk4/signal.Notebook.page-added.html
+    DECLARE_SIGNAL_MANUAL(page_added, "page-added", void,
+        SPLAT(GtkWidget* widget, uint32_t page_index),
+        SPLAT(widget, page_index)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.Notebook.page-removed.html
+    DECLARE_SIGNAL_MANUAL(page_removed, "page-removed", void,
+        SPLAT(GtkWidget* widget, uint32_t page_index),
+        SPLAT(widget, page_index)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.Notebook.page-reordered.html
+    DECLARE_SIGNAL_MANUAL(page_reordered, "page-reordered", void,
+        SPLAT(GtkWidget* widget, uint32_t page_index),
+        SPLAT(widget, page_index)
+    );
+
+    /// @see https://docs.gtk.org/gtk4/signal.Notebook.switch-page.html
+    DECLARE_SIGNAL_MANUAL(page_selection_changed, "switch-page", void,
+        SPLAT(GtkWidget* widget, uint32_t page_index),
+        SPLAT(widget, page_index)
+    );
 }

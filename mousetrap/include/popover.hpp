@@ -6,7 +6,7 @@
 #pragma once
 
 #include <include/widget.hpp>
-#include <include/popover_position.hpp>
+#include <include/relative_position.hpp>
 
 namespace mousetrap
 {
@@ -22,8 +22,8 @@ namespace mousetrap
             void set_child(Widget*);
             Widget* get_child() const;
 
-            void set_relative_position(PopoverPosition);
-            PopoverPosition get_relative_position() const;
+            void set_relative_position(RelativePosition);
+            RelativePosition get_relative_position() const;
 
             void set_autohide(bool);
             bool get_autohide() const;

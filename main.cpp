@@ -16,6 +16,7 @@
 #include <mousetrap/include/list_view.hpp>
 #include <mousetrap/include/popover_menu_button.hpp>
 #include <mousetrap/include/stack.hpp>
+#include <mousetrap/include/notebook.hpp>
 
 #include <deque>
 #include <iostream>
@@ -51,25 +52,17 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto* stack = new Stack();
+    auto* notebook = new Notebook();
+    notebook->set_tabs_reorderable(true);
     for (size_t i = 0; i < 10; ++i)
     {
-        auto* label = new Label("<span size=\"1000%\">" + std::to_string(i) + "</span>");
-        label->set_size_request({300, 300});
-        stack->add_child(label, "0" + std::to_string(i));
+        auto* label = new Label("<span size=\"1000%\">content_" + std::to_string(i) + "</span>");
+        auto* label_label = new Label(std::to_string(i));
+        label->set_size_request({20, 300});
+        notebook->push_back(label, label_label);
     }
 
-    stack->get_selection_model()->connect_signal_selection_changed([](SelectionModel*, int32_t i, int32_t n){
-        std::cout << "postition: " << i << " | " << "n: " << n << std::endl;
-    });
-
-    //g_signal_connect(gtk_stack_get_pages(stack->operator _GtkStack *()), "selection-changed", G_CALLBACK(on_select), nullptr);
-
-    auto switcher = StackSwitcher(stack);
-    auto box = Box(Orientation::VERTICAL);
-    box.push_back(stack);
-    box.push_back(&switcher);
-    window->set_child(&box);
+    window->set_child(notebook);
 
     window->show();
     window->present();

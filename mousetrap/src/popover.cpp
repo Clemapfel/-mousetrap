@@ -37,14 +37,14 @@ namespace mousetrap
         return _child;
     }
 
-    void Popover::set_relative_position(PopoverPosition position)
+    void Popover::set_relative_position(RelativePosition position)
     {
         gtk_popover_set_position(get_native(), (GtkPositionType) position);
     }
 
-    PopoverPosition Popover::get_relative_position() const
+    RelativePosition Popover::get_relative_position() const
     {
-        return (PopoverPosition) gtk_popover_get_position(get_native());
+        return (RelativePosition) gtk_popover_get_position(get_native());
     }
 
     void Popover::set_has_base_arrow(bool b)

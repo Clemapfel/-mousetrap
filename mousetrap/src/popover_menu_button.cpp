@@ -43,14 +43,14 @@ namespace mousetrap
             _popover_menu->refresh_widgets();
     }
 
-    void PopoverMenuButton::set_popover_position(PopoverPosition type)
+    void PopoverMenuButton::set_popover_position(RelativePosition type)
     {
         gtk_popover_set_position(gtk_menu_button_get_popover(get_native()), (GtkPositionType) type);
     }
 
-    PopoverPosition PopoverMenuButton::get_popover_position() const
+    RelativePosition PopoverMenuButton::get_popover_position() const
     {
-        return (PopoverPosition) gtk_popover_get_position(gtk_menu_button_get_popover(get_native()));
+        return (RelativePosition) gtk_popover_get_position(gtk_menu_button_get_popover(get_native()));
     }
 
     void PopoverMenuButton::set_popover(Popover* popover)

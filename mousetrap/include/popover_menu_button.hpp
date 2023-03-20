@@ -7,7 +7,7 @@
 
 #include <include/widget.hpp>
 #include <include/menu_model.hpp>
-#include <include/popover_position.hpp>
+#include <include/relative_position.hpp>
 #include <include/popover.hpp>
 
 namespace mousetrap
@@ -35,8 +35,8 @@ namespace mousetrap
             void set_child(Widget*);
             Widget* get_child() const;
 
-            void set_popover_position(PopoverPosition);
-            PopoverPosition get_popover_position() const;
+            void set_popover_position(RelativePosition);
+            RelativePosition get_popover_position() const;
 
             void set_popover(Popover*);
             void set_popover_menu(PopoverMenu*);
