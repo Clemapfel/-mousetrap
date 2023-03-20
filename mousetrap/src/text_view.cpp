@@ -35,7 +35,7 @@ namespace mousetrap
 
     bool TextView::get_cursor_visible() const
     {
-        gtk_text_view_get_cursor_visible(get_native());
+        return gtk_text_view_get_cursor_visible(get_native());
     }
 
     void TextView::undo()

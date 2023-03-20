@@ -14,7 +14,7 @@ namespace mousetrap
         _v_adjustment = new Adjustment(gtk_scrolled_window_get_hadjustment(get_native()));
     }
 
-    ScrolledWindow::~ScrolledWindow() noexcept
+    ScrolledWindow::~ScrolledWindow()
     {
         delete _h_adjustment;
         delete _v_adjustment;
@@ -130,6 +130,6 @@ namespace mousetrap
     void ScrolledWindow::set_child(Widget* child)
     {
         _child = child;
-        gtk_scrolled_window_set_child(get_native(), _child != nullptr ? _child->operator Widget*() : nullptr);
+        gtk_scrolled_window_set_child(get_native(), _child != nullptr ? _child->operator GtkWidget*() : nullptr);
     }
 }
