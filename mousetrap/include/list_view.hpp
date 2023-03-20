@@ -17,7 +17,7 @@ namespace mousetrap
     namespace detail { struct _ListViewItem; }
 
     class ListView : public WidgetImplementation<GtkListView>,
-        HAS_SIGNAL(ListView, activate) // emitted when any list item is activated
+        HAS_SIGNAL(ListView, activate)
     {
         public:
             using Iterator = detail::_ListViewItem*;
@@ -38,8 +38,13 @@ namespace mousetrap
             void set_widget_at(size_t i, Widget*, Iterator = nullptr);
 
             void set_enable_rubberband_selection(bool);
+            bool get_enable_rubberband_selection() const;
+
             void set_show_separators(bool);
+            bool get_show_separators() const;
+
             void set_single_click_activate(bool);
+            bool get_single_click_activate() const;
 
             SelectionModel* get_selection_model();
             size_t get_n_items() const;

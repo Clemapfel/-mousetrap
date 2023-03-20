@@ -241,9 +241,19 @@ namespace mousetrap
         gtk_list_view_set_enable_rubberband(_list_view, b);
     }
 
+    bool ListView::get_enable_rubberband_selection() const
+    {
+        return gtk_list_view_get_enable_rubberband(_list_view);
+    }
+
     void ListView::set_show_separators(bool b)
     {
         gtk_list_view_set_show_separators(_list_view, b);
+    }
+
+    bool ListView::get_show_separators() const
+    {
+        return gtk_list_view_get_show_separators(_list_view);
     }
 
     ListView::Iterator ListView::move_item_to(size_t old_position, size_t new_position, Iterator old_it, Iterator new_it)
@@ -256,6 +266,11 @@ namespace mousetrap
     void ListView::set_single_click_activate(bool b)
     {
         gtk_list_view_set_single_click_activate(_list_view, b);
+    }
+
+    bool ListView::get_single_click_activate() const
+    {
+        return gtk_list_view_get_single_click_activate(_list_view);
     }
 
     SelectionModel* ListView::get_selection_model()
