@@ -21,6 +21,7 @@ namespace mousetrap
         HAS_SIGNAL(SelectionModel, selection_changed)
     {
         public:
+            SelectionModel(GtkSelectionModel*);
             SelectionModel() = delete;
             ~SelectionModel();
             operator GtkSelectionModel*();
@@ -34,8 +35,6 @@ namespace mousetrap
             void unselect(size_t i);
 
         protected:
-            SelectionModel(GtkSelectionModel*);
-
             GtkSelectionModel* _native;
     };
 

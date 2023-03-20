@@ -15,6 +15,7 @@
 #include <mousetrap/include/button.hpp>
 #include <mousetrap/include/list_view.hpp>
 #include <mousetrap/include/popover_menu_button.hpp>
+#include <mousetrap/include/stack.hpp>
 
 #include <deque>
 #include <iostream>
@@ -25,6 +26,11 @@ inline Window* window = nullptr;
 inline Application* app = nullptr;
 
 inline Action* action;
+
+static void on_select(GtkSelectionModel* model, int32_t i, int32_t n)
+{
+    std::cout << "postition: " << i << " | " << "n: " << n << std::endl;
+}
 
 static void startup(GApplication*)
 {
@@ -45,21 +51,25 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto list = ListView(Orientation::VERTICAL);
+    auto* stack = new Stack();
+    for (size_t i = 0; i < 10; ++i)
+    {
+        auto* label = new Label("<span size=\"1000%\">" + std::to_string(i) + "</span>");
+        label->set_size_request({300, 300});
+        stack->add_child(label, "0" + std::to_string(i));
+    }
 
-    static auto* text_view = new TextView();
-    text_view->set_text("test");
-    std::cout << text_view->get_text() << std::endl;
+    stack->get_selection_model()->connect_signal_selection_changed([](SelectionModel*, int32_t i, int32_t n){
+        std::cout << "postition: " << i << " | " << "n: " << n << std::endl;
+    });
 
-    list.push_back(text_view);
+    //g_signal_connect(gtk_stack_get_pages(stack->operator _GtkStack *()), "selection-changed", G_CALLBACK(on_select), nullptr);
 
-    auto button = PopoverMenuButton();
-    auto popover_menu = PopoverMenu(&menu_model);
-    button.set_popover_menu(&popover_menu);
-
-    list.push_back(&button);
-
-    window->set_child(&list);
+    auto switcher = StackSwitcher(stack);
+    auto box = Box(Orientation::VERTICAL);
+    box.push_back(stack);
+    box.push_back(&switcher);
+    window->set_child(&box);
 
     window->show();
     window->present();

@@ -7,7 +7,7 @@
 
 namespace mousetrap
 {
-    Revealer::Revealer(TransitionType type)
+    Revealer::Revealer(RevealerTransitionType type)
     : WidgetImplementation(GTK_REVEALER(gtk_revealer_new()))
     {
         gtk_revealer_set_reveal_child(get_native(), true);
@@ -38,14 +38,14 @@ namespace mousetrap
         return gtk_revealer_get_reveal_child(get_native());
     }
 
-    void Revealer::set_transition_type(TransitionType type)
+    void Revealer::set_transition_type(RevealerTransitionType type)
     {
         gtk_revealer_set_transition_type(get_native(), (GtkRevealerTransitionType) type);
     }
 
-    TransitionType Revealer::get_transition_type() const
+    RevealerTransitionType Revealer::get_transition_type() const
     {
-        return (TransitionType) gtk_revealer_get_transition_type(get_native());
+        return (RevealerTransitionType) gtk_revealer_get_transition_type(get_native());
     }
 
     void Revealer::set_transition_duration(Time time)
