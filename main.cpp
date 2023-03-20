@@ -54,6 +54,8 @@ static void startup(GApplication*)
 
     auto* notebook = new Notebook();
     notebook->set_tabs_reorderable(true);
+    notebook->set_quick_change_menu_enabled(true);
+    
     for (size_t i = 0; i < 10; ++i)
     {
         auto* label = new Label("<span size=\"1000%\">content_" + std::to_string(i) + "</span>");
