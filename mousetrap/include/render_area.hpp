@@ -10,10 +10,9 @@
 
 namespace mousetrap
 {
-    class RenderArea : public WidgetImplementation<GtkGLArea>//,
-        // HAS_SIGNAL(RenderArea, realize),
-        //HAS_SIGNAL(RenderArea, render),
-        //HAS_SIGNAL(RenderArea, resize)
+    class RenderArea : public WidgetImplementation<GtkGLArea>,
+        HAS_SIGNAL(RenderArea, render),
+        HAS_SIGNAL(RenderArea, resize)
     {
         public:
             RenderArea();

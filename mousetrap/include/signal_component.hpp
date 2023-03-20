@@ -342,4 +342,16 @@ namespace mousetrap
 
     /// @see https://docs.gtk.org/gtk4/signal.Adjustment.value-changed.html
     DECLARE_SIGNAL(value_changed, "value-changed", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.GLArea.create-context.html
+    DECLARE_SIGNAL(render_context_create, "create-context", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.GLArea.render.html
+    DECLARE_SIGNAL_MANUAL(render, "render", bool, GdkGLContext* context, context);
+
+    /// @see https://docs.gtk.org/gtk4/signal.GLArea.resize.html
+    DECLARE_SIGNAL_MANUAL(resize, "resize", void,
+        SPLAT(int32_t width, int32_t height),
+        SPLAT(width, height)
+    );
 }
