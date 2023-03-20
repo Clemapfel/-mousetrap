@@ -14,6 +14,7 @@
 #include <mousetrap/include/frame.hpp>
 #include <mousetrap/include/button.hpp>
 #include <mousetrap/include/list_view.hpp>
+#include <mousetrap/include/popover_menu_button.hpp>
 
 #include <deque>
 #include <iostream>
@@ -23,15 +24,21 @@ using namespace mousetrap;
 inline Window* window = nullptr;
 inline Application* app = nullptr;
 
+inline Action* action;
+
 static void startup(GApplication*)
 {
     window = new Window(*app);
 
-    auto action = Action("global.test_action");
-    action.set_function([](){
-        std::cout << "test" << std::endl;
-    });
-    action.add_shortcut("<Control>c");
+    action = new Action("global.test_action");
+    action->set_function([](auto test2){
+        std::cout << test2 << std::endl;
+    }, "testest");
+    action->add_shortcut("<Control>c");
+    app->add_action(action);
+
+    auto menu_model = MenuModel();
+    menu_model.add_action("test", *action);
 
     window->connect_signal_close_request([](Window*) -> bool {
         std::cout << "close" << std::endl;
@@ -46,11 +53,11 @@ static void startup(GApplication*)
 
     list.push_back(text_view);
 
-    auto* button = new Button();
-    button->connect_signal_clicked([](Button* instance, TextView* text_view){
-        std::cout << text_view->get_text() << std::endl;
-    }, text_view);
-    list.push_back(button);
+    auto button = PopoverMenuButton();
+    auto popover_menu = PopoverMenu(&menu_model);
+    button.set_popover_menu(&popover_menu);
+
+    list.push_back(&button);
 
     window->set_child(&list);
 

@@ -46,16 +46,16 @@ namespace mousetrap
         return G_ACTION_MAP(_native);
     }
 
-    void Application::add_action(const Action& action)
+    void Application::add_action(Action* action)
     {
-        auto inserted = _actions.insert({action.get_id(), action}).first->second;
+        auto inserted = _actions.insert({action->get_id(), action}).first->second;
         auto* self = operator GActionMap*();
-        g_action_map_add_action(self, inserted.operator GAction *());
+        g_action_map_add_action(self, inserted->operator GAction *());
 
         auto* app = operator GtkApplication*();
 
         auto accels = std::vector<const char*>();
-        for (auto& s : inserted.get_shortcuts())
+        for (auto& s : inserted->get_shortcuts())
         {
             if (s != "never")
                 accels.push_back(s.c_str());
@@ -63,7 +63,7 @@ namespace mousetrap
         accels.push_back(NULL);
 
         if (not accels.empty())
-            gtk_application_set_accels_for_action(app, ("app." + inserted.get_id()).c_str(), accels.data());
+            gtk_application_set_accels_for_action(app, ("app." + inserted->get_id()).c_str(), accels.data());
     }
 
     void Application::remove_action(const ActionID& id)
@@ -78,16 +78,13 @@ namespace mousetrap
         return _actions.find(id) != _actions.end();
     }
 
-    const Action& Application::get_action(const ActionID& id)
+    Action* Application::get_action(const ActionID& id)
     {
         return _actions.at(id);
     }
 
-    /*
     void Application::set_menubar(MenuModel* model)
     {
         gtk_application_set_menubar(_native, model->operator GMenuModel*());
     }
-
-    */
 }

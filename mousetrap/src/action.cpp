@@ -3,17 +3,21 @@
 //
 
 #include <include/action.hpp>
+#include <include/application.hpp>
 
 #include <iostream>
 
 namespace mousetrap
 {
     Action::Action(const std::string& id)
-    : _id(id)
+        : _id(id)
     {}
 
     Action::~Action()
-    {}
+    {
+        if (_g_action == nullptr)
+            g_object_unref(_g_action);
+    }
 
     void Action::on_action_activate(GSimpleAction*, GVariant* variant, Action* instance)
     {

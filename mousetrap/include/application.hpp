@@ -11,8 +11,7 @@
 #include <include/window.hpp>
 #include <include/action.hpp>
 
-//#include <include/menu_model.hpp>
-//#include <include/action_map.hpp>
+#include <include/menu_model.hpp>
 
 #include <string>
 
@@ -33,15 +32,16 @@ namespace mousetrap
             operator GtkApplication*();
             operator GActionMap*();
 
-            void add_action(const Action&);
+            void add_action(Action*);
             void remove_action(const ActionID&);
-            const Action& get_action(const ActionID&);
+            Action* get_action(const ActionID&);
             bool has_action(const ActionID&);
 
-            //void set_menubar(MenuModel*);
+            /// @brief should be done during signal startup
+            void set_menubar(MenuModel*);
 
         private:
             GtkApplication* _native;
-            std::unordered_map<ActionID, Action> _actions;
+            std::unordered_map<ActionID, Action*> _actions;
     };
 }
