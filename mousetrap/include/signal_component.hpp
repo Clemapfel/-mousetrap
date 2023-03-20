@@ -336,4 +336,10 @@ namespace mousetrap
         SPLAT(double angle_absolute_radians, double angle_delta_radians),
         SPLAT(angle_absolute_radians, angle_delta_radians)
     );
+
+    /// @see https://docs.gtk.org/gtk4/signal.Adjustment.changed.html
+    DECLARE_SIGNAL(properties_changed, "changed", void);
+
+    /// @see https://docs.gtk.org/gtk4/signal.Adjustment.value-changed.html
+    DECLARE_SIGNAL(value_changed, "value-changed", void);
 }
