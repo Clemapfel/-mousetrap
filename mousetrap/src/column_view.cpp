@@ -118,29 +118,46 @@ namespace mousetrap
     void ColumnView::Column::push_back(Widget* widget)
     {
         _widgets.push_back(widget);
+        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), _widgets.size() - 1, 0, 0);
 
         if (_widgets.size() > _owner->_n_rows)
         {
             auto* item = detail::column_view_item_new(_widgets.size() - 1);
             g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
-            for (guint i = 0; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
-                g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), i, 0, 0);
             _owner->_n_rows++;
         }
     }
 
     void ColumnView::Column::push_front(Widget* widget)
     {
-        _widgets.push_front(widget);
+        insert(0, widget);
+    }
+
+    void ColumnView::Column::insert(size_t index, Widget* widget)
+    {
+        while(index >= _widgets.size())
+            push_back(nullptr);
+
+        _widgets.insert(_widgets.begin() + index, widget);
+        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), index, 0, 0);
 
         if (_widgets.size() > _owner->_n_rows)
         {
             auto* item = detail::column_view_item_new(_widgets.size() - 1);
             g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
-            for (guint i = 0; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
+            for (guint i = index; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
                 g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), i, 0, 0);
             _owner->_n_rows++;
         }
+    }
+
+    void ColumnView::Column::replace(size_t index, Widget* widget)
+    {
+        while(index >= _widgets.size())
+            push_back(nullptr);
+
+        _widgets.at(index) = widget;
+        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), index, 0, 0);
     }
 
     ColumnView::Column* ColumnView::push_back_column(const std::string& title)
@@ -160,7 +177,7 @@ namespace mousetrap
     ColumnView::Column* ColumnView::insert_column(size_t index, const std::string& title)
     {
         if (index > _columns.size())
-            index = _columns.size();
+            index = _columns.size() == 0 ? 0 : _columns.size() -1;
 
         auto* new_column = _columns.insert(_columns.begin() + index, new Column(this, title)).operator*();
         gtk_column_view_insert_column(get_native(), index, new_column->operator GtkColumnViewColumn*());
@@ -187,6 +204,39 @@ namespace mousetrap
             gtk_column_view_remove_column(get_native(), column->operator GtkColumnViewColumn*());
 
         _columns.clear();
+    }
+
+    void ColumnView::push_back_row(const std::vector<Widget*>& widgets)
+    {
+        for (size_t i = 0; i < get_n_columns(); ++i)
+        {
+            if (i >= widgets.size())
+                get_column_at(i)->insert(_n_rows - 1, nullptr);
+            else
+                get_column_at(i)->insert(_n_rows - 1, widgets.at(i));
+        }
+    }
+
+    void ColumnView::push_front_row(const std::vector<Widget*>& widgets)
+    {
+        for (size_t i = 0; i < get_n_columns(); ++i)
+        {
+            if (i >= widgets.size())
+                get_column_at(i)->insert(0, nullptr);
+            else
+                get_column_at(i)->insert(0, widgets.at(i));
+        }
+    }
+
+    void ColumnView::insert_row(size_t index, const std::vector<Widget*>& widgets)
+    {
+        for (size_t i = 0; i < get_n_columns(); ++i)
+        {
+            if (i >= widgets.size())
+                get_column_at(i)->insert(index, nullptr);
+            else
+                get_column_at(i)->insert(index, widgets.at(i));
+        }
     }
 
     void ColumnView::set_enable_rubberband_selection(bool b)
@@ -232,5 +282,21 @@ namespace mousetrap
     size_t ColumnView::get_n_columns() const
     {
         return _columns.size();
+    }
+
+    ColumnView::Column* ColumnView::get_column_at(size_t column_i)
+    {
+        auto* gtk_column = g_list_model_get_item(gtk_column_view_get_columns(get_native()), column_i);
+        if (gtk_column == nullptr)
+            return nullptr;
+        else
+        {
+            for (auto* column : _columns)
+                if (column->_column == gtk_column)
+                    return column;
+        }
+
+        assert(false && "In ColumnView::get_column_at: unreachable reached");
+        return nullptr;
     }
 }

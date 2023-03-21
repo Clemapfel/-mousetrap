@@ -103,7 +103,7 @@ namespace mousetrap
         g_object_ref(_tree_list_model);
     }
 
-    ListView::~ListView() noexcept
+    ListView::~ListView()
     {
         g_object_unref(_factory);
         g_object_unref(_root);
@@ -185,6 +185,11 @@ namespace mousetrap
             to_append_to = G_LIST_MODEL(it->children);
 
         auto* item = detail::tree_list_view_item_new(widget);
+
+        auto n =  g_list_model_get_n_items(G_LIST_MODEL(to_append_to));
+        if (i > n)
+            i = n == 0 ? 0 : n - 1;
+
         g_list_store_insert(G_LIST_STORE(to_append_to), i, item);
         g_object_unref(item);
 
@@ -259,13 +264,6 @@ namespace mousetrap
     bool ListView::get_show_separators() const
     {
         return gtk_list_view_get_show_separators(_list_view);
-    }
-
-    ListView::Iterator ListView::move_item_to(size_t old_position, size_t new_position, Iterator old_it, Iterator new_it)
-    {
-        auto* widget = get_widget_at(old_position, old_it);
-        remove(old_position, old_it);
-        return insert(new_position, widget, new_it);
     }
 
     void ListView::set_single_click_activate(bool b)

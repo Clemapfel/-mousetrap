@@ -63,22 +63,29 @@ static void startup(GApplication*)
         for (size_t i = 0; i < column_i; ++i)
             column->push_back(new Label(std::to_string(int((rand() / float(RAND_MAX)) * 100u))));
 
-        special_column = column;
+        if (column_i == 0)
+            special_column = column;
     }
 
     auto* box = new Box(Orientation::VERTICAL);
     auto* button_top = new Button();
     button_top->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->push_front(new Label("new"));
+        special_column->push_front(new Label("front"));
+    }, special_column);
+
+    auto* button_center = new Button();
+    button_center->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
+        special_column->replace(3, new Label("replace"));
     }, special_column);
 
     auto* button_bottom = new Button();
     button_bottom->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->push_back(new Label("new"));
+        special_column->push_back(new Label("back"));
     }, special_column);
 
     box->push_back(tree);
     box->push_back(button_top);
+    box->push_back(button_center);
     box->push_back(button_bottom);
     window->set_child(box);
 

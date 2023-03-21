@@ -28,9 +28,6 @@ namespace mousetrap
             Iterator push_back(Widget* widget, Iterator = nullptr);
             Iterator push_front(Widget* widget, Iterator = nullptr);
             Iterator insert(size_t, Widget*, Iterator = nullptr);
-
-            Iterator move_item_to(size_t old_position, size_t new_position, Iterator old_it, Iterator new_it);
-
             void remove(size_t, Iterator = nullptr);
             void clear(Iterator = nullptr);
 

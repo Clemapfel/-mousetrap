@@ -24,7 +24,11 @@ namespace mousetrap
                 operator GtkColumnViewColumn*();
                 void push_back(Widget*);
                 void push_front(Widget*);
+
+                /// @note if number of items in column is lower than index, fills them with nullptr
                 void insert(size_t, Widget*);
+
+                void replace(size_t, Widget*);
                 void remove(size_t);
 
                 Widget* get_widget_at(size_t row_i);
@@ -51,6 +55,10 @@ namespace mousetrap
 
             void remove_column(Column*);
             void clear();
+
+            void push_back_row(const std::vector<Widget*>&);
+            void push_front_row(const std::vector<Widget*>&);
+            void insert_row(size_t, const std::vector<Widget*>&);
 
             Column* get_column_at(size_t column_i);
 
