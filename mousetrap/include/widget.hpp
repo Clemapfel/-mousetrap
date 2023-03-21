@@ -11,6 +11,7 @@
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>
 #include <include/cursor_type.hpp>
+#include <include/alignment.hpp>
 
 /*
 #include <include/event_controller.hpp>
@@ -64,13 +65,13 @@ namespace mousetrap
             void set_margin_horizontal(float);
             void set_margin_vertical(float);
 
-            void set_hexpand(bool should_expand);
-            void set_vexpand(bool should_expand);
+            void set_expand_horizontally(bool should_expand);
+            void set_expand_vertically(bool should_expand);
             void set_expand(bool both);
 
-            void set_halign(GtkAlign);
-            void set_valign(GtkAlign);
-            void set_align(GtkAlign both);
+            void set_horizontal_alignment(Alignment);
+            void set_vertical_alignment(Alignment);
+            void set_alignment(Alignment both);
 
             void set_opacity(float);
             float get_opacity();

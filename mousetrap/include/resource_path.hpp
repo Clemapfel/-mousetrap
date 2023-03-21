@@ -10,6 +10,6 @@ namespace mousetrap
 {
     inline std::string get_resource_path()
     {
-        return "@RESOURCE_PATHQ";
+        return "/home/clem/Workspace/rat_game/resources/";
     }
 }

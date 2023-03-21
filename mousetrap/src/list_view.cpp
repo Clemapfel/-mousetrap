@@ -44,6 +44,9 @@ namespace mousetrap::detail
         item->widget = nullptr;
         item->widget_ref = nullptr;
         item->children = g_object_ref(g_list_store_new(G_TYPE_OBJECT));
+
+        gtk_tree_expander_set_indent_for_icon(item->expander, true);
+        // TODO: once GTK4 4.10 releases: gtk_tree_expander_set_indent_for_depth(item->expander, TRUE);
     }
 
     static void tree_list_view_item_class_init(ListViewItemClass* klass)
@@ -113,7 +116,7 @@ namespace mousetrap
     {
         auto* tree_list_view_item = (detail::ListViewItem*) item;
 
-        auto* out = g_list_store_new(G_TYPE_OBJECT);
+        auto* out = g_object_ref(g_list_store_new(G_TYPE_OBJECT));
 
         for (size_t i = 0; i < g_list_model_get_n_items(G_LIST_MODEL(tree_list_view_item->children)); ++i)
             g_list_store_append(out, g_list_model_get_item(G_LIST_MODEL(tree_list_view_item->children), i));
@@ -122,7 +125,9 @@ namespace mousetrap
     }
 
     void ListView::on_tree_list_model_destroy(void* item)
-    {}
+    {
+        g_object_unref(item);
+    }
 
     void ListView::on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, void* instance)
     {

@@ -125,12 +125,12 @@ namespace mousetrap
         gtk_widget_set_margin_end(operator GtkWidget*(), value);
     }
 
-    void Widget::set_hexpand(bool should_expand)
+    void Widget::set_expand_horizontally(bool should_expand)
     {
         gtk_widget_set_hexpand(operator GtkWidget*(), should_expand == TRUE);
     }
 
-    void Widget::set_vexpand(bool should_expand)
+    void Widget::set_expand_vertically(bool should_expand)
     {
         gtk_widget_set_vexpand(operator GtkWidget*(), should_expand == TRUE);
     }
@@ -141,20 +141,20 @@ namespace mousetrap
         gtk_widget_set_vexpand(operator GtkWidget*(), both == TRUE);
     }
 
-    void Widget::set_halign(GtkAlign alignment)
+    void Widget::set_horizontal_alignment(Alignment alignment)
     {
-        gtk_widget_set_halign(operator GtkWidget*(), alignment);
+        gtk_widget_set_halign(operator GtkWidget*(), (GtkAlign) alignment);
     }
 
-    void Widget::set_valign(GtkAlign alignment)
+    void Widget::set_vertical_alignment(Alignment alignment)
     {
-        gtk_widget_set_valign(operator GtkWidget*(), alignment);
+        gtk_widget_set_valign(operator GtkWidget*(), (GtkAlign) alignment);
     }
 
-    void Widget::set_align(GtkAlign both)
+    void Widget::set_alignment(Alignment both)
     {
-        gtk_widget_set_halign(operator GtkWidget*(), both);
-        gtk_widget_set_valign(operator GtkWidget*(), both);
+        gtk_widget_set_halign(operator GtkWidget*(), (GtkAlign) both);
+        gtk_widget_set_valign(operator GtkWidget*(), (GtkAlign) both);
     }
 
     void Widget::set_size_request(Vector2f size)

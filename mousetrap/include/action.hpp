@@ -42,7 +42,6 @@ namespace mousetrap
             template<typename Function_t, typename Data_t>
             void set_stateful_function(Function_t f, Data_t data, bool initial_state = false);
 
-
             void set_state(bool);
             void activate() const;
 

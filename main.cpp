@@ -14,6 +14,7 @@
 #include <mousetrap/include/frame.hpp>
 #include <mousetrap/include/button.hpp>
 #include <mousetrap/include/list_view.hpp>
+#include <mousetrap/include/column_view.hpp>
 #include <mousetrap/include/popover_menu_button.hpp>
 #include <mousetrap/include/stack.hpp>
 #include <mousetrap/include/notebook.hpp>
@@ -52,19 +53,15 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto* notebook = new Notebook();
-    notebook->set_tabs_reorderable(true);
-    notebook->set_quick_change_menu_enabled(true);
-    
-    for (size_t i = 0; i < 10; ++i)
+    auto* tree = new ColumnView();
+
+    for (size_t column_i = 0; column_i < 5; ++column_i)
     {
-        auto* label = new Label("<span size=\"1000%\">content_" + std::to_string(i) + "</span>");
-        auto* label_label = new Label(std::to_string(i));
-        label->set_size_request({20, 300});
-        notebook->push_back(label, label_label);
+        auto* column = tree->append_column(std::to_string(column_i));
+        column->push_back(new Label(std::to_string(column_i)));
     }
 
-    window->set_child(notebook);
+    window->set_child(tree);
 
     window->show();
     window->present();

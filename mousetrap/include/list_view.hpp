@@ -68,4 +68,6 @@ namespace mousetrap
             GtkSelectionMode _selection_mode;
             GtkOrientation _orientation;
     };
+
+    using TreeListView = ListView;
 }
