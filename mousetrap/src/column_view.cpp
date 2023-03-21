@@ -15,7 +15,7 @@ namespace mousetrap::detail
     struct _ColumnViewItem
     {
         GObject parent_instance;
-
+s
         std::vector<Widget*>* widgets;
         std::vector<GtkWidget*>* widget_refs;
     };
@@ -83,7 +83,6 @@ namespace mousetrap
             _selection_model = GTK_SELECTION_MODEL(gtk_no_selection_new(G_LIST_MODEL(_list_store)));
 
         gtk_column_view_set_model(get_native(), _selection_model);
-        std::cout << "is: " << _list_store << " " << G_IS_LIST_STORE(_list_store) << std::endl;
     }
 
     void ColumnView::on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, void*)
@@ -91,7 +90,10 @@ namespace mousetrap
         auto* list_item = GTK_LIST_ITEM(object);
         auto* object_in = detail::G_COLUMN_VIEW_ITEM(gtk_list_item_get_item(list_item));
 
-        gtk_list_item_set_child(list_item, object_in->widgets->at(0)->operator GtkWidget*());
+        if (rand() / float(RAND_MAX) > 0.8)
+            gtk_list_item_set_child(list_item, object_in->widgets->at(0)->operator GtkWidget*());
+        else
+            gtk_list_item_set_child(list_item, nullptr);
     }
 
     void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*)
