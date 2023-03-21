@@ -59,10 +59,9 @@ static void startup(GApplication*)
     for (size_t column_i = 0; column_i < 5; ++column_i)
     {
         auto* column = tree->push_back_column(std::to_string(column_i));
-        column->push_back(new Label(std::to_string(column_i)));
 
         for (size_t i = 0; i < column_i; ++i)
-            column->push_back(new Label(std::to_string(column_i)));
+            column->push_back(new Label(std::to_string(int((rand() / float(RAND_MAX)) * 100u))));
 
         special_column = column;
     }

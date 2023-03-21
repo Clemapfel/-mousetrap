@@ -126,7 +126,7 @@ namespace mousetrap
         if (_widgets.size() > _owner->_n_rows)
         {
             auto* item = detail::column_view_item_new(_widgets.size() - 1);
-            g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
+            g_list_store_insert(G_LIST_STORE(_owner->_list_store), 0, item);
             _owner->_n_rows++;
         }
     }
