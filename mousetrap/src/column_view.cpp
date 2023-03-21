@@ -77,11 +77,19 @@ namespace mousetrap
 
         ColumnView::Column* instance = (ColumnView::Column*) data;
         auto* widget = instance->_widgets.size() > item->row ? instance->_widgets.at(item->row) : nullptr;
-        gtk_list_item_set_child(list_item, widget != nullptr ? widget->operator GtkWidget*() : nullptr);
+        auto* gtk_widget = widget != nullptr ? widget->operator GtkWidget*() : nullptr;
+        if (gtk_widget != nullptr)
+            gtk_widget_unparent(gtk_widget);
+
+        gtk_list_item_set_child(list_item, gtk_widget);
     }
 
-    void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*)
-    {}
+    void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void* data)
+    {
+        auto* list_item = GTK_LIST_ITEM(object);
+        auto* item = detail::G_COLUMN_VIEW_ITEM(gtk_list_item_get_item(list_item));
+        gtk_list_item_set_child(list_item, nullptr);
+    }
 
     void ColumnView::on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*)
     {}
@@ -115,6 +123,8 @@ namespace mousetrap
         {
             auto* item = detail::column_view_item_new(_widgets.size() - 1);
             g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
+            for (guint i = 0; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
+                g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), i, 0, 0);
             _owner->_n_rows++;
         }
     }
@@ -126,7 +136,9 @@ namespace mousetrap
         if (_widgets.size() > _owner->_n_rows)
         {
             auto* item = detail::column_view_item_new(_widgets.size() - 1);
-            g_list_store_insert(G_LIST_STORE(_owner->_list_store), 0, item);
+            g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
+            for (guint i = 0; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
+                g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), i, 0, 0);
             _owner->_n_rows++;
         }
     }

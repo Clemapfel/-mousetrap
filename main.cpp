@@ -67,13 +67,19 @@ static void startup(GApplication*)
     }
 
     auto* box = new Box(Orientation::VERTICAL);
-    auto* button = new Button();
-    button->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
+    auto* button_top = new Button();
+    button_top->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
         special_column->push_front(new Label("new"));
     }, special_column);
 
+    auto* button_bottom = new Button();
+    button_bottom->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
+        special_column->push_back(new Label("new"));
+    }, special_column);
+
     box->push_back(tree);
-    box->push_back(button);
+    box->push_back(button_top);
+    box->push_back(button_bottom);
     window->set_child(box);
 
     window->show();
