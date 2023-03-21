@@ -15,24 +15,26 @@ namespace mousetrap
 
     class ColumnView : public WidgetImplementation<GtkColumnView>
     {
-        class Column
-        {
-            friend class ColumnView;
+        public:
+            class Column
+            {
+                friend class ColumnView;
 
-            public:
-                operator GtkColumnViewColumn*();
-                void push_back(Widget*);
+                public:
+                    operator GtkColumnViewColumn*();
+                    void push_back(Widget*);
 
-            protected:
-                Column(ColumnView*, const std::string&);
+                protected:
+                    Column(ColumnView*, const std::string&);
 
-            private:
-                ColumnView* _owner = nullptr;
+                private:
+                    ColumnView* _owner = nullptr;
 
-                std::string _title;
-                GtkSignalListItemFactory* _factory = nullptr;
-                GtkColumnViewColumn* _column = nullptr;
-        };
+                    std::string _title;
+                    GtkSignalListItemFactory* _factory = nullptr;
+                    GtkColumnViewColumn* _column = nullptr;
+                    std::vector<Widget*> _widgets;
+            };
 
         public:
             ColumnView(SelectionMode mode = SelectionMode::NONE);
@@ -50,5 +52,6 @@ namespace mousetrap
             static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*);
 
             std::vector<Column*> _columns;
+            size_t _n_rows = 0;
     };
 }
