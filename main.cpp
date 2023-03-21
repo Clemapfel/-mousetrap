@@ -58,7 +58,7 @@ static void startup(GApplication*)
     ColumnView::Column* special_column;
     for (size_t column_i = 0; column_i < 5; ++column_i)
     {
-        auto* column = tree->append_column(std::to_string(column_i));
+        auto* column = tree->push_back_column(std::to_string(column_i));
         column->push_back(new Label(std::to_string(column_i)));
 
         for (size_t i = 0; i < column_i; ++i)
@@ -70,7 +70,7 @@ static void startup(GApplication*)
     auto* box = new Box(Orientation::VERTICAL);
     auto* button = new Button();
     button->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->push_back(new Label("new"));
+        special_column->push_front(new Label("new"));
     }, special_column);
 
     box->push_back(tree);
