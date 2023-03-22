@@ -117,7 +117,7 @@ namespace mousetrap
         gtk_adjustment_set_upper(_native, value);
     }
 
-    void Adjustment::set_step_increment(float value)
+    void Adjustment::set_increment(float value)
     {
         gtk_adjustment_set_step_increment(_native, value);
     }

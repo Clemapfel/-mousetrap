@@ -19,7 +19,6 @@ namespace mousetrap
             Adjustment& get_adjustment();
             const Adjustment& get_adjustment() const;
 
-
         private:
             Adjustment* _adjustment = nullptr;
     };

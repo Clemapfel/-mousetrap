@@ -18,6 +18,7 @@
 #include <mousetrap/include/popover_menu_button.hpp>
 #include <mousetrap/include/stack.hpp>
 #include <mousetrap/include/notebook.hpp>
+#include <mousetrap/include/spin_button.hpp>
 
 #include <deque>
 #include <iostream>
@@ -53,6 +54,8 @@ static void startup(GApplication*)
         return false;
     });
 
+
+    /*
     auto* tree = new ColumnView();
 
     ColumnView::Column* special_column;
@@ -88,6 +91,17 @@ static void startup(GApplication*)
     box->push_back(button_center);
     box->push_back(button_bottom);
     window->set_child(box);
+     */
+
+    auto* spin = new SpinButton(-1, 1, 0.01);
+
+    spin->set_value_to_text_function([](const SpinButton* instance, float value) -> std::string{
+        return std::to_string(value) + "%";
+    });
+
+    spin->set_allow_only_numeric(false);
+
+    window->set_child(spin);
 
     window->show();
     window->present();

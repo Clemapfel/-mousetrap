@@ -162,7 +162,7 @@ namespace mousetrap
 
     size_t GridView::get_min_n_columns() const
     {
-        gtk_grid_view_get_min_columns(_native);
+        return gtk_grid_view_get_min_columns(_native);
     }
 
     SelectionModel* GridView::get_selection_model()

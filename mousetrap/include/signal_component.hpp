@@ -74,13 +74,18 @@ namespace mousetrap
                     return _blocked;                                                                  \
                 }                                                                                     \
                                                                                                       \
-                return_type emit_signal_activate()                                                    \
+                return_type emit_signal_##signal_name()                                                    \
                 {                                                                                     \
                     if (not _blocked)                                                                 \
                         return _function(_instance);                                                  \
                     else                                                                              \
                         return return_type();                                                         \
                 }                                                                                     \
+                                                                                                      \
+                void disconnect_signal_##signal_name()                                                \
+                {                                                                                     \
+                    _instance->disconnect_signal(signal_id);                                      \
+                }\
         }
 
     /// @brief declare a signal with the signature (T* instance, arg_list..., auto data) -> return_t
@@ -378,4 +383,7 @@ namespace mousetrap
         SPLAT(GtkWidget* widget, uint32_t page_index),
         SPLAT(widget, page_index)
     );
+
+    /// @see https://docs.gtk.org/gtk4/signal.SpinButton.wrapped.html
+    DECLARE_SIGNAL(wrapped, "wrapped", void);
 }

@@ -37,7 +37,16 @@ namespace mousetrap
         }
     }
 
-    std::vector<std::string>SignalEmitter::get_all_signal_names()
+    void SignalEmitter::disconnect_signal(const std::string& signal_id)
+    {
+        auto it = _signal_handlers.find(signal_id);
+        if (it == _signal_handlers.end())
+            return;
+
+        g_signal_handler_disconnect(operator GObject*(), it->second.id);
+    }
+
+    std::vector<std::string> SignalEmitter::get_all_signal_names()
     {
         std::vector<std::string> out;
         guint n;

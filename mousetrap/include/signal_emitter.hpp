@@ -21,6 +21,7 @@ namespace mousetrap
 
             template<typename Function_t>
             void connect_signal(const std::string& signal_id, Function_t*, void* data = nullptr);
+            void disconnect_signal(const std::string& signal_id);
 
             virtual operator GObject*() = 0;
 

@@ -25,7 +25,7 @@ namespace mousetrap
     {
     }
 
-    Stack::~Stack() noexcept
+    Stack::~Stack()
     {
         delete _selection_model;
     }
