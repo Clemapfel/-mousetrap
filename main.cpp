@@ -99,6 +99,7 @@ static void startup(GApplication*)
         return std::to_string(value) + "%";
     });
 
+    spin->reset_value_to_text_function();
     spin->set_allow_only_numeric(false);
 
     window->set_child(spin);

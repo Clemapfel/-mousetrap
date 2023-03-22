@@ -19,19 +19,19 @@ namespace mousetrap
     /// @brief declare a signal with the signature (T* instance, auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
     /// @param g_signal_id Gio ID of the signal, string
-    /// @param return_type return type of the signal wrapper function
-    #define DECLARE_SIGNAL(signal_name, g_signal_id, return_type)                                     \
+    /// @param return_t return type of the signal wrapper function
+    #define DECLARE_SIGNAL(signal_name, g_signal_id, return_t)                                     \
         template<typename T>                                                                          \
         class has_##signal_name##_signal                                                              \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
-                std::function<return_type(T*)> _function;                                             \
+                std::function<return_t(T*)> _function;                                             \
                 bool _blocked = false;                                                                \
                                                                                                       \
-                static return_type wrapper(void*, has_##signal_name##_signal<T>* instance)            \
+                static return_t wrapper(void*, has_##signal_name##_signal<T>* instance)            \
                 {                                                                                     \
-                    return instance->emit_signal_activate();                                          \
+                    return instance->emit_signal_##signal_name();                                          \
                 }                                                                                     \
                                                                                                       \
             protected:                                                                                \
@@ -45,7 +45,7 @@ namespace mousetrap
                 template<typename Function_t, typename Data_t>                                        \
                 void connect_signal_##signal_name(Function_t function, Data_t data)                   \
                 {                                                                                     \
-                    _function = [f = function, d = data](T* instance) -> return_type                  \
+                    _function = [f = function, d = data](T* instance) -> return_t                  \
                     {                                                                                 \
                         return f(instance, d);                                                                  \
                     };                                                                                \
@@ -56,7 +56,7 @@ namespace mousetrap
                 template<typename Function_t>                                                         \
                 void connect_signal_##signal_name(Function_t function)                                \
                 {                                                                                     \
-                    _function = [f = function](T* instance) -> return_type                            \
+                    _function = [f = function](T* instance) -> return_t                            \
                     {                                                                                 \
                         return f(instance);                                                           \
                     };                                                                                \
@@ -74,12 +74,12 @@ namespace mousetrap
                     return _blocked;                                                                  \
                 }                                                                                     \
                                                                                                       \
-                return_type emit_signal_##signal_name()                                                    \
+                return_t emit_signal_##signal_name()                                                    \
                 {                                                                                     \
                     if (not _blocked)                                                                 \
                         return _function(_instance);                                                  \
                     else                                                                              \
-                        return return_type();                                                         \
+                        return return_t();                                                         \
                 }                                                                                     \
                                                                                                       \
                 void disconnect_signal_##signal_name()                                                \
@@ -91,7 +91,7 @@ namespace mousetrap
     /// @brief declare a signal with the signature (T* instance, arg_list..., auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
     /// @param g_signal_id Gio ID of the signal, string
-    /// @param return_type return type of the signal wrapper function
+    /// @param return_t return type of the signal wrapper function
     /// @param arg_list list of argument types an names, for example `float x, float y`
     /// @param arg_name_list list of arguments **without** the type, for example `x, y`
     #define DECLARE_SIGNAL_MANUAL(signal_name, g_signal_id, return_t, arg_list, arg_name_list)        \
@@ -105,7 +105,7 @@ namespace mousetrap
                                                                                                       \
                 static return_t wrapper(void*, arg_list, has_##signal_name##_signal<T>* self)         \
                 {                                                                                     \
-                    self->emit_signal_activate(arg_name_list);                                        \
+                    return self->emit_signal_##signal_name(arg_name_list);                                        \
                 }                                                                                     \
                                                                                                       \
             protected:                                                                                \
@@ -146,13 +146,18 @@ namespace mousetrap
                     return _blocked;                                                                  \
                 }                                                                                     \
                                                                                                       \
-                return_t emit_signal_activate(arg_list)                                               \
+                return_t emit_signal_##signal_name(arg_list)                                                    \
                 {                                                                                     \
-                    if (not _blocked and _function != nullptr)                                        \
-                        return _function(_instance, arg_name_list);                                   \
+                    if (not _blocked)                                                                 \
+                        return _function(_instance, arg_name_list);                                                  \
                     else                                                                              \
-                        return return_t();                                                            \
+                        return return_t();                                                         \
                 }                                                                                     \
+                                                                                                      \
+                void disconnect_signal_##signal_name()                                                \
+                {                                                                                     \
+                    _instance->disconnect_signal(signal_id);                                      \
+                }                                                                                  \
         }
     
     /// @see https://docs.gtk.org/gio/signal.Application.activate.html
