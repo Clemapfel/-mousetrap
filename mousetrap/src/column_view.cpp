@@ -76,7 +76,7 @@ namespace mousetrap
         auto* item = detail::G_COLUMN_VIEW_ITEM(gtk_list_item_get_item(list_item));
 
         ColumnView::Column* instance = (ColumnView::Column*) data;
-        auto* widget = instance->_widgets.size() > item->row ? instance->_widgets.at(item->row) : nullptr;
+        auto* widget = instance->get_widget_at(item->row);
         auto* gtk_widget = widget != nullptr ? widget->operator GtkWidget*() : nullptr;
         if (gtk_widget != nullptr)
             gtk_widget_unparent(gtk_widget);
@@ -115,49 +115,57 @@ namespace mousetrap
         return _column;
     }
 
-    void ColumnView::Column::push_back(Widget* widget)
+    void ColumnView::Column::set_widget_at(size_t row_i, Widget* widget)
     {
-        _widgets.push_back(widget);
-        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), _widgets.size() - 1, 0, 0);
+        while (_widgets.size() <= row_i)
+            _widgets.emplace_back(nullptr);
 
-        if (_widgets.size() > _owner->_n_rows)
+        _widgets.at(row_i) = widget;
+
+        if (row_i >= _owner->_n_rows)
+            _owner->resize_list();
+
+        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), row_i, 0, 0);
+    }
+
+    Widget* ColumnView::Column::get_widget_at(size_t row_i) const
+    {
+        if (row_i >= _widgets.size())
+            return nullptr;
+        else
+            return _widgets.at(row_i);
+    }
+
+    void ColumnView::Column::remove(size_t row_i)
+    {
+        if (row_i >= _widgets.size())
+            return;
+
+        _widgets.at(row_i) = nullptr;
+
+        if (row_i == _owner->_n_rows)
+            _owner->resize_list();
+    }
+
+    void ColumnView::resize_list()
+    {
+        size_t max_length = 0;
+        for (auto* column : _columns)
+            if (column->_widgets.size() > max_length)
+                max_length = column->_widgets.size();
+
+        _n_rows = max_length;
+
+        while (g_list_model_get_n_items(G_LIST_MODEL(_list_store)) < max_length)
         {
-            auto* item = detail::column_view_item_new(_widgets.size() - 1);
-            g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
-            _owner->_n_rows++;
+            auto* item = detail::column_view_item_new(g_list_model_get_n_items(G_LIST_MODEL(_list_store)) - 1);
+            g_list_store_append(G_LIST_STORE(_list_store), item);
         }
-    }
 
-    void ColumnView::Column::push_front(Widget* widget)
-    {
-        insert(0, widget);
-    }
-
-    void ColumnView::Column::insert(size_t index, Widget* widget)
-    {
-        while(index >= _widgets.size())
-            push_back(nullptr);
-
-        _widgets.insert(_widgets.begin() + index, widget);
-        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), index, 0, 0);
-
-        if (_widgets.size() > _owner->_n_rows)
+        while (g_list_model_get_n_items(G_LIST_MODEL(_list_store)) >= max_length)
         {
-            auto* item = detail::column_view_item_new(_widgets.size() - 1);
-            g_list_store_append(G_LIST_STORE(_owner->_list_store), item);
-            for (guint i = index; i < g_list_model_get_n_items(G_LIST_MODEL(_owner->_list_store)); ++i)
-                g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), i, 0, 0);
-            _owner->_n_rows++;
+            g_list_store_remove(_list_store, g_list_model_get_n_items(G_LIST_MODEL(_list_store))-1);
         }
-    }
-
-    void ColumnView::Column::replace(size_t index, Widget* widget)
-    {
-        while(index >= _widgets.size())
-            push_back(nullptr);
-
-        _widgets.at(index) = widget;
-        g_list_model_items_changed(G_LIST_MODEL(_owner->_list_store), index, 0, 0);
     }
 
     ColumnView::Column* ColumnView::push_back_column(const std::string& title)
@@ -211,9 +219,9 @@ namespace mousetrap
         for (size_t i = 0; i < get_n_columns(); ++i)
         {
             if (i >= widgets.size())
-                get_column_at(i)->insert(_n_rows - 1, nullptr);
+                get_column_at(i)->set_widget_at(_n_rows - 1, nullptr);
             else
-                get_column_at(i)->insert(_n_rows - 1, widgets.at(i));
+                get_column_at(i)->set_widget_at(_n_rows - 1, widgets.at(i));
         }
     }
 
@@ -222,9 +230,9 @@ namespace mousetrap
         for (size_t i = 0; i < get_n_columns(); ++i)
         {
             if (i >= widgets.size())
-                get_column_at(i)->insert(0, nullptr);
+                get_column_at(i)->set_widget_at(0, nullptr);
             else
-                get_column_at(i)->insert(0, widgets.at(i));
+                get_column_at(i)->set_widget_at(0, widgets.at(i));
         }
     }
 
@@ -233,9 +241,9 @@ namespace mousetrap
         for (size_t i = 0; i < get_n_columns(); ++i)
         {
             if (i >= widgets.size())
-                get_column_at(i)->insert(index, nullptr);
+                get_column_at(i)->set_widget_at(index, nullptr);
             else
-                get_column_at(i)->insert(index, widgets.at(i));
+                get_column_at(i)->set_widget_at(index, widgets.at(i));
         }
     }
 

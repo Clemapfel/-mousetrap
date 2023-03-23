@@ -115,6 +115,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/action.hpp
     mousetrap/src/action.cpp
+    mousetrap/src/action.inl
 
     mousetrap/include/frame_clock.hpp
     mousetrap/src/frame_clock.cpp
@@ -164,7 +165,85 @@ add_library(mousetrap STATIC
     mousetrap/include/label.hpp
     mousetrap/src/label.cpp
 
-    mousetrap/include/text_view.hpp mousetrap/src/text_view.cpp mousetrap/include/list_view.hpp mousetrap/include/selection_model.hpp mousetrap/src/selection_model.cpp mousetrap/src/list_view.cpp mousetrap/include/render_area.hpp mousetrap/include/click_event_controller.hpp mousetrap/src/click_event_controller.cpp mousetrap/include/scroll_event_controller.hpp mousetrap/src/scroll_event_controller.cpp mousetrap/include/focus_event_controller.hpp mousetrap/src/focus_event_controller.cpp mousetrap/include/drag_event_controller.hpp mousetrap/src/drag_event_controller.cpp mousetrap/include/pinch_zoom_event_controller.hpp mousetrap/src/pinch_zoom_event_controller.cpp mousetrap/include/rotate_event_controller.hpp mousetrap/src/rotate_event_controller.cpp mousetrap/include/adjustment.hpp mousetrap/src/adjustment.cpp mousetrap/include/scrollbar.hpp mousetrap/src/scrollbar.cpp mousetrap/include/viewport.hpp mousetrap/src/viewport.cpp mousetrap/include/scrolled_window.hpp mousetrap/src/scrolled_window.cpp mousetrap/include/grid_view.hpp mousetrap/src/grid_view.cpp mousetrap/include/menu_model.hpp mousetrap/src/menu_model.cpp mousetrap/include/popover_menu_button.hpp mousetrap/src/popover_menu_button.cpp mousetrap/include/popover.hpp mousetrap/include/relative_position.hpp mousetrap/src/popover.cpp mousetrap/src/action.inl mousetrap/src/render_area.cpp mousetrap/include/center_box.hpp mousetrap/src/center_box.cpp mousetrap/include/clipboard.hpp mousetrap/src/clipboard.cpp mousetrap/src/clipboard.inl mousetrap/include/stack.hpp mousetrap/include/transition_type.hpp mousetrap/src/stack.cpp mousetrap/include/notebook.hpp mousetrap/src/notebook.cpp mousetrap/include/column_view.hpp mousetrap/src/column_view.cpp mousetrap/include/spin_button.hpp mousetrap/src/spin_button.cpp mousetrap/src/spin_button.inl)
+    mousetrap/include/text_view.hpp
+    mousetrap/src/text_view.cpp
+
+    mousetrap/include/list_view.hpp
+    mousetrap/src/list_view.cpp
+
+    mousetrap/include/selection_model.hpp
+    mousetrap/src/selection_model.cpp
+
+    mousetrap/include/render_area.hpp
+
+    mousetrap/include/click_event_controller.hpp
+    mousetrap/src/click_event_controller.cpp
+
+    mousetrap/include/scroll_event_controller.hpp
+    mousetrap/src/scroll_event_controller.cpp
+
+    mousetrap/include/focus_event_controller.hpp
+    mousetrap/src/focus_event_controller.cpp
+
+    mousetrap/include/drag_event_controller.hpp
+    mousetrap/src/drag_event_controller.cpp
+
+    mousetrap/include/pinch_zoom_event_controller.hpp
+    mousetrap/src/pinch_zoom_event_controller.cpp
+
+    mousetrap/include/rotate_event_controller.hpp
+    mousetrap/src/rotate_event_controller.cpp
+
+    mousetrap/include/adjustment.hpp
+    mousetrap/src/adjustment.cpp
+
+    mousetrap/include/scrollbar.hpp
+    mousetrap/src/scrollbar.cpp
+
+    mousetrap/include/viewport.hpp
+    mousetrap/src/viewport.cpp
+
+    mousetrap/include/scrolled_window.hpp
+    mousetrap/src/scrolled_window.cpp
+
+    mousetrap/include/grid_view.hpp
+    mousetrap/src/grid_view.cpp
+
+    mousetrap/include/menu_model.hpp
+    mousetrap/src/menu_model.cpp
+
+    mousetrap/include/popover_menu_button.hpp
+    mousetrap/src/popover_menu_button.cpp
+
+    mousetrap/include/popover.hpp
+    mousetrap/src/popover.cpp
+
+    mousetrap/include/relative_position.hpp
+
+    mousetrap/src/render_area.cpp
+
+    mousetrap/include/center_box.hpp
+    mousetrap/src/center_box.cpp
+
+    mousetrap/include/clipboard.hpp
+    mousetrap/src/clipboard.cpp
+    mousetrap/src/clipboard.inl
+
+    mousetrap/include/stack.hpp
+    mousetrap/src/stack.cpp
+
+    mousetrap/include/transition_type.hpp
+
+    mousetrap/include/notebook.hpp
+    mousetrap/src/notebook.cpp
+
+    mousetrap/include/column_view.hpp
+    mousetrap/src/column_view.cpp
+
+    mousetrap/include/spin_button.hpp
+    mousetrap/src/spin_button.cpp
+
+        mousetrap/include/drop_down.hpp mousetrap/src/drop_down.cpp mousetrap/src/drop_down.inl)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

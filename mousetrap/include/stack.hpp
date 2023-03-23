@@ -12,22 +12,22 @@
 
 namespace mousetrap
 {
-    using StackID = std::string;
-
     class Stack : public WidgetImplementation<GtkStack>
     {
+        using ID = std::string;
+            
         public:
             Stack();
             ~Stack();
 
             SelectionModel* get_selection_model();
 
-            [[nodiscard]] StackID add_child(Widget*, const std::string& child_title);
-            Widget* get_child(StackID);
-            void remove_child(StackID);
+            [[nodiscard]] Stack::ID add_child(Widget*, const std::string& child_title);
+            Widget* get_child(Stack::ID);
+            void remove_child(Stack::ID);
 
-            StackID get_visible_child();
-            void set_visible_child(StackID);
+            Stack::ID get_visible_child();
+            void set_visible_child(Stack::ID);
 
             void set_transition_duration(Time);
             Time get_transition_duration() const;
@@ -46,7 +46,7 @@ namespace mousetrap
 
         private:
             SelectionModel* _selection_model = nullptr;
-            std::map<StackID, Widget*> _children;
+            std::map<Stack::ID, Widget*> _children;
     };
 
     class StackSidebar : public WidgetImplementation<GtkStackSidebar>

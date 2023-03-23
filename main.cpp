@@ -19,6 +19,7 @@
 #include <mousetrap/include/stack.hpp>
 #include <mousetrap/include/notebook.hpp>
 #include <mousetrap/include/spin_button.hpp>
+#include <mousetrap/include/drop_down.hpp>
 
 #include <deque>
 #include <iostream>
@@ -29,11 +30,6 @@ inline Window* window = nullptr;
 inline Application* app = nullptr;
 
 inline Action* action;
-
-static void on_select(GtkSelectionModel* model, int32_t i, int32_t n)
-{
-    std::cout << "postition: " << i << " | " << "n: " << n << std::endl;
-}
 
 static void startup(GApplication*)
 {
@@ -54,55 +50,20 @@ static void startup(GApplication*)
         return false;
     });
 
+    auto* dropdown = new DropDown();
 
-    /*
-    auto* tree = new ColumnView();
-
-    ColumnView::Column* special_column;
-    for (size_t column_i = 0; column_i < 5; ++column_i)
+    for (size_t i = 0; i < 3; ++i)
     {
-        auto* column = tree->push_back_column(std::to_string(column_i));
+        auto* list_label = new Label("list_" + std::to_string(i));
+        auto* label_label = new Label("label_" + std::to_string(i));
 
-        for (size_t i = 0; i < column_i; ++i)
-            column->push_back(new Label(std::to_string(int((rand() / float(RAND_MAX)) * 100u))));
-
-        if (column_i == 0)
-            special_column = column;
+        dropdown->push_back(list_label, label_label, [i](auto)
+        {
+            std::cout << "selected " << i << std::endl;
+        }, nullptr);
     }
 
-    auto* box = new Box(Orientation::VERTICAL);
-    auto* button_top = new Button();
-    button_top->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->push_front(new Label("front"));
-    }, special_column);
-
-    auto* button_center = new Button();
-    button_center->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->replace(3, new Label("replace"));
-    }, special_column);
-
-    auto* button_bottom = new Button();
-    button_bottom->connect_signal_clicked([](Button*, ColumnView::Column* special_column){
-        special_column->push_back(new Label("back"));
-    }, special_column);
-
-    box->push_back(tree);
-    box->push_back(button_top);
-    box->push_back(button_center);
-    box->push_back(button_bottom);
-    window->set_child(box);
-     */
-
-    auto* spin = new SpinButton(-1, 1, 0.01);
-
-    spin->set_value_to_text_function([](const SpinButton* instance, float value) -> std::string{
-        return std::to_string(value) + "%";
-    });
-
-    spin->reset_value_to_text_function();
-    spin->set_allow_only_numeric(false);
-
-    window->set_child(spin);
+    window->set_child(dropdown);
 
     window->show();
     window->present();

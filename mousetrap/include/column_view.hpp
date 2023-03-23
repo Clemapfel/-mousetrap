@@ -22,16 +22,10 @@ namespace mousetrap
 
             public:
                 operator GtkColumnViewColumn*();
-                void push_back(Widget*);
-                void push_front(Widget*);
+                void set_widget_at(size_t row_i, Widget*);
+                Widget* get_widget_at(size_t row_i) const;
 
-                /// @note if number of items in column is lower than index, fills them with nullptr
-                void insert(size_t, Widget*);
-
-                void replace(size_t, Widget*);
-                void remove(size_t);
-
-                Widget* get_widget_at(size_t row_i);
+                void remove(size_t row_i);
 
             protected:
                 Column(ColumnView*, const std::string&);
@@ -42,6 +36,7 @@ namespace mousetrap
                 std::string _title;
                 GtkSignalListItemFactory* _factory = nullptr;
                 GtkColumnViewColumn* _column = nullptr;
+
                 std::deque<Widget*> _widgets;
         };
 
@@ -80,6 +75,8 @@ namespace mousetrap
             size_t get_n_columns() const;
 
         private:
+            void resize_list();
+
             SelectionModel* _selection_model = nullptr;
             GtkSelectionMode _selection_mode;
 

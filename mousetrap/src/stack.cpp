@@ -38,14 +38,14 @@ namespace mousetrap
         return _selection_model;
     }
 
-    StackID Stack::add_child(Widget* widget, const std::string& title)
+    Stack::ID Stack::add_child(Widget* widget, const std::string& title)
     {
         gtk_stack_add_titled(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*(), title.c_str(), title.c_str());
         _children.insert({title, widget});
         return title;
     }
 
-    void Stack::remove_child(StackID id)
+    void Stack::remove_child(Stack::ID id)
     {
         if (_children.find(id) == _children.end())
         {
@@ -57,12 +57,12 @@ namespace mousetrap
         _children.erase(id);
     }
 
-    StackID Stack::get_visible_child()
+    Stack::ID Stack::get_visible_child()
     {
         return gtk_stack_get_visible_child_name(get_native());
     }
 
-    void Stack::set_visible_child(StackID id)
+    void Stack::set_visible_child(Stack::ID id)
     {
         gtk_stack_set_visible_child_name(get_native(), id.c_str());
     }

@@ -4,6 +4,8 @@
 # TODO
 + Search Bar
 + Make ListView, GridView, ColumnView filterable
++ Add DropDown search bar
++ Expose TextView widget insertion
 + Refactor ColumnView to be a tree
 + GIcon: Icon set, update image display
 
