@@ -53,7 +53,7 @@ namespace mousetrap
 
     bool ProgressBar::get_show_text_or_percentage() const
     {
-        gtk_progress_bar_get_show_text(get_native());
+        return gtk_progress_bar_get_show_text(get_native());
     }
 
     void ProgressBar::set_progress_inverted(bool b)
@@ -63,6 +63,6 @@ namespace mousetrap
 
     bool ProgressBar::get_progress_inverted() const
     {
-        gtk_progress_bar_get_inverted(get_native());
+        return gtk_progress_bar_get_inverted(get_native());
     }
 }

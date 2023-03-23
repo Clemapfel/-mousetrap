@@ -20,6 +20,7 @@
 #include <mousetrap/include/notebook.hpp>
 #include <mousetrap/include/spin_button.hpp>
 #include <mousetrap/include/drop_down.hpp>
+#include <mousetrap/include/scale.hpp>
 
 #include <deque>
 #include <iostream>
@@ -37,7 +38,6 @@ static void startup(GApplication*)
 
     action = new Action("global.test_action");
     action->set_function([](auto test2){
-        std::cout << test2 << std::endl;
     }, "testest");
     action->add_shortcut("<Control>c");
     app->add_action(action);
@@ -50,20 +50,13 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto* dropdown = new DropDown();
+    auto* scale = new Scale(0, 1, 0.01);
+    scale->set_should_draw_value(true);
+    scale->set_format_value_function([](float in) -> std::string {
+       return std::to_string(in) + "%";
+    });
 
-    for (size_t i = 0; i < 3; ++i)
-    {
-        auto* list_label = new Label("list_" + std::to_string(i));
-        auto* label_label = new Label("label_" + std::to_string(i));
-
-        dropdown->push_back(list_label, label_label, [i](auto)
-        {
-            std::cout << "selected " << i << std::endl;
-        }, nullptr);
-    }
-
-    window->set_child(dropdown);
+    window->set_child(scale);
 
     window->show();
     window->present();
@@ -80,7 +73,6 @@ int main()
 
     app->connect_signal("startup", startup);
 
-    std::cout << app << std::endl;
     return app->run();
 
     delete app;
