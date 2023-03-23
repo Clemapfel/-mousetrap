@@ -56,8 +56,6 @@ static void startup(GApplication*)
        return std::to_string(in) + "%";
     });
 
-    window->set_child(scale);
-
     window->show();
     window->present();
     window->set_focusable(true);
