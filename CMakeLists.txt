@@ -233,7 +233,7 @@ add_library(mousetrap STATIC
     mousetrap/include/spin_button.hpp
     mousetrap/src/spin_button.cpp
 
-        mousetrap/include/drop_down.hpp mousetrap/src/drop_down.cpp mousetrap/src/drop_down.inl mousetrap/include/fixed.hpp mousetrap/src/fixed.cpp mousetrap/include/level_bar.hpp mousetrap/src/level_bar.cpp mousetrap/include/spinner.hpp mousetrap/src/spinner.cpp mousetrap/include/progress_bar.hpp mousetrap/src/progress_bar.cpp mousetrap/include/paned.hpp mousetrap/src/paned.cpp mousetrap/include/scale.hpp mousetrap/src/scale.inl mousetrap/src/scale.cpp mousetrap/include/overlay.hpp mousetrap/src/overlay.cpp mousetrap/include/separator.hpp mousetrap/src/separator.cpp mousetrap/include/switch.hpp mousetrap/src/switch.cpp mousetrap/include/file_system.hpp mousetrap/src/file_system.cpp mousetrap/include/file_monitor.hpp)
+        mousetrap/include/drop_down.hpp mousetrap/src/drop_down.cpp mousetrap/src/drop_down.inl mousetrap/include/fixed.hpp mousetrap/src/fixed.cpp mousetrap/include/level_bar.hpp mousetrap/src/level_bar.cpp mousetrap/include/spinner.hpp mousetrap/src/spinner.cpp mousetrap/include/progress_bar.hpp mousetrap/src/progress_bar.cpp mousetrap/include/paned.hpp mousetrap/src/paned.cpp mousetrap/include/scale.hpp mousetrap/src/scale.inl mousetrap/src/scale.cpp mousetrap/include/overlay.hpp mousetrap/src/overlay.cpp mousetrap/include/separator.hpp mousetrap/src/separator.cpp mousetrap/include/switch.hpp mousetrap/src/switch.cpp mousetrap/include/file_system.hpp mousetrap/src/file_system.cpp mousetrap/include/file_monitor.hpp mousetrap/src/file_monitor.inl mousetrap/src/file_monitor.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

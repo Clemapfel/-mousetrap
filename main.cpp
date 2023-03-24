@@ -21,6 +21,7 @@
 #include <mousetrap/include/spin_button.hpp>
 #include <mousetrap/include/drop_down.hpp>
 #include <mousetrap/include/scale.hpp>
+#include <mousetrap/include/file_system.hpp>
 
 #include <deque>
 #include <iostream>
@@ -55,6 +56,9 @@ static void startup(GApplication*)
     scale->set_format_value_function([](float in) -> std::string {
        return std::to_string(in) + "%";
     });
+
+    auto* file = new FileDescriptor("/home/clem/Workspace/rat_game/README.md");
+    auto monitor = new FileMonitor(file->create_monitor());
 
     window->show();
     window->present();

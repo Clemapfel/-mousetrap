@@ -4,6 +4,7 @@
 //
 
 #include <include/file_system.hpp>
+#include <include/file_monitor.hpp>
 #include <iostream>
 
 namespace mousetrap
@@ -166,4 +167,17 @@ namespace mousetrap
         return g_file_hash(_native);
     }
 
+    FileMonitor FileDescriptor::create_monitor() const
+    {
+        GError* error = nullptr;
+        auto out = FileMonitor(g_file_monitor(_native, (GFileMonitorFlags) FileMonitor::flags, nullptr, &error));
+
+        if (error != nullptr)
+        {
+            std::cerr << "[ERROR] In FileDescriptor::create_monitor: " << error->message << std::endl;
+            g_error_free(error);
+        }
+
+        return out;
+    }
 }

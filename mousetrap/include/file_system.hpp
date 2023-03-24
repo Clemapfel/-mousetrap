@@ -6,6 +6,8 @@
 
 #include <gtk/gtk.h>
 
+#include <include/file_monitor.hpp>
+
 #include <string>
 
 namespace mousetrap
@@ -52,6 +54,8 @@ namespace mousetrap
             /// \note list of attributes available here: https://www.freedesktop.org/software/gstreamer-sdk/data/docs/2012.5/gio/GFileInfo.html
             std::string query_info(const char* attribute_query_string) const;
             size_t hash() const;
+
+            FileMonitor create_monitor() const;
 
         private:
             GFile* _native;
