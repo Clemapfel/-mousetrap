@@ -9,14 +9,14 @@
 #include <vector>
 
 #include <include/widget.hpp>
-#include <include/orientation.hpp>
+#include <include/orientable.hpp>
 #include <include/selection_model.hpp>
 
 namespace mousetrap
 {
     namespace detail { struct _ListViewItem; }
 
-    class ListView : public WidgetImplementation<GtkListView>,
+    class ListView : public WidgetImplementation<GtkListView>, public Orientable,
         HAS_SIGNAL(ListView, activate)
     {
         public:
@@ -45,6 +45,9 @@ namespace mousetrap
 
             SelectionModel* get_selection_model();
             size_t get_n_items() const;
+
+            void set_orientation(Orientation) override;
+            Orientation get_orientation() const override;
 
         private:
             static void on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*);

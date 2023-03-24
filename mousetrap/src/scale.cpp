@@ -105,4 +105,14 @@ namespace mousetrap
         auto out = instance->_format_f(value);
         return g_strdup(out.c_str());
     }
+
+    void Scale::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation Scale::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

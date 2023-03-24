@@ -27,4 +27,14 @@ namespace mousetrap
     {
         return *_adjustment;
     }
+
+    void Scrollbar::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation Scrollbar::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

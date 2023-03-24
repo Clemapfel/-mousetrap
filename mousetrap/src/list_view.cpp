@@ -285,4 +285,14 @@ namespace mousetrap
     {
         return g_list_model_get_n_items(G_LIST_MODEL(_root));
     }
+
+    void ListView::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation ListView::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

@@ -184,4 +184,14 @@ namespace mousetrap
     {
         return gtk_grid_view_get_single_click_activate(_native);
     }
+
+    void GridView::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation GridView::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

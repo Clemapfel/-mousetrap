@@ -6,10 +6,11 @@
 #pragma once
 
 #include <include/widget.hpp>
+#include <include/orientable.hpp>
 
 namespace mousetrap
 {
-    class CenterBox : public WidgetImplementation<GtkCenterBox>
+    class CenterBox : public WidgetImplementation<GtkCenterBox>, public Orientable
     {
         public:
             CenterBox(GtkOrientation);

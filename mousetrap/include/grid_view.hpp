@@ -7,10 +7,11 @@
 
 #include <include/widget.hpp>
 #include <include/selection_model.hpp>
-#include <include/orientation.hpp>
+#include <include/orientable.hpp>
+
 namespace mousetrap
 {
-    class GridView : public WidgetImplementation<GtkGridView>,
+    class GridView : public WidgetImplementation<GtkGridView>, public Orientable,
         HAS_SIGNAL(GridView, activate)
     {
         public:
@@ -38,6 +39,9 @@ namespace mousetrap
 
             void set_single_click_activate(bool);
             bool get_single_click_activate() const;
+
+            void set_orientation(Orientation) override;
+            Orientation get_orientation() const override;
 
         private:
             static void on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, GridView* instance);

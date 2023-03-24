@@ -96,4 +96,14 @@ namespace mousetrap
     {
         return gtk_paned_get_wide_handle(get_native());
     }
+
+    void Paned::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation Paned::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

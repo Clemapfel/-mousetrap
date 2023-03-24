@@ -9,12 +9,12 @@
 
 #include <include/widget.hpp>
 #include <include/adjustment.hpp>
-#include <include/orientation.hpp>
+#include <include/orientable.hpp>
 #include <include/relative_position.hpp>
 
 namespace mousetrap
 {
-    class Scale : public WidgetImplementation<GtkScale>,
+    class Scale : public WidgetImplementation<GtkScale>, public Orientable,
         HAS_SIGNAL(Scale, value_changed)
     {
         public:
@@ -49,6 +49,9 @@ namespace mousetrap
             void set_format_value_function(Function_t function);
 
             void reset_format_value_function();
+
+            void set_orientation(Orientation) override;
+            Orientation get_orientation() const override;
 
         private:
             Adjustment _adjustment;

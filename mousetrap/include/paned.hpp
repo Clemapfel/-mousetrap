@@ -6,11 +6,11 @@
 #pragma once
 
 #include <include/widget.hpp>
-#include <include/orientation.hpp>
+#include <include/orientable.hpp>
 
 namespace mousetrap
 {
-    class Paned : public WidgetImplementation<GtkPaned>
+    class Paned : public WidgetImplementation<GtkPaned>, public Orientable
     {
         public:
             Paned(Orientation);
@@ -38,6 +38,9 @@ namespace mousetrap
 
             void set_has_wide_handle(bool);
             bool get_has_widget_handle() const;
+
+            void set_orientation(Orientation) override;
+            Orientation get_orientation() const override;
 
         private:
             Widget* _start_child = nullptr;
