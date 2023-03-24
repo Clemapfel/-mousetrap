@@ -11,6 +11,10 @@
 + Scale: pango layout interface to allow markdown during text format function
 + Expose GTK_DEBUG interface
 + File: file system, monitor, measure disk size, asynchronous read/write 
++ Action: allow changing shortcut triggers during runtime
++ GtkGrid
++ check button groups
++ clipboard: allow arbitrary datatypes
 
 # Design Goals
 

@@ -8,17 +8,21 @@
 
 namespace mousetrap
 {
+    /// @brief event controller that triggers when focus is moved to the widget
     class FocusEventController : public EventController,
         HAS_SIGNAL(FocusEventController, focus_gained),
         HAS_SIGNAL(FocusEventController, focus_lost)
     {
         public:
+            /// @brief construct
             FocusEventController();
 
-            /// @brief focus is contained within self or any child
+            /// @brief get whether focus is contained within self or any child
+            /// @return bool
             bool self_or_child_is_focused();
 
-            /// @brief focus is contained within self and not any child
+            /// @brief get whether focus is contained within self only and not any child
+            /// @return bool
             bool self_is_focused();
     };
 }

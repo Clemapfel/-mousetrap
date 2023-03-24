@@ -51,6 +51,8 @@ static void startup(GApplication*)
         return false;
     });
 
+    auto* box = new Box(Orientation::HORIZONTAL);
+
     auto* scale = new Scale(0, 1, 0.01);
     scale->set_should_draw_value(true);
     scale->set_format_value_function([](float in) -> std::string {

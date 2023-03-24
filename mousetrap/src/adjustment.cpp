@@ -13,6 +13,10 @@ namespace mousetrap
         return _native;
     }
 
+    Adjustment::Adjustment()
+        : Adjustment(0, 0, 0, 0)
+    {}
+
     Adjustment::Adjustment(GtkAdjustment* in)
         : CTOR_SIGNAL(Adjustment, value_changed), CTOR_SIGNAL(Adjustment, properties_changed)
     {
@@ -21,10 +25,6 @@ namespace mousetrap
 
     Adjustment::Adjustment(float current, float lower, float upper, float increment)
         : Adjustment(gtk_adjustment_new(current, lower, upper, increment, 0, glm::distance(lower, upper)))
-    {}
-
-    Adjustment::Adjustment()
-        : Adjustment(0, 0, 1, 1)
     {}
 
     Adjustment::~Adjustment()

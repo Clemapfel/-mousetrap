@@ -13,12 +13,6 @@ namespace mousetrap
         : _id(id)
     {}
 
-    Action::~Action()
-    {
-        if (_g_action == nullptr)
-            g_object_unref(_g_action);
-    }
-
     void Action::on_action_activate(GSimpleAction*, GVariant* variant, Action* instance)
     {
         if (instance->_stateless_f)
@@ -26,6 +20,12 @@ namespace mousetrap
 
         if (instance->_stateful_f)
             instance->_stateful_f();
+    }
+
+    Action::~Action()
+    {
+        if (_g_action == nullptr)
+            g_object_unref(_g_action);
     }
 
     void Action::on_action_change_state(GSimpleAction*, GVariant* variant, Action* instance)
@@ -47,7 +47,8 @@ namespace mousetrap
 
     void Action::set_state(bool b)
     {
-        g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(b));
+        if (get_is_stateful())
+            g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(b));
     }
 
     void Action::add_shortcut(const ShortcutTriggerID& shortcut)

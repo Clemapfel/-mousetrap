@@ -11,26 +11,67 @@ namespace mousetrap
 {
     class Angle;
 
-    Angle degrees(float);
-    Angle radians(float);
+    /// @brief construct angle from degrees
+    /// @return mousetrap::Angle
+    [[nodiscard]] Angle degrees(float);
 
+    /// @brief construct from radians
+    /// @return mousetrap::Angle
+    [[nodiscard]] Angle radians(float);
+
+    /// @brief object representing an angle, unit agnostic
     struct Angle
     {
-            friend Angle degrees(float);
-            friend Angle radians(float);
+        friend Angle degrees(float);
+        friend Angle radians(float);
 
         public:
+            /// @brief convert angle to degrees
+            /// @return float, in degrees
             float as_degrees() const;
+
+            /// @brief convert angle to radians
+            /// @return float, in radians
             float as_radians() const;
 
-            Angle operator+(const Angle&);
-            Angle operator-(const Angle&);
+            /// @brief addition operator
+            /// @param other
+            /// @return mousetrap::Angle
+            [[nodiscard]] Angle operator+(const Angle&);
 
+            /// @brief subtraction operator
+            /// @param other
+            /// @return mousetrap::Angle
+            [[nodiscard]] Angle operator-(const Angle&);
+
+            /// @brief multiplication operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle operator*(const Angle&);
+
+            /// @brief division operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle operator/(const Angle&);
+
+            /// @brief addition assignment operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle& operator+=(const Angle&);
+
+            /// @brief subtraction assignment operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle& operator-=(const Angle&);
+
+            /// @brief multiplication assignment operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle& operator*=(const Angle&);
+
+            /// @brief division assignment operator
+            /// @param other
+            /// @return mousetrap::Angle
             Angle& operator/=(const Angle&);
 
         private:

@@ -131,11 +131,14 @@ namespace mousetrap
     };
 
     template<typename GtkWidget_t>
-    struct WidgetImplementation : public Widget
+    class WidgetImplementation : public Widget
     {
-        WidgetImplementation(GtkWidget_t*);
-        operator GtkWidget_t*() const;
-        GtkWidget_t* get_native() const;
+        public:
+            operator GtkWidget_t*() const;
+
+        protected:
+            WidgetImplementation(GtkWidget_t*);
+            GtkWidget_t* get_native() const;
     };
 };
 

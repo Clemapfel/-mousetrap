@@ -8,13 +8,14 @@
 
 namespace mousetrap
 {
-    /// handles mouse button press
+    /// @brief event controller handles button pressed
     class ClickEventController : public EventController,
         HAS_SIGNAL(ClickEventController, click_pressed),
         HAS_SIGNAL(ClickEventController, click_released),
         HAS_SIGNAL(ClickEventController, click_stopped)
     {
         public:
+            /// @brief construct controller, needs to be connected to a widget to function
             ClickEventController();
     };
 }

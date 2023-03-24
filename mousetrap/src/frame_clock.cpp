@@ -40,12 +40,12 @@ namespace mousetrap
         return *this;
     }
 
-    Time FrameClock::get_frame_time()
+    Time FrameClock::get_frame_time() const
     {
         return microseconds(gdk_frame_clock_get_frame_time(_native));
     }
 
-    Time FrameClock::get_time_since_last_frame()
+    Time FrameClock::get_time_since_last_frame() const
     {
         auto* timings = gdk_frame_clock_get_current_timings(_native);
 
@@ -55,11 +55,12 @@ namespace mousetrap
         return microseconds(end - start);
     }
 
-    float FrameClock::get_fps()
+    float FrameClock::get_fps() const
     {
         return gdk_frame_clock_get_fps(_native);
     }
 
+    /*
     void FrameClock::start()
     {
         gdk_frame_clock_begin_updating(_native);
@@ -69,4 +70,5 @@ namespace mousetrap
     {
         gdk_frame_clock_end_updating(_native);
     }
+     */
 }

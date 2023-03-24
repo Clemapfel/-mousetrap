@@ -15,21 +15,34 @@ namespace mousetrap
 
     void CenterBox::set_start_widget(Widget* widget)
     {
-        gtk_center_box_set_start_widget(get_native(), widget->operator GtkWidget*());
+        _start = widget;
+        gtk_center_box_set_start_widget(get_native(), _start != nullptr ? _start->operator GtkWidget*() : nullptr);
     }
 
     void CenterBox::set_end_widget(Widget* widget)
     {
-        gtk_center_box_set_end_widget(get_native(), widget->operator GtkWidget*());
+        _end = widget;
+        gtk_center_box_set_end_widget(get_native(), _end != nullptr ? _end->operator GtkWidget*() : nullptr);
     }
 
     void CenterBox::set_center_widget(Widget* widget)
     {
-        gtk_center_box_set_center_widget(get_native(), widget->operator GtkWidget*());
+        _center = widget;
+        gtk_center_box_set_center_widget(get_native(), _center != nullptr ? _center->operator GtkWidget*() : nullptr);
     }
 
-    void CenterBox::set_baseline_position(GtkBaselinePosition position)
+    Widget* CenterBox::get_start_widget() const
     {
-        gtk_center_box_set_baseline_position(get_native(), position);
+        return _start;
+    }
+
+    Widget* CenterBox::get_center_widget() const
+    {
+        return _center;
+    }
+
+    Widget* CenterBox::get_end_widget() const
+    {
+        return _end;
     }
 }

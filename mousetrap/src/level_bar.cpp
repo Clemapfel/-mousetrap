@@ -65,4 +65,14 @@ namespace mousetrap
     {
         return gtk_level_bar_get_value(get_native());
     }
+
+    void LevelBar::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation LevelBar::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
+    }
 }

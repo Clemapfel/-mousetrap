@@ -13,7 +13,7 @@ namespace mousetrap
           CTOR_SIGNAL(KeyEventController, modifiers_changed)
     {}
 
-    bool KeyEventController::should_shortcut_trigger_trigger(const std::string& shortcut)
+    bool KeyEventController::should_shortcut_trigger_trigger(const ShortuctTriggerID& shortcut)
     {
         auto* trigger = gtk_shortcut_trigger_parse_string(shortcut.c_str());
         auto* event = gtk_event_controller_get_current_event(_native);

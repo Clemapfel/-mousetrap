@@ -12,29 +12,47 @@
 
 namespace mousetrap
 {
+    /// @brief clock that is updated every render unit
     class FrameClock : public SignalEmitter,
         HAS_SIGNAL(FrameClock, update),
         HAS_SIGNAL(FrameClock, paint)
     {
         public:
+            /// @brief construct from GdkFrameClock, for internal use only. Use the callback of widget::add_tick_callback to get an initialized mousetrap::FrameClock
+            /// @param clock
             FrameClock(GdkFrameClock*);
+
+            /// @brief destruct
             virtual ~FrameClock();
 
+            /// @brief copy ctor deleted
             FrameClock(const FrameClock&) = delete;
+
+            /// @brief move ctor, safely transfers ownership
+            /// @param other
             FrameClock(FrameClock&&) noexcept;
 
+            /// @brief copy assignment deleted
             FrameClock& operator=(const FrameClock&) = delete;
+
+            /// @brief move assignment, safely transfers ownership
+            /// @param other
+            /// @return self after mutation
             FrameClock& operator=(FrameClock&&) noexcept;
 
+            /// @brief expose as GObject, for internal use only
             operator GObject*();
 
-            Time get_frame_time();
-            Time get_time_since_last_frame();
+            /// @brief get duration of one frame
+            /// @return mousetrap::Time
+            Time get_frame_time() const;
 
-            float get_fps();
+            /// @brief get duration since the laste render cycle
+            /// @return mousetrap::Time
+            Time get_time_since_last_frame() const;
 
-            void start();
-            void stop();
+            /// @brief get effective fps of the render loop
+            float get_fps() const;
 
         private:
             GdkFrameClock* _native = nullptr;

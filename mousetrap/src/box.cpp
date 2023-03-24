@@ -27,16 +27,24 @@ namespace mousetrap
 
     void Box::insert_after(Widget* to_append, Widget* after)
     {
-        if (to_append != nullptr and after != nullptr)
-        gtk_box_insert_child_after(
-            get_native(),
-            to_append->operator GtkWidget*(),
-            after->operator GtkWidget*()
-        );
+        if (to_append == nullptr)
+            return;
+
+        if (after == nullptr)
+            push_front(to_append);
+        else
+            gtk_box_insert_child_after(
+                get_native(),
+                to_append->operator GtkWidget*(),
+                after->operator GtkWidget*()
+            );
     }
 
     void Box::remove(Widget* widget)
     {
+        if (widget == nullptr)
+            return;
+
         gtk_box_remove(get_native(), widget->operator GtkWidget *());
     }
 
@@ -57,11 +65,6 @@ namespace mousetrap
     void Box::set_homogeneous(bool b)
     {
         gtk_box_set_homogeneous(get_native(), b);
-    }
-
-    Orientation Box::get_orientation() const
-    {
-        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
     }
 
     size_t Box::get_n_items()
@@ -90,5 +93,15 @@ namespace mousetrap
     float Box::get_spacing() const
     {
         return gtk_box_get_spacing(get_native());
+    }
+
+    void Box::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation Box::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
     }
 }

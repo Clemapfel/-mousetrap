@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iostream>
 #include <cctype>
+#include <vector>
 
 namespace mousetrap
 {
@@ -27,11 +28,6 @@ namespace mousetrap
     : r(vec[0]), g(vec[1]), b(vec[2]), a(vec[3])
     {}
 
-    float RGBA::to_grayscale() const
-    {
-        return (r + g + b) / 3;
-    }
-
     RGBA::operator glm::vec4() const
     {
         return glm::vec4(r, g, b, a);
@@ -39,7 +35,7 @@ namespace mousetrap
 
     RGBA::RGBA(HSVA hsva)
     {
-        auto out = hsva_to_rgba(hsva.operator glm::vec4());
+        auto out = detail::hsva_to_rgba(hsva.operator glm::vec4());
         r = out[0];
         g = out[1];
         b = out[2];
@@ -61,7 +57,7 @@ namespace mousetrap
 
     RGBA::operator HSVA() const
     {
-        return HSVA(rgba_to_hsva(this->operator glm::vec4()));
+        return HSVA(detail::rgba_to_hsva(this->operator glm::vec4()));
     }
 
     HSVA::operator std::string() const
@@ -79,11 +75,6 @@ namespace mousetrap
     : h(vec[0]), s(vec[1]), v(vec[2]), a(vec[3])
     {}
 
-    float HSVA::to_grayscale() const
-    {
-        return s;
-    }
-
     HSVA::operator glm::vec4() const
     {
         return glm::vec4(h, s, v, a);
@@ -91,7 +82,7 @@ namespace mousetrap
 
     HSVA::HSVA(RGBA rgba)
     {
-        auto out = rgba_to_hsva(rgba.operator glm::vec4());
+        auto out = detail::rgba_to_hsva(rgba.operator glm::vec4());
         h = out[0];
         s = out[1];
         v = out[2];
@@ -100,7 +91,7 @@ namespace mousetrap
 
     HSVA::operator RGBA() const
     {
-        return RGBA(hsva_to_rgba(this->operator glm::vec4()));
+        return RGBA(detail::hsva_to_rgba(this->operator glm::vec4()));
     }
 
     bool HSVA::operator==(const HSVA& other)
@@ -116,7 +107,7 @@ namespace mousetrap
         return not (*this == other);
     }
 
-    glm::vec4 rgba_to_hsva(glm::vec4 in)
+    glm::vec4 detail::rgba_to_hsva(glm::vec4 in)
     {
         const float r = in.r;
         const float g = in.g;
@@ -155,7 +146,7 @@ namespace mousetrap
         return glm::vec4(h / 360.f, s, v, a);
     }
 
-    glm::vec4 hsva_to_rgba(glm::vec4 in)
+    glm::vec4 detail::hsva_to_rgba(glm::vec4 in)
     {
         const float h = in[0] * 360;
         const float s = in[1];
@@ -202,6 +193,7 @@ namespace mousetrap
         return glm::vec4(rgb.r, rgb.g, rgb.b, a);
     }
 
+    /*
     glm::vec4 rgba_to_cmyk(glm::vec4 in)
     {
         float r = in[0];
@@ -234,15 +226,16 @@ namespace mousetrap
 
     glm::vec4 hsva_to_cmyk(glm::vec4 in)
     {
-        return rgba_to_cmyk(hsva_to_rgba(in));
+        return rgba_to_cmyk(detail::hsva_to_rgba(in));
     }
 
     glm::vec4 cmyk_to_hsva(glm::vec4 in)
     {
-        return rgba_to_hsva(cmyk_to_rgba(in));
+        return detail::rgba_to_hsva(cmyk_to_rgba(in));
     }
+     */
 
-    RGBA html_code_to_rgba(const std::string& code)
+    RGBA html_code_to_rgba(const std::string& text)
     {
         static auto hex_char_to_int = [](char c) -> uint8_t
         {
@@ -276,66 +269,121 @@ namespace mousetrap
             if (c == '9')
                 return 9;
 
-            if (c == 'A' or c == 'a')
+            if (c == 'A')
                 return 10;
 
-            if (c == 'B' or c == 'b')
+            if (c == 'B')
                 return 11;
 
-            if (c == 'C' or c == 'c')
+            if (c == 'C')
                 return 12;
 
-            if (c == 'D' or c == 'd')
+            if (c == 'D')
                 return 13;
 
-            if (c == 'E' or c == 'e')
+            if (c == 'E')
                 return 14;
 
-            if (c == 'F' or c == 'f')
+            if (c == 'F')
                 return 15;
 
-            std::stringstream str;
-            str << "In html_code_to_rgba: Unrecognized hex character: " << c << std::endl;
-            throw std::invalid_argument(str.str());
+            return -1; // on error
         };
 
-        static auto hex_component_to_int = [](char left, char right) -> uint8_t
+        static auto hex_component_to_int = [](int left, int right) -> uint8_t
         {
-            return hex_char_to_int(left) * 16 + hex_char_to_int(right);
+            return left * 16 + right;
         };
 
-        RGBA out;
-        size_t offset = code.front() == '#' ? 1 : 0;
+        std::vector<int> as_hex;
+        as_hex.reserve(6);
+        for (size_t i = 1; i < text.size(); ++i)
+        {
+            as_hex.push_back(hex_char_to_int(text.at(i)));
+            if (as_hex.back() == -1)
+                goto on_error;
+        }
 
-        out.r = hex_component_to_int(code.at(offset + 0), code.at(offset + 1)) / 255.f;
-        out.g = hex_component_to_int(code.at(offset + 2), code.at(offset + 3)) / 255.f;
-        out.b = hex_component_to_int(code.at(offset + 4), code.at(offset + 5)) / 255.f;
+        return RGBA(
+        hex_component_to_int(as_hex.at(0), as_hex.at(1)) / 255.f,
+        hex_component_to_int(as_hex.at(2), as_hex.at(3)) / 255.f,
+        hex_component_to_int(as_hex.at(4), as_hex.at(5)) / 255.f,
+        1
+        );
 
-        if (code.size() > offset + 5)
-            out.a = hex_component_to_int(code.at(offset + 5), code.at(offset + 6)) / 255.f;
-        else
-            out.a = 1;
-
-        return out;
+        on_error:
+            std::cerr << "[WARNING] In mousetrap::html_code_to_rgba: Unable to parse code \"" + text + "\"" << std::endl;
+            return RGBA(0, 0, 0, 1);
     }
 
     std::string rgba_to_html_code(RGBA in, bool show_alpha = true)
     {
+        auto sanitize_code = [](std::string& in) -> bool
+        {
+            std::string text = "#";
+
+            size_t start = 0;
+            if (in.size() == 6)
+                start = 0;
+            else if (in.size() == 7)
+                start = 1;
+            else
+                return false;
+
+            for (size_t i = start; i < 6 + start; ++i)
+            {
+                auto c = in.at(i);
+                if (c == 'a')
+                    c = 'A';
+                else if (c == 'b')
+                    c = 'B';
+                else if (c == 'c')
+                    c = 'C';
+                else if (c == 'd')
+                    c = 'D';
+                else if (c == 'e')
+                    c = 'E';
+                else if (c == 'f')
+                    c = 'F';
+
+                if (not ((c == '0') or (c == '1') or (c == '2') or (c == '3') or (c == '4') or (c == '5') or (c == '6') or (c == '7') or (c == '8') or (c == '9') or (c == 'A') or (c == 'B') or (c == 'C') or (c == 'D') or (c == 'E') or (c == 'F')))
+                    return false;
+
+                text.push_back(c);
+            }
+
+            in = text;
+            return true;
+        };
+
         in.r = glm::clamp<float>(in.r, 0.f, 1.f);
         in.g = glm::clamp<float>(in.g, 0.f, 1.f);
         in.b = glm::clamp<float>(in.b, 0.f, 1.f);
-        in.a = glm::clamp<float>(in.a, 0.f, 1.f);
 
-        std::stringstream str;
-        str << "#";
-        str << std::hex << int(std::round(in.r * 255))
-            << std::hex << int(std::round(in.g * 255))
-            << std::hex << int(std::round(in.b * 255));
+        std::stringstream r;
+        r << std::hex << int(std::round(in.r * 255));
 
-        if (show_alpha)
-            str << std::hex << int(std::round(in.a * 255));
+        auto r_string = r.str();
+        if (r_string.size() == 1)
+            r_string = "0" + r_string;
 
-        return str.str();
+        std::stringstream g;
+        g << std::hex << int(std::round(in.g * 255));
+
+        auto g_string = g.str();
+        if (g_string.size() == 1)
+            g_string = "0" + g_string;
+
+        std::stringstream b;
+        b << std::hex << int(std::round(in.b * 255));
+
+        auto b_string = b.str();
+        if (b_string.size() == 1)
+            b_string = "0" + b_string;
+
+        auto out = "#" + r_string + g_string + b_string;
+        sanitize_code(out);
+        return out;
     }
 
     void quantize(RGBA&, size_t n_values_per_component)
