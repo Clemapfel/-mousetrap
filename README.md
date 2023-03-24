@@ -10,7 +10,7 @@
 + GIcon: Icon set, update image display
 + Scale: pango layout interface to allow markdown during text format function
 + Expose GTK_DEBUG interface
-+ File: measure disk size
++ File: file system, monitor, measure disk size, asynchronous read/write 
 
 # Design Goals
 

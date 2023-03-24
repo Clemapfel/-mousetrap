@@ -10,8 +10,8 @@
 
 namespace mousetrap
 {
-    class FileMonitor : public SignalEmitter//,
-        //HAS_SIGNAL(FileMonitor, changed)
+    class FileMonitor : public SignalEmitter,
+        HAS_SIGNAL(FileMonitor, changed)
     {
             // TODO
     };
