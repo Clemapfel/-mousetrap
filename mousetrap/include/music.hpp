@@ -1,27 +1,26 @@
 //
-// Copyright (c) Clemens Cords (mail@clemens-cords.com), created 3/16/23
+// Copyright (c) Clemens Cords (mail@clemens-cords.com), created 3/26/23
 //
 
 #pragma once
 
-#include <include/sound_buffer.hpp>
-#include <include/time.hpp>
-#include <include/vector.hpp>
+#include <SFML/Audio/Music.hpp>
 
-#include <SFML/Audio/Sound.hpp>
+#include <include/vector.hpp>
+#include <include/time.hpp>
 
 namespace mousetrap
 {
-    /// @brief a sound, streamed from ram
-    class Sound
+    /// @brief longform sound, streamed directly from disk if possible
+    class Music
     {
         public:
             /// @brief construct
-            Sound();
+            Music();
 
-            /// @brief construct from buffer
-            /// @param buffer
-            void create_from_buffer(const SoundBuffer&);
+            /// @brief create from file
+            /// @param path absolute path
+            bool create_from_file(const std::string& path);
 
             /// @brief play the sound, loops if mousetrap::Sound::set_should_loop was set to true, otherwise plays exactly once
             void play();
@@ -31,6 +30,11 @@ namespace mousetrap
 
             /// @brief pause the playback, position is reset to the beginning
             void stop();
+
+            /// @brief set which area of the file should loop
+            /// @param start_time start of loop area
+            /// @param end_time end of loop area
+            void set_loop_area(Time start_time, Time end_time);
 
             /// @brief get whether the sound should loop indefinitely
             /// @return true if looping, false otherwise
@@ -78,6 +82,6 @@ namespace mousetrap
             Vector3f get_spacial_position() const;
 
         private:
-            sf::Sound _native;
+            sf::Music _native;
     };
 }

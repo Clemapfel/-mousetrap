@@ -81,8 +81,8 @@ add_library(mousetrap STATIC
     mousetrap/include/time.hpp
     mousetrap/src/time.cpp
 
-    mousetrap/include/sound_stream.hpp
-    mousetrap/src/sound_stream.cpp
+    mousetrap/include/music.hpp
+    mousetrap/src/music.cpp
 
     mousetrap/include/signal_emitter.hpp
     mousetrap/src/signal_emitter.inl
@@ -273,7 +273,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/orientable.hpp
 
-    mousetrap/include/grid.hpp mousetrap/src/grid.cpp mousetrap/include/selectable.hpp mousetrap/src/spin_button.inl)
+    mousetrap/include/grid.hpp mousetrap/src/grid.cpp mousetrap/include/selectable.hpp mousetrap/src/spin_button.inl mousetrap/include/music.hpp mousetrap/src/music.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -285,7 +285,6 @@ target_link_libraries(mousetrap PUBLIC
     ${GLEW}
     ${GTK_LIBRARIES}
     sfml-audio
-    soundio
 )
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)

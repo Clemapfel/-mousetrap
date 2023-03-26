@@ -12,9 +12,10 @@
 + Expose GTK_DEBUG interface
 + File: file system, monitor, measure disk size, asynchronous read/write 
 + Action: allow changing shortcut triggers during runtime
-+ GtkGrid
++ Grid: Baseline Positions
 + check button groups
 + clipboard: allow arbitrary datatypes
++ Sound: Mutate SoundBuffer, allow Music stream from memory
 
 # Design Goals
 
