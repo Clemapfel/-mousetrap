@@ -79,3 +79,5 @@ namespace mousetrap
             float _rads;
     };
 }
+
+#include <iostream>

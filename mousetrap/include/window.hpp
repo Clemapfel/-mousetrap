@@ -124,4 +124,3 @@ namespace mousetrap
             Widget* _titlebar_widget = nullptr;
     };
 }
-

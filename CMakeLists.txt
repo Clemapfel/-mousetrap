@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(rat_game VERSION 0.0.1 LANGUAGES CXX)
+project(rat_game VERSION 0.0.1 LANGUAGES CXX C)
 
 ## DEPS
 
@@ -22,7 +22,7 @@ endif()
 
 ## LIBRARY
 
-add_library(mousetrap STATIC
+add_library(mousetrap SHARED
     mousetrap/include/shape.hpp
     mousetrap/src/shape.cpp
 
@@ -154,6 +154,8 @@ add_library(mousetrap STATIC
     mousetrap/include/label.hpp
     mousetrap/src/label.cpp
 
+    mousetrap/include/justify_mode.hpp
+
     mousetrap/include/text_view.hpp
     mousetrap/src/text_view.cpp
 
@@ -273,7 +275,15 @@ add_library(mousetrap STATIC
 
     mousetrap/include/orientable.hpp
 
-    mousetrap/include/grid.hpp mousetrap/src/grid.cpp mousetrap/include/selectable.hpp mousetrap/src/spin_button.inl mousetrap/include/music.hpp mousetrap/src/music.cpp)
+    mousetrap/include/grid.hpp
+    mousetrap/src/grid.cpp
+
+    mousetrap/include/selectable.hpp
+    mousetrap/src/spin_button.inl
+
+    mousetrap/include/music.hpp
+    mousetrap/src/music.cpp
+)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -289,12 +299,37 @@ target_link_libraries(mousetrap PUBLIC
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)
 set_target_properties(mousetrap PROPERTIES
-    LINKER_LANGUAGE CXX
+    LINKER_LANGUAGE C
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+## C BINDING
+
+add_library(mousetrap_c_binding SHARED
+    julia/mousetrap.hpp
+    julia/mousetrap.cpp
+)
+
+target_include_directories(mousetrap_c_binding PUBLIC
+    "${CMAKE_SOURCE_DIR}/mousetrap"
+    "${GTK_INCLUDE_DIRS}"
+)
+
+target_link_libraries(mousetrap_c_binding PUBLIC
+    ${OpenGL}
+    ${GLEW}
+    ${GTK_LIBRARIES}
+    sfml-audio
+)
+
+target_compile_features(mousetrap_c_binding PUBLIC cxx_std_20)
+set_target_properties(mousetrap_c_binding PROPERTIES
+    LINKER_LANGUAGE C
+    LIBRARY_OUTPUT_DIRECTORY "/home/clem/Workspace/rat_game/julia"
 )
 
 ## EXECUTABLE
 
-add_executable(debug main.cpp mousetrap/include/justify_mode.hpp)
+add_executable(debug main.cpp)
 target_link_libraries(debug PUBLIC mousetrap)
 target_include_directories(debug PUBLIC "${CMAKE_SOURCE_DIR}")

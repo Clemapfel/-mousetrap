@@ -162,7 +162,7 @@ namespace mousetrap
 
     bool Widget::get_expand_vertically() const
     {
-        gtk_widget_get_vexpand(operator GtkWidget*());
+        return gtk_widget_get_vexpand(operator GtkWidget*());
     }
 
     void Widget::set_expand(bool both)
