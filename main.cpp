@@ -4,7 +4,6 @@
 #include <mousetrap/include/render_task.hpp>
 #include <mousetrap/include/image.hpp>
 #include <mousetrap/include/sound.hpp>
-#include <mousetrap/include/sound_stream.hpp>
 #include <mousetrap/include/application.hpp>
 #include <mousetrap/include/window.hpp>
 #include <mousetrap/include/motion_event_controller.hpp>
@@ -60,7 +59,7 @@ static void startup(GApplication*)
     window->set_child(box);
     window->show();
     window->present();
-    window->set_focusable(true);
+    window->set_is_focusable(true);
     window->grab_focus();
 }
 

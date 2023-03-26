@@ -97,7 +97,7 @@ namespace mousetrap
 
     bool Grid::get_rows_homogenous() const
     {
-        return gtk_grid_get_row_homogeneous(get_native(), b);
+        return gtk_grid_get_row_homogeneous(get_native());
     }
 
     void Grid::set_columns_homogenous(bool b)
