@@ -606,6 +606,12 @@ namespace mousetrap
 
     void Shape::set_vertex_color(size_t i, RGBA color)
     {
+        if (i > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            return;
+        }
+
         _vertices.at(i).color = color;
         update_color();
         update_data(false, true, false);
@@ -613,11 +619,22 @@ namespace mousetrap
 
     RGBA Shape::get_vertex_color(size_t index) const
     {
+        if (index > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            return RGBA(0, 0, 0, 0);
+        }
         return RGBA(_vertices.at(index).color);
     }
 
     void Shape::set_vertex_position(size_t i, Vector3f position)
     {
+        if (i > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            return;
+        }
+
         _vertices.at(i).position = position;
         update_position();
         update_data(true, false, false);
@@ -625,12 +642,25 @@ namespace mousetrap
 
     Vector3f Shape::get_vertex_position(size_t i) const
     {
+        if (i > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            auto min = std::numeric_limits<float>::min();
+            return Vector3f(min, min, min);
+        }
+
         return _vertices.at(i).position;
     }
 
 
     void Shape::set_vertex_texture_coordinate(size_t i, Vector2f coordinates)
     {
+        if (i > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_texture_coordinate: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            return;
+        }
+
         _vertices.at(i).texture_coordinates = coordinates;
         update_texture_coordinate();
         update_data(false, false, true);
@@ -638,6 +668,13 @@ namespace mousetrap
 
     Vector2f Shape::get_vertex_texture_coordinate(size_t i) const
     {
+        if (i > _vertices.size())
+        {
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            auto min = std::numeric_limits<float>::min();
+            return Vector2f(min, min);
+        }
+
         return _vertices.at(i).texture_coordinates;
     }
 

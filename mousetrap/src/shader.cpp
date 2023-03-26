@@ -15,8 +15,8 @@ namespace mousetrap
     {
         if (_noop_program_id == 0)
         {
-            _noop_fragment_shader_id = compile_shader(_noop_fragment_shader_source, ShaderType::FRAGMENT);
-            _noop_vertex_shader_id = compile_shader(_noop_vertex_shader_source, ShaderType::VERTEX);
+            _noop_fragment_shader_id = compile_shader(noop_fragment_shader_code, ShaderType::FRAGMENT);
+            _noop_vertex_shader_id = compile_shader(noop_vertex_shader_code, ShaderType::VERTEX);
             _noop_program_id = link_program(_noop_fragment_shader_id, _noop_vertex_shader_id);
         }
 
@@ -37,7 +37,7 @@ namespace mousetrap
             glDeleteProgram(_program_id);
     }
 
-    void Shader::create_from_string(const std::string& code, ShaderType type)
+    bool Shader::create_from_string(const std::string& code, ShaderType type)
     {
         if (type == ShaderType::FRAGMENT)
             _fragment_shader_id = compile_shader(code, type);
@@ -45,9 +45,18 @@ namespace mousetrap
             _vertex_shader_id = compile_shader(code, type);
 
         _program_id = link_program(_fragment_shader_id, _vertex_shader_id);
+
+        if (
+            (type == ShaderType::FRAGMENT and _fragment_shader_id == 0) or
+            (type == ShaderType::VERTEX and _vertex_shader_id == 0) or
+            _program_id == 0
+        )
+            return false;
+        else
+            return true;
     }
 
-    void Shader::create_from_file(const std::string& path, ShaderType type)
+    bool Shader::create_from_file(const std::string& path, ShaderType type)
     {
         auto file = std::ifstream();
 
@@ -55,12 +64,12 @@ namespace mousetrap
         if (not file.is_open())
         {
             std::cerr << "[WARNING] In Shader::create_from_file: Unable to open file at `" << path << "`" << std::endl;
-            return;
+            return false;
         }
         auto str = std::stringstream();
         str << file.rdbuf();
 
-        create_from_string(str.str(), type);
+        return create_from_string(str.str(), type);
         file.close();
     }
 

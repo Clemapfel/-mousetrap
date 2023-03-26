@@ -56,13 +56,13 @@ namespace mousetrap
         return gtk_progress_bar_get_show_text(get_native());
     }
 
-    void ProgressBar::set_progress_inverted(bool b)
+    void ProgressBar::set_orientation(Orientation orientation)
     {
-        gtk_progress_bar_set_inverted(get_native(), b);
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
     }
 
-    bool ProgressBar::get_progress_inverted() const
+    Orientation ProgressBar::get_orientation() const
     {
-        return gtk_progress_bar_get_inverted(get_native());
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
     }
 }

@@ -8,12 +8,14 @@
 
 namespace mousetrap
 {
+    /// @brief handles cursor motion events
     class MotionEventController : public EventController,
         HAS_SIGNAL(MotionEventController, motion_enter),
         HAS_SIGNAL(MotionEventController, motion),
         HAS_SIGNAL(MotionEventController, motion_leave)
     {
         public:
+            /// @brief ctor, needs to be connected to a widget to start emitting events
             MotionEventController();
     };
 }

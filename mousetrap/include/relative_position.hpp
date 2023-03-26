@@ -8,11 +8,19 @@
 
 namespace mousetrap
 {
+    /// @brief signifies position of A relative to B
     enum class RelativePosition
     {
+        /// @brief A is above B
         ABOVE = GTK_POS_TOP,
+
+        /// @brief A is left of B
         LEFT_OF = GTK_POS_LEFT,
+
+        /// @brief A is right of B
         RIGHT_OF = GTK_POS_RIGHT,
+
+        /// @brief A is below B
         BELOW = GTK_POS_BOTTOM
     };
 }

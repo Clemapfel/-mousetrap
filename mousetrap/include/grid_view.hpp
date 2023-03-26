@@ -12,7 +12,7 @@
 namespace mousetrap
 {
     /// @brief container, arranges widget in a grid
-    class GridView : public WidgetImplementation<GtkGridView>, public Orientable,
+    class GridView : public WidgetImplementation<GtkGridView>, public Orientable, public Selectable,
         HAS_SIGNAL(GridView, activate)
     {
         public:
@@ -71,7 +71,7 @@ namespace mousetrap
 
             /// @brief get selection model
             /// @return pointer to selection model
-            SelectionModel* get_selection_model();
+            SelectionModel* get_selection_model() override;
 
             /// @brief set whether an <tt>activated</tt> signal should be emitted when the user selects the item, as opposed to selecting and activating the item
             /// @param enable true to enable, false otherwise

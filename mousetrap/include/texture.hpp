@@ -39,8 +39,8 @@ namespace mousetrap
             void set_wrap_mode(WrapMode);
             WrapMode get_wrap_mode();
 
-            void set_scale_mode(ScaleMode);
-            ScaleMode get_scale_mode();
+            void set_scale_mode(TextureScaleMode);
+            TextureScaleMode get_scale_mode();
 
             Vector2i get_size() const;
             GLNativeHandle get_native_handle() const;
@@ -48,7 +48,7 @@ namespace mousetrap
         private:
             GLNativeHandle _native_handle = 0;
             WrapMode _wrap_mode = WrapMode::STRETCH;
-            ScaleMode _scale_mode = ScaleMode::NEAREST;
+            TextureScaleMode _scale_mode = TextureScaleMode::NEAREST;
 
             Vector2i _size;
     };

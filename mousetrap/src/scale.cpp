@@ -87,7 +87,7 @@ namespace mousetrap
 
     void Scale::add_mark(float at, RelativePosition pos, const std::string& label)
     {
-        gtk_scale_add_mark(get_native(), at, (GtkPositionType) pos, label.c_str());
+        gtk_scale_add_mark(get_native(), at, (GtkPositionType) pos, label.empty() ? nullptr : label.c_str());
     }
 
     void Scale::clear_marks()

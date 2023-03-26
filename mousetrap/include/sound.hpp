@@ -12,6 +12,7 @@
 
 namespace mousetrap
 {
+    //
     class Sound
     {
         public:

@@ -162,12 +162,12 @@ namespace mousetrap
         return _native_handle;
     }
 
-    void Texture::set_scale_mode(ScaleMode mode)
+    void Texture::set_scale_mode(TextureScaleMode mode)
     {
         _scale_mode = mode;
     }
 
-    ScaleMode Texture::get_scale_mode()
+    TextureScaleMode Texture::get_scale_mode()
     {
         return _scale_mode;
     }

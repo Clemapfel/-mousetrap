@@ -14,7 +14,7 @@ namespace mousetrap
 {
     namespace detail { struct _ColumnViewItem; }
 
-    class ColumnView : public WidgetImplementation<GtkColumnView>
+    class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable
     {
         class Column
         {
@@ -69,7 +69,7 @@ namespace mousetrap
             void set_single_click_activate(bool);
             bool get_single_click_activate() const;
 
-            SelectionModel* get_selection_model();
+            SelectionModel* get_selection_model() override;
 
             size_t get_n_rows() const;
             size_t get_n_columns() const;

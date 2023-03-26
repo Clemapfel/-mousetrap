@@ -9,10 +9,11 @@
 #include <include/time.hpp>
 #include <include/transition_type.hpp>
 #include <include/selection_model.hpp>
+#include <include/selectable.hpp>
 
 namespace mousetrap
 {
-    class Stack : public WidgetImplementation<GtkStack>
+    class Stack : public WidgetImplementation<GtkStack>, public Selectable
     {
         using ID = std::string;
             
@@ -20,7 +21,7 @@ namespace mousetrap
             Stack();
             ~Stack();
 
-            SelectionModel* get_selection_model();
+            SelectionModel* get_selection_model() override;
 
             [[nodiscard]] Stack::ID add_child(Widget*, const std::string& child_title);
             Widget* get_child(Stack::ID);
