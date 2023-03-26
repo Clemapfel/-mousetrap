@@ -25,7 +25,7 @@ namespace mousetrap
 
             /// @brief get the bottom-most widget
             /// @return widget
-            Widget* get_child();
+            Widget* get_child() const;
 
             /// @brief add a widget on top
             /// @param widget

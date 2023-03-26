@@ -139,36 +139,88 @@ namespace mousetrap
             /// @param transform transform to hand to the vertex shader
             void render(const Shader& shader, GLTransform transform) const;
 
-            /// @brief get color of n-th vertex
+            /// @brief get color of n-th vertex, returns RGBA(0, 0, 0, 0) and prints a warning if vertex index out of bounds
+            /// @param index vertex index
             /// @returns color as RGBA
             RGBA get_vertex_color(size_t) const;
+
+            /// @brief set color of n-th vertex, does nothing if vertex index out of bounds
+            /// @param index vertex index
+            /// @param new_color
             void set_vertex_color(size_t, RGBA);
 
+            /// @brief set texture coordinate of vertex, does nothing if vertex index out of bounds
+            /// @param index vertex index
+            /// @param coordinate new texture coordinate, {0, 0} for top left, {1, 1} for bottom right of texture
             void set_vertex_texture_coordinate(size_t, Vector2f);
+
+            /// @brief get vertex texture coordinate, returns Vector2f() if index out of bounds
+            /// @param index vertex index
+            /// @return texture coordinate, {0, 0} for top left, {1, 1} for bottom right of texture
             Vector2f get_vertex_texture_coordinate(size_t) const;
 
+            /// @brief set vertex position in 3d space, does nothing if index out of bounds
+            /// @param index vertex index
+            /// @param position position in 3d space
+            /// @note if multiple vertex positions change at the same time, use mousetrap::Vertex::as_rectangle (or other appropriate shape) to update all of them at once in a more performant manned
             void set_vertex_position(size_t, Vector3f);
+
+            /// @brief get vertex position in 3d space, return Vector3f() if out of bounds
+            /// @param index vertex index
+            /// @return position in 3d space
             Vector3f get_vertex_position(size_t) const;
 
+            /// @brief get number of vertices, the number depends on the shape and may be larger than intuitive
+            /// @param number of vertices
             size_t get_n_vertices() const;
 
+            /// @brief set color of all vertices at once
+            /// @param rgba color in RGBA
             void set_color(RGBA);
 
+            /// @brief set whether shape should render when instructed
+            /// @param b if false, mousetrap::Shape::render will do nothing, true otherwise
             void set_visible(bool);
+
+            /// @brief get whether shape should render when instructed
+            /// @param true if false, mousetrap::Shape::render will do nothing, true otherwise
             bool get_visible() const;
 
+            /// @brief get axis aligned bounding box of all vertices
+            /// @return rectangle
             Rectangle get_bounding_box() const;
+
+            /// @brief get size of axis aligned bounding box
+            /// @return width, height
             Vector2f get_size() const;
 
+            /// @brief align all vertices such that the centroid, the center of the axis aligned bounding box, is set to the given position
+            /// @param new_position
             void set_centroid(Vector2f);
+
+            /// @brief get centroid, center of the axis aligned bounding box
+            /// @return position
             Vector2f get_centroid() const;
 
+            /// @brief align top left of axis aligned bounding box with position
+            /// @param position
             void set_top_left(Vector2f);
+
+            /// @brief get top left of axis aligned bounding box
+            /// @param position
             Vector2f get_top_left() const;
 
-            void rotate(Angle);
+            /// @brief rotate all vertices around origin
+            /// @param angle
+            /// @param origin point in 2d space
+            void rotate(Angle, Vector2f origin);
 
+            /// @brief set texture of shape, has to be queried in the fragment shader using the <tt>int _texture_set</tt> and <tt>Sampler2D _texture</tt> uniforms, the default fragment shader does this automatically
+            /// @param texture texture object, such as mousetrap::Texture, mousetrap::RenderTexture or mousetrap::MultisampledRenderTexture. The user is responsible for making sure the texture stays in memory. May be nullptr
             void set_texture(const TextureObject*);
+
+            /// @brief get texture object
+            /// @returns pointer to texture object, or nullptr if no texture is registered
             const TextureObject* get_texture() const;
 
         private:

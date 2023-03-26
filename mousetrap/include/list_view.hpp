@@ -10,7 +10,7 @@
 
 #include <include/widget.hpp>
 #include <include/orientable.hpp>
-#include <include/selection_model.hpp>
+#include <include/selectable.hpp>
 
 namespace mousetrap
 {

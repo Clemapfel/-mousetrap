@@ -47,6 +47,9 @@ namespace mousetrap
 
     void SpinButton::set_acceleration_rate(float v)
     {
+        if (v < 0)
+            v = 0;
+
         gtk_spin_button_set_climb_rate(get_native(), v);
     }
 

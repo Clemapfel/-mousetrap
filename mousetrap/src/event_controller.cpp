@@ -35,6 +35,6 @@ namespace mousetrap
 
     PropagationPhase EventController::get_propagation_phase() const
     {
-        return (GtkPropagationPhase) gtk_event_controller_get_propagation_phase(_native);
+        return (PropagationPhase) gtk_event_controller_get_propagation_phase(_native);
     }
 }

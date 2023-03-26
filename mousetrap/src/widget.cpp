@@ -110,9 +110,19 @@ namespace mousetrap
         gtk_widget_set_margin_bottom(operator GtkWidget*(), value);
     }
 
+    float Widget::get_margin_bottom() const
+    {
+        return gtk_widget_get_margin_bottom(operator GtkWidget*());
+    }
+
     void Widget::set_margin_top(float value)
     {
         gtk_widget_set_margin_top(operator GtkWidget*(), value);
+    }
+
+    float Widget::get_margin_top() const
+    {
+        return gtk_widget_get_margin_top(operator GtkWidget*());
     }
 
     void Widget::set_margin_start(float value)
@@ -120,9 +130,19 @@ namespace mousetrap
         gtk_widget_set_margin_start(operator GtkWidget*(), value);
     }
 
+    float Widget::get_margin_start() const
+    {
+        return gtk_widget_get_margin_start(operator GtkWidget*());
+    }
+
     void Widget::set_margin_end(float value)
     {
         gtk_widget_set_margin_end(operator GtkWidget*(), value);
+    }
+
+    float Widget::get_margin_end() const
+    {
+        return gtk_widget_get_margin_end(operator GtkWidget*());
     }
 
     void Widget::set_expand_horizontally(bool should_expand)
@@ -130,9 +150,19 @@ namespace mousetrap
         gtk_widget_set_hexpand(operator GtkWidget*(), should_expand == TRUE);
     }
 
+    bool Widget::get_expand_horizontally() const
+    {
+        return gtk_widget_get_hexpand(operator GtkWidget*());
+    }
+
     void Widget::set_expand_vertically(bool should_expand)
     {
         gtk_widget_set_vexpand(operator GtkWidget*(), should_expand == TRUE);
+    }
+
+    bool Widget::get_expand_vertically() const
+    {
+        gtk_widget_get_vexpand(operator GtkWidget*());
     }
 
     void Widget::set_expand(bool both)
@@ -146,9 +176,19 @@ namespace mousetrap
         gtk_widget_set_halign(operator GtkWidget*(), (GtkAlign) alignment);
     }
 
+    Alignment Widget::get_horizontal_alignment() const
+    {
+        return (Alignment) gtk_widget_get_halign(operator GtkWidget*());
+    }
+
     void Widget::set_vertical_alignment(Alignment alignment)
     {
         gtk_widget_set_valign(operator GtkWidget*(), (GtkAlign) alignment);
+    }
+
+    Alignment Widget::get_vertical_alignment() const
+    {
+        return (Alignment) gtk_widget_get_valign(operator GtkWidget*());
     }
 
     void Widget::set_alignment(Alignment both)
@@ -170,17 +210,6 @@ namespace mousetrap
     float Widget::get_opacity()
     {
         return gtk_widget_get_opacity(operator GtkWidget*());
-    }
-
-    Vector2f Widget::get_size()
-    {
-        GtkAllocation* allocation = new GtkAllocation();
-        gtk_widget_get_allocation(operator GtkWidget*(), allocation);
-
-        Vector2f out = Vector2f{allocation->width, allocation->height};
-        delete allocation;
-
-        return out;
     }
 
     bool Widget::operator==(const Widget& other) const
@@ -314,14 +343,32 @@ namespace mousetrap
         gtk_widget_set_focusable(operator GtkWidget*(), true);
     }
 
-    void Widget::set_focusable(bool b)
+    void Widget::remove_controller(EventController* controller)
+    {
+        if (controller == nullptr)
+            return;
+
+        gtk_widget_remove_controller(operator GtkWidget*(), controller->operator GtkEventController*());
+    }
+
+    void Widget::set_is_focusable(bool b)
     {
         gtk_widget_set_focusable(operator GtkWidget*(), b);
+    }
+
+    bool Widget::get_is_focusable() const
+    {
+        return gtk_widget_get_focusable(operator GtkWidget*());
     }
 
     void Widget::set_focus_on_click(bool b)
     {
         gtk_widget_set_focus_on_click(operator GtkWidget*(), b);
+    }
+
+    bool Widget::get_focus_on_click() const
+    {
+        return gtk_widget_get_focus_on_click(operator GtkWidget*());
     }
 
     bool Widget::get_has_focus()
@@ -380,12 +427,6 @@ namespace mousetrap
         return true;
     }
 
-    void Widget::beep()
-    {
-        if (gtk_widget_get_parent(operator GtkWidget*()) != nullptr)
-            gtk_widget_error_bell(operator GtkWidget*());
-    }
-
     gboolean Widget::tick_callback_wrapper(GtkWidget*, GdkFrameClock* clock, Widget* instance)
     {
         if (instance->_tick_callback_f)
@@ -393,5 +434,4 @@ namespace mousetrap
         else
             return true;
     }
-
 }

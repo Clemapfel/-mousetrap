@@ -7,9 +7,13 @@
 
 namespace mousetrap
 {
+    /// @brief object that can be bound to a texture unit
     struct TextureObject
     {
+        /// @brief bind for rendering, usually to GL_TEXTURE0
         virtual void bind() const = 0;
+
+        /// @brief unbind from rendering
         virtual void unbind() const = 0;
     };
 }

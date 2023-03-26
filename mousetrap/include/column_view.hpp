@@ -6,7 +6,7 @@
 #pragma once
 
 #include <include/widget.hpp>
-#include <include/selection_model.hpp>
+#include <include/selectable.hpp>
 
 #include <deque>
 

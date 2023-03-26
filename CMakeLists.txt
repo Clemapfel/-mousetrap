@@ -273,7 +273,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/orientable.hpp
 
-    mousetrap/include/grid.hpp mousetrap/src/grid.cpp mousetrap/include/selectable.hpp)
+    mousetrap/include/grid.hpp mousetrap/src/grid.cpp mousetrap/include/selectable.hpp mousetrap/src/spin_button.inl)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

@@ -41,7 +41,7 @@ namespace mousetrap
         gtk_overlay_set_child(get_native(), nullptr);
     }
 
-    Widget* Overlay::get_child()
+    Widget* Overlay::get_child() const
     {
         return _child;
     }

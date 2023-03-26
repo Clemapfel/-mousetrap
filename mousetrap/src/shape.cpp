@@ -608,7 +608,7 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
             return;
         }
 
@@ -621,7 +621,7 @@ namespace mousetrap
     {
         if (index > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
             return RGBA(0, 0, 0, 0);
         }
         return RGBA(_vertices.at(index).color);
@@ -631,7 +631,7 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
             return;
         }
 
@@ -644,9 +644,8 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
-            auto min = std::numeric_limits<float>::min();
-            return Vector3f(min, min, min);
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            return Vector3f();
         }
 
         return _vertices.at(i).position;
@@ -657,7 +656,7 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_texture_coordinate: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
+            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_texture_coordinate: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
             return;
         }
 
@@ -670,9 +669,8 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << std::endl;
-            auto min = std::numeric_limits<float>::min();
-            return Vector2f(min, min);
+            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            return Vector2f();
         }
 
         return _vertices.at(i).texture_coordinates;
@@ -791,10 +789,12 @@ namespace mousetrap
         update_data(true, false, false);
     }
 
-    void Shape::rotate(Angle angle)
+    void Shape::rotate(Angle angle, Vector2f origin)
     {
         auto transform = GLTransform();
+        transform.translate({-1 * origin.x, -1 * origin.y});
         transform.rotate(angle, to_gl_position(get_centroid()));
+        transform.translate({origin.x, origin.y});
 
         for (auto& v : _vertices)
         {

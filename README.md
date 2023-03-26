@@ -7,7 +7,7 @@
 + Add DropDown search bar
 + Expose TextView widget insertion
 + Refactor ColumnView to be a tree
-+ GIcon: Icon set, update image display
++ GIcon: IconSet, allow setting the windows application icon
 + Scale: pango layout interface to allow markdown during text format function
 + Expose GTK_DEBUG interface
 + File: file system, monitor, measure disk size, asynchronous read/write 

@@ -22,6 +22,7 @@
 #include <mousetrap/include/drop_down.hpp>
 #include <mousetrap/include/scale.hpp>
 #include <mousetrap/include/file_system.hpp>
+#include <mousetrap/include/spinner.hpp>
 
 #include <deque>
 #include <iostream>
@@ -51,17 +52,12 @@ static void startup(GApplication*)
         return false;
     });
 
-    auto* box = new Box(Orientation::HORIZONTAL);
+    auto* box = new Box(Orientation::VERTICAL);
+    auto* spinner = new Spinner();
 
-    auto* scale = new Scale(0, 1, 0.01);
-    scale->set_should_draw_value(true);
-    scale->set_format_value_function([](float in) -> std::string {
-       return std::to_string(in) + "%";
-    });
+    auto* button_spin = new Button();
 
-    auto* file = new FileDescriptor("/home/clem/Workspace/rat_game/README.md");
-    auto monitor = new FileMonitor(file->create_monitor());
-
+    window->set_child(box);
     window->show();
     window->present();
     window->set_focusable(true);

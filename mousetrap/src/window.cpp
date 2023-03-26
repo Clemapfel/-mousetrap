@@ -48,19 +48,15 @@ namespace mousetrap
 
     void Window::set_child(Widget* widget)
     {
-        gtk_window_set_child(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*());
+        _child = widget;
+        gtk_window_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }
 
-    void Window::remove_child()
+    Widget* Window::get_child() const
     {
-        gtk_window_set_child(get_native(), nullptr);
+        return _child;
     }
 
-    void Window::set_focused_widget(Widget* widget)
-    {
-        if (widget != nullptr)
-            gtk_window_set_focus(get_native(), widget->operator GtkWidget*());
-    }
 
     void Window::set_hide_on_close(bool b)
     {
@@ -72,9 +68,19 @@ namespace mousetrap
         gtk_window_set_title(get_native(), str.c_str());
     }
 
+    std::string Window::get_title() const
+    {
+        return gtk_window_get_title(get_native());
+    }
+
     void Window::set_destroy_with_parent(bool b)
     {
         gtk_window_set_destroy_with_parent(get_native(), b);
+    }
+
+    bool Window::get_destroy_with_parent() const
+    {
+        return gtk_window_get_destroy_with_parent(get_native());
     }
 
     void Window::set_titlebar_layout(const char* layout)
@@ -86,12 +92,23 @@ namespace mousetrap
 
     void Window::set_titlebar_widget(Widget* widget)
     {
-        gtk_window_set_titlebar(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*());
+        _titlebar_widget = widget;
+        gtk_window_set_titlebar(get_native(), _titlebar_widget == nullptr ? nullptr : _titlebar_widget->operator GtkWidget*());
     }
 
-    void Window::set_modal(bool b)
+    Widget* Window::get_titlebar_widget() const
+    {
+        return _titlebar_widget;
+    }
+
+    void Window::set_is_modal(bool b)
     {
         gtk_window_set_modal(get_native(), b);
+    }
+
+    bool Window::get_is_modal() const
+    {
+        return gtk_window_get_modal(get_native());
     }
 
     void Window::set_transient_for(Window* partner)
@@ -100,8 +117,38 @@ namespace mousetrap
             gtk_window_set_transient_for(get_native(), partner->operator GtkWindow*());
     }
 
-    void Window::set_decorated(bool b)
+    void Window::set_is_decorated(bool b)
     {
         gtk_window_set_decorated(get_native(), b);
+    }
+
+    bool Window::get_is_decorated() const
+    {
+        return gtk_window_get_decorated(get_native());
+    }
+
+    void Window::set_has_close_button(bool b)
+    {
+        gtk_window_set_deletable(get_native(), b);
+    }
+
+    bool Window::get_has_close_button() const
+    {
+        return gtk_window_get_deletable(get_native());
+    }
+
+    void Window::set_startup_notification_identifier(const std::string& str)
+    {
+        gtk_window_set_startup_id(get_native(), str.c_str());
+    }
+
+    void Window::set_focus_visible(bool b)
+    {
+        gtk_window_set_focus_visible(get_native(), b);
+    }
+
+    bool Window::get_focus_visible() const
+    {
+        return gtk_window_get_focus_visible(get_native());
     }
 }

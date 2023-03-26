@@ -50,6 +50,14 @@ namespace mousetrap
             /// @return true if enabled, false otherwise
             bool get_start_child_shrinkable() const;
 
+            /// @brief set end child
+            /// @param widget
+            void set_end_child(Widget*);
+
+            /// @brief get end child
+            /// @return child
+            Widget* get_end_child() const;
+
             /// @brief set whether the end child will increase in size if the separator bar is dragged away from it
             /// @param b true if enabled, false otherwise
             void set_end_child_resizable(bool);
