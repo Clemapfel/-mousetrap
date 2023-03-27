@@ -118,7 +118,6 @@ namespace mousetrap
             std::string get_value(GroupKey, KeyID);
 
             /// @brief get value of key in group as data type, conversion may fail
-            /// @tparam Return_t: One of std::string, bool, int, size_t, float, double or std::vector<T> where T is one of the former
             /// @param group_id
             /// @param key_id
             template<typename Return_t>
@@ -131,7 +130,6 @@ namespace mousetrap
             void set_value(GroupKey, KeyID, const std::string&);
 
             /// @brief set value from type, prints soft warning if group or key in group does not exist, or conversion failed
-            /// @tparam Value_t: One of std::string, bool, int, size_t, float, double or std::vector<T> where T is one of the former
             /// @param group_id
             /// @param key_id
             /// @param value
