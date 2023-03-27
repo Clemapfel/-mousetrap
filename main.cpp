@@ -63,10 +63,8 @@ static void startup(GApplication*)
 
     auto* view = new ListView(Orientation::VERTICAL);
     auto* theme = new IconTheme();
-
-    theme->add_resource_path("/home/clem/Desktop/icons/hicolor/48x48/");
-    std::cout << theme->has_icon("rat_icon_desktop") << std::endl;
-    exit(0);
+    theme->set_resource_path("/home/clem/Desktop/icons_");
+    exit(theme->has_icon("rat_icon_desktop"));
 
     for (auto id : theme->get_icon_names())
     {

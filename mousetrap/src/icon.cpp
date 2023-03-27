@@ -137,4 +137,15 @@ namespace mousetrap
         gtk_icon_theme_add_resource_path(_native, path.c_str());
         gtk_icon_theme_add_search_path(_native, path.c_str());
     }
+
+    void IconTheme::set_resource_path(const std::string& path)
+    {
+        std::array<const char*, 2> paths = {
+            path.c_str(),
+            nullptr
+        };
+
+        gtk_icon_theme_set_resource_path(_native, paths.data());
+        gtk_icon_theme_set_search_path(_native, paths.data());
+    }
 }

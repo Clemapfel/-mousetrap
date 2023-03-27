@@ -44,9 +44,13 @@ namespace mousetrap
             /// @return true if icon exists, false otherwise
             bool has_icon(const IconID&) const;
 
-            /// @brief add a resource path to the theme, on unix, this path has to conform to https://www.freedesktop.org/wiki/Standards/icon-theme-spec/
+            /// @brief add a resource path to the theme, the structure of the folder has to conform to https://www.freedesktop.org/wiki/Standards/icon-theme-spec/
             /// @param path
             void add_resource_path(const std::string&);
+
+            /// @brief overwrite the resource path to the theme, the structure of the folder has to conform to https://www.freedesktop.org/wiki/Standards/icon-theme-spec/
+            /// @param path
+            void set_resource_path(const std::string&);
 
         private:
             GtkIconTheme* _native;
