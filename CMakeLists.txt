@@ -22,7 +22,7 @@ endif()
 
 ## LIBRARY
 
-add_library(mousetrap SHARED
+add_library(mousetrap STATIC
     mousetrap/include/shape.hpp
     mousetrap/src/shape.cpp
 
@@ -299,33 +299,27 @@ target_link_libraries(mousetrap PUBLIC
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)
 set_target_properties(mousetrap PROPERTIES
-    LINKER_LANGUAGE C
+    LINKER_LANGUAGE CXX
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 ## C BINDING
 
-add_library(mousetrap_c_binding SHARED
-    julia/mousetrap.hpp
-    julia/mousetrap.cpp
+add_library(mousetrap_c_adapter SHARED
+    mousetrap/c_adapter/mousetrap.hpp
+    mousetrap/c_adapter/mousetrap.cpp
 )
 
-target_include_directories(mousetrap_c_binding PUBLIC
+target_include_directories(mousetrap_c_adapter PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
     "${GTK_INCLUDE_DIRS}"
 )
 
-target_link_libraries(mousetrap_c_binding PUBLIC
-    ${OpenGL}
-    ${GLEW}
-    ${GTK_LIBRARIES}
-    sfml-audio
-)
-
-target_compile_features(mousetrap_c_binding PUBLIC cxx_std_20)
-set_target_properties(mousetrap_c_binding PROPERTIES
+target_link_libraries(mousetrap_c_adapter PRIVATE mousetrap)
+target_compile_features(mousetrap_c_adapter PUBLIC cxx_std_20)
+set_target_properties(mousetrap_c_adapter PROPERTIES
     LINKER_LANGUAGE C
-    LIBRARY_OUTPUT_DIRECTORY "/home/clem/Workspace/rat_game/julia"
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 ## EXECUTABLE

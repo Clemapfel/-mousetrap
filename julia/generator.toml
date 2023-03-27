@@ -1,0 +1,8 @@
+[general]
+library_name = "\"./libmousetrap_c_binding.so\""
+output_file_path = "./mousetrap.jl"
+module_name = "mousetrap"
+
+export_symbol_prefixes = []
+jll_pkg_name = ""
+output_ignorelist = []
