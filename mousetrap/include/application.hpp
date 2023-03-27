@@ -25,7 +25,8 @@ namespace mousetrap
     {
         public:
             /// @brief construct new action
-            Application();
+            /// @param id valid application id, see https://docs.gtk.org/gio/type_func.Application.id_is_valid.html
+            Application(const std::string& id);
 
             /// @brief destroy action, should only be called at the very end of <tt>main</tt>
             virtual ~Application();

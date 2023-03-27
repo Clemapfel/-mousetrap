@@ -4,15 +4,20 @@
 //
 
 #include <include/application.hpp>
+#include <iostream>
 
 namespace mousetrap
 {
-    Application::Application()
+    Application::Application(const std::string& id)
         : CTOR_SIGNAL(Application, activate),
           CTOR_SIGNAL(Application, startup),
           CTOR_SIGNAL(Application, shutdown)
     {
-        _native = gtk_application_new(nullptr, G_APPLICATION_DEFAULT_FLAGS);
+        if (not g_application_id_is_valid(id.c_str())) {
+            std::cerr << "[ERROR] In Application::Application: id " << id << " is not a valid application id" << std::endl;
+        }
+
+        _native = gtk_application_new(id.c_str(), G_APPLICATION_DEFAULT_FLAGS);
         _native = g_object_ref(_native);
     }
 
