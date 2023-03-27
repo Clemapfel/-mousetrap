@@ -13,7 +13,9 @@ namespace mousetrap
           CTOR_SIGNAL(Window, close_request),
           CTOR_SIGNAL(Window, activate_default_widget),
           CTOR_SIGNAL(Window, activate_focused_widget)
-    {}
+    {
+        gtk_application_add_window(app.operator GtkApplication*(), get_native());
+    }
 
     void Window::present()
     {
