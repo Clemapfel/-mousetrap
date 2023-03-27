@@ -63,7 +63,7 @@ namespace mousetrap
     void ImageDisplay::create_from_icon(const Icon& icon)
     {
         _size = icon.get_size() * Vector2ui(icon.get_scale());
-        gtk_image_set_from_paintable(get_native(), GTK_PAINTABLE(icon.operator GtkIconPaintable*()));
+        gtk_image_set_from_paintable(get_native(), GDK_PAINTABLE(icon.operator GtkIconPaintable*()));
     }
 
     void ImageDisplay::clear()

@@ -61,44 +61,33 @@ static void startup(GApplication*)
 
     auto* button_spin = new Button();
 
-    auto* theme = gtk_icon_theme_new();
-    gtk_icon_theme_get_for_display(gdk_display_get_default());
-    gtk_icon_theme_add_resource_path(theme, "/home/clem/Desktop/");
-    gtk_icon_theme_add_search_path(theme, "/home/clem/Desktop/");
-
     auto* view = new ListView(Orientation::VERTICAL);
+    auto* theme = new IconTheme();
 
-    char** list = gtk_icon_theme_get_icon_names(theme);
-    size_t i = 0;
-    while (list[i] != nullptr)
+    theme->add_resource_path("/home/clem/Desktop/icons/hicolor/48x48/");
+    std::cout << theme->has_icon("rat_icon_desktop") << std::endl;
+    exit(0);
+
+    for (auto id : theme->get_icon_names())
     {
-        auto* paintable = gtk_icon_theme_lookup_icon(theme, list[i], nullptr, 64, 1, GTK_TEXT_DIR_NONE, GTK_ICON_LOOKUP_FORCE_REGULAR);
-        auto* image = new ImageDisplay(GTK_IMAGE(gtk_image_new_from_paintable(GDK_PAINTABLE(paintable))));
-        auto* label = new Label(list[i]);
+        auto* icon = new Icon();
+        icon->create_from_theme(*theme, id, 64);
+        auto* image = new ImageDisplay();
+        image->create_from_icon(*icon);
+
         auto* box = new Box(Orientation::HORIZONTAL);
+        box->set_spacing(10);
 
-        image->set_margin_end(10);
         box->push_back(image);
-        box->push_back(label);
-
+        box->push_back(new Label(id));
         view->push_back(box);
-        i += 1;
     }
 
     auto* scrolled_window = new ScrolledWindow();
     scrolled_window->set_child(view);
 
-    //window->set_child(scrolled_window);
+    window->set_child(scrolled_window);
 
-    auto* icon = new Icon();
-    icon->create_from_file("/home/clem/Desktop/icons/hicolor/48x48/rat_icon_desktop.svg");
-
-    auto* image_display = new ImageDisplay();
-    image_display->create_from_icon(*icon);
-
-    window->set_child(image_display);
-
-    //window->set_child(box);
     window->show();
     window->present();
     window->set_is_focusable(true);
@@ -110,24 +99,7 @@ int main()
     app = new Application("app.mousetrap");
     app->connect_signal_activate([](Application* app)
     {
-        auto* model = new MenuModel();
-        auto* submenu = new MenuModel();
-        auto* action = new Action("test");
-        action->set_function([](){
-            std::cout << "test" << std::endl;
-        });
-        app->add_action(action);
-
-        submenu->add_action("test", *action);
-        //model->add_submenu("test", submenu);
-        app->set_menubar(model);
-
-        auto* popover_menu = new PopoverMenu(submenu);
-        auto* button = new PopoverMenuButton();
-        button->set_popover_menu(popover_menu);
-        //window->set_child(button);
-
-        gtk_application_set_menubar(app->operator GtkApplication *(), model->operator GMenuModel *());
+        // TODO menubar doesn't show up
     });
 
     app->connect_signal("startup", startup);

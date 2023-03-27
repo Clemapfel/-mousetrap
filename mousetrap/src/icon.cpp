@@ -60,7 +60,7 @@ namespace mousetrap
             square_resolution,
             scale,
             GtkTextDirection::GTK_TEXT_DIR_LTR,
-            (GtkIconLookupFlags) 0
+            GtkIconLookupFlags::GTK_ICON_LOOKUP_FORCE_REGULAR
         );
 
         if (error != nullptr)
@@ -107,7 +107,7 @@ namespace mousetrap
         return _native;
     }
 
-    std::vector<std::string> IconTheme::get_icon_names() const
+    std::vector<IconID> IconTheme::get_icon_names() const
     {
         std::vector<std::string> out;
         char** list = gtk_icon_theme_get_icon_names(_native);
@@ -135,5 +135,6 @@ namespace mousetrap
     void IconTheme::add_resource_path(const std::string& path)
     {
         gtk_icon_theme_add_resource_path(_native, path.c_str());
+        gtk_icon_theme_add_search_path(_native, path.c_str());
     }
 }
