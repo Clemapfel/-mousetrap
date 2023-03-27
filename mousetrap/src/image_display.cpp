@@ -14,6 +14,12 @@ namespace mousetrap
         _size = {0, 0};
     }
 
+    ImageDisplay::ImageDisplay(GtkImage* image)
+        : WidgetImplementation<GtkImage>(image)
+    {
+        _size = {0, 0};
+    }
+
     ImageDisplay::ImageDisplay(const std::string& file)
        : ImageDisplay()
     {
@@ -52,6 +58,12 @@ namespace mousetrap
 
         gtk_image_set_from_pixbuf(get_native(), pixbuf);
         g_object_unref(pixbuf);
+    }
+
+    void ImageDisplay::create_from_icon(const Icon& icon)
+    {
+        _size = icon.get_size() * Vector2ui(icon.get_scale());
+        gtk_image_set_from_paintable(get_native(), GTK_PAINTABLE(icon.operator GtkIconPaintable*()));
     }
 
     void ImageDisplay::clear()

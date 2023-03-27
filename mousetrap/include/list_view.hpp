@@ -36,7 +36,7 @@ namespace mousetrap
             /// @param widget
             /// @param iterator iterator to sub-list, or nullptr to add to the toplevel list
             /// @return iterator to list the widget was inserted in
-            [[nodiscard]] Iterator push_back(Widget* widget, Iterator = nullptr);
+            Iterator push_back(Widget* widget, Iterator = nullptr);
 
             /// @brief add a widget to the front of the list
             /// @param widget

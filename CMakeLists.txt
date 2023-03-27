@@ -283,7 +283,7 @@ add_library(mousetrap STATIC
 
     mousetrap/include/music.hpp
     mousetrap/src/music.cpp
-)
+        mousetrap/include/icon.hpp mousetrap/src/icon.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

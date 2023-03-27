@@ -7,6 +7,7 @@
 
 #include <include/image.hpp>
 #include <include/widget.hpp>
+#include <include/icon.hpp>
 
 namespace mousetrap
 {
@@ -16,6 +17,10 @@ namespace mousetrap
         public:
             /// @brief default ctor, initialize as 0x0 image
             ImageDisplay();
+
+            /// @brief construct from GtkImage, for internal use only
+            /// @param image GtkImage instance
+            ImageDisplay(GtkImage*);
 
             /// @brief construct from image on disk
             /// @param path
@@ -36,6 +41,10 @@ namespace mousetrap
             /// @brief load from image
             /// @param image
             void create_from_image(const Image&);
+
+            /// @brief load from icon
+            /// @param icon
+            void create_from_icon(const Icon&);
 
             /// @brief create from empty image
             void clear();
