@@ -26,9 +26,47 @@ namespace mousetrap
         g_object_unref(_native);
     }
 
+    ApplicationID Application::get_id() const
+    {
+        auto* id = g_application_get_application_id(G_APPLICATION(_native));
+        if (id != nullptr)
+            return std::string(id);
+        else
+            return "";
+    }
+
     int Application::run()
     {
         return g_application_run(G_APPLICATION(_native), 0, nullptr);
+    }
+
+    void Application::quit()
+    {
+        g_application_quit(G_APPLICATION(_native));
+    }
+
+    void Application::hold()
+    {
+        if (not _holding)
+            g_application_hold(G_APPLICATION(_native));
+    }
+
+    void Application::release()
+    {
+        if (_holding)
+            g_application_release(G_APPLICATION(_native));
+    }
+
+    void Application::mark_as_busy()
+    {
+        if (not _busy)
+            g_application_mark_busy(G_APPLICATION(_native));
+    }
+
+    void Application::unmark_as_busy()
+    {
+        if (_busy)
+            g_application_unmark_busy(G_APPLICATION(_native));
     }
 
     Application::operator GObject*()

@@ -17,6 +17,9 @@
 
 namespace mousetrap
 {
+    /// @brief application id, see https://docs.gtk.org/gio/type_func.Application.id_is_valid.html
+    using ApplicationID = std::string;
+
     /// @brief object representing an entire application, supplies the main render loop, mapping of actions
     class Application : public SignalEmitter,
         HAS_SIGNAL(Application, activate),
@@ -25,8 +28,12 @@ namespace mousetrap
     {
         public:
             /// @brief construct new action
-            /// @param id valid application id, see https://docs.gtk.org/gio/type_func.Application.id_is_valid.html
-            Application(const std::string& id);
+            /// @param id valid application id, see
+            Application(const ApplicationID& id);
+
+            /// @brief get id
+            /// @return id
+            ApplicationID get_id() const;
 
             /// @brief destroy action, should only be called at the very end of <tt>main</tt>
             virtual ~Application();
@@ -34,6 +41,21 @@ namespace mousetrap
             /// @brief start the main render loop
             /// @returns 1 on error, 0 otherwise
             int run();
+
+            /// @brief immediately exit the application, this forces mousetrap::Application::run to return
+            void quit();
+
+            /// @brief mark the application such that quitting regularly will be prevented, use mousetrap::Application::release to undo this
+            void hold();
+
+            /// @brief undo a previous mousetrap::Application::hold()
+            void release();
+
+            /// @brief mark that the application is currently doing a long-running application. Call mousetrap::Application::unmark_as_busy to undo this
+            void mark_as_busy();
+
+            /// @brief undo a previous call to mousetrap::Application::mark_as_busy
+            void unmark_as_busy();
 
             /// @brief expose as GObject for signal handling, for internal use only
             explicit operator GObject*() override;
@@ -72,5 +94,8 @@ namespace mousetrap
         private:
             GtkApplication* _native;
             std::unordered_map<ActionID, Action*> _actions;
+
+            bool _holding = false;
+            bool _busy = false;
     };
 }

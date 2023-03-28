@@ -1,3 +1,5 @@
+# mousetrap
+
 
 > > This repo is under rapid active development and should not be interacted with by the public. Licensed CC-BY-SA-NC
 
@@ -7,7 +9,6 @@
 + Add DropDown search bar
 + Expose TextView widget insertion
 + Refactor ColumnView to be a tree
-+ GIcon: IconSet, allow setting the windows application icon
 + Scale: pango layout interface to allow markdown during text format function
 + Expose GTK_DEBUG interface
 + File: file system, monitor, measure disk size, asynchronous read/write 
@@ -16,6 +17,7 @@
 + check button groups
 + clipboard: allow arbitrary datatypes
 + Sound: Mutate SoundBuffer, allow Music stream from memory
++ Expose GResource interface
 
 # Design Goals
 
