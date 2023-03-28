@@ -97,4 +97,39 @@ of the library as sometimes, a single task such as constructing a list displayin
 different libraries who are documented on three different internet domains. mousetrap aims to unify both documentation 
 and code usage, keeping everything in one place by abstracting away any gdk or glib functionality.
 
+# Hello World
 
+```cpp
+#include <include/mousetrap.hpp>
+
+using namespace mousetrap;
+
+// global state, holds persistent widgets for the duration of runtime
+inline struct State
+{
+    Window window;
+    Label hello_world_label = Label("hello world");
+    
+}* state;
+
+int main()
+{
+    auto app = Application("app.hello_world");
+
+    app.connect_signal_activate([&](Application*)
+    {
+        // initialize
+        state = new State{Window(app)};
+        state->window.set_child(&state->hello_world_label);
+        state->window.present();
+    });
+
+    app.connect_signal_shutdown([](Application*)
+    {
+        // shut down
+        delete state;
+    });
+
+    return app.run(); // main render loop
+}
+```

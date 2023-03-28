@@ -13,6 +13,12 @@ namespace mousetrap
           CTOR_SIGNAL(ToggleButton, toggled)
     {}
 
+    ToggleButton::ToggleButton(Widget* child)
+        : ToggleButton()
+    {
+        set_child(child);
+    }
+
     bool ToggleButton::get_active() const
     {
         return gtk_toggle_button_get_active(get_native()) == TRUE;

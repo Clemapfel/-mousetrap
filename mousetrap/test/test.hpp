@@ -122,6 +122,6 @@ namespace mousetrap
     };
 }
 
-#define BEGIN_TEST(name) Test::test(name, [](){
-#define CONTINUE_TEST(name) }); Test::test(name, [](){
+#define BEGIN_TEST(name) Test::test(name, [&](){
+#define CONTINUE_TEST(name) }); Test::test(name, [&](){
 #define END_TEST });
