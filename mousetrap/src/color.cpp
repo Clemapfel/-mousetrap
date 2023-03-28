@@ -5,6 +5,8 @@
 
 #include <include/gl_common.hpp>
 #include <include/color.hpp>
+#include <include/log.hpp>
+
 #include <sstream>
 #include <iostream>
 #include <cctype>
@@ -312,7 +314,8 @@ namespace mousetrap
         );
 
         on_error:
-            std::cerr << "[WARNING] In mousetrap::html_code_to_rgba: Unable to parse code \"" + text + "\"" << std::endl;
+
+            log::warning("In html_code_to_rgba: Unable to parse code \"" + text + "\"", MOUSETRAP_DOMAIN);
             return RGBA(0, 0, 0, 1);
     }
 

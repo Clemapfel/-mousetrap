@@ -3,11 +3,13 @@
 // Created on 8/1/22 by clem (mail@clemens-cords.com)
 //
 
+#include <include/shader.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <include/shader.hpp>
 
 namespace mousetrap
 {
@@ -63,7 +65,7 @@ namespace mousetrap
         file.open(path);
         if (not file.is_open())
         {
-            std::cerr << "[WARNING] In Shader::create_from_file: Unable to open file at `" << path << "`" << std::endl;
+            log::critical("[WARNING] In Shader::create_from_file: Unable to open file at `" + path + "`", MOUSETRAP_DOMAIN);
             return false;
         }
         auto str = std::stringstream();
@@ -100,7 +102,8 @@ namespace mousetrap
         glGetShaderiv(id, GL_COMPILE_STATUS, &compilation_success);
         if (compilation_success != GL_TRUE)
         {
-            std::cerr << "In Shader::compile_shader: compilation failed:\n"
+            std::stringstream str;
+            str << "In Shader::compile_shader: compilation failed:\n"
                       << source << "\n\n";
 
             int info_length = 0;
@@ -114,8 +117,9 @@ namespace mousetrap
             glGetShaderInfoLog(id, max_length, &info_length, log.data());
 
             for (auto c: log)
-                std::cerr << c;
-            std::cerr << std::endl;
+                str << c;
+
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
 
             glDeleteShader(id);
             id = 0;
@@ -135,7 +139,8 @@ namespace mousetrap
         glGetProgramiv(id, GL_LINK_STATUS, &link_success);
         if (link_success != GL_TRUE)
         {
-            std::cerr << "In Shader::link_program: linking failed:" << std::endl;
+            std::stringstream str;
+            str << "In Shader::link_program: linking failed:" << std::endl;
 
             int info_length = 0;
             int max_length = info_length;
@@ -148,8 +153,9 @@ namespace mousetrap
             glGetProgramInfoLog(_program_id, max_length, &info_length, log.data());
 
             for (auto c: log)
-                std::cerr << c;
-            std::cerr << std::endl;
+                str << c;
+
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
 
             glDeleteProgram(id);
             id = 0;

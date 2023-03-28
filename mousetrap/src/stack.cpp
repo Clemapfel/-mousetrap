@@ -4,6 +4,8 @@
 //
 
 #include <include/stack.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -49,7 +51,9 @@ namespace mousetrap
     {
         if (_children.find(id) == _children.end())
         {
-            std::cerr << "[ERROR] In Stack::remove_child: No child with ID `" << id << "`" << std::endl;
+            std::stringstream str;
+            str << "In Stack::remove_child: No child with ID `" << id << "`";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 

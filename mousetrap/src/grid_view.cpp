@@ -4,6 +4,7 @@
 //
 
 #include <include/grid_view.hpp>
+#include <include/log.hpp>
 
 #include <iostream>
 
@@ -145,7 +146,7 @@ namespace mousetrap
     {
         auto min = get_min_n_columns();
         if (min > n)
-            std::cerr << "[WARNING] In GridView::set_max_n_columns: Maximum number of columns is lower than minimum number" << std::endl;
+            log::warning("In GridView::set_max_n_columns: Maximum number of columns is lower than minimum number", MOUSETRAP_DOMAIN);
 
         gtk_grid_view_set_max_columns(_native, n);
     }

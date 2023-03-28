@@ -3,6 +3,7 @@
 //
 
 #include <include/sound.hpp>
+#include <include/log.hpp>
 
 #include <iostream>
 
@@ -16,7 +17,7 @@ namespace mousetrap
         auto* sf_buffer = buffer.operator sf::SoundBuffer*();
         if (sf_buffer == nullptr)
         {
-            std::cerr << "[WARNING] In Sound::create_from_buffer: Buffer uninitialized" << std::endl;
+            log::critical("In Sound::create_from_buffer: Buffer uninitialized", MOUSETRAP_DOMAIN);
             return;
         }
 

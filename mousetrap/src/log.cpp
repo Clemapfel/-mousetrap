@@ -3,6 +3,7 @@
 //
 
 #include <include/log.hpp>
+#include <include/time.hpp>
 #include <iostream>
 
 namespace mousetrap
@@ -19,6 +20,18 @@ namespace mousetrap
         
         g_log_set_writer_func(log_writer, nullptr, nullptr);
         _initialized = true;
+
+        _log_format_function = [](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
+
+            auto timestamp = get_timestamp_now();
+
+            std::stringstream out;
+            out << "[" << timestamp << "]: " << message << "\n";
+            for (auto& pair : values)
+                out << "\t" << pair.first << " " << pair.second << "\n";
+
+            return out.str();
+        };
     }
 
     GLogWriterOutput log::log_writer(GLogLevelFlags log_level, const GLogField* fields, gsize n_fields, gpointer)
@@ -29,37 +42,58 @@ namespace mousetrap
         const char* message = nullptr;
         const char* level = nullptr;
 
-        bool level_read = false;
         bool domain_read = false;
         bool message_read = false;
+        bool level_read = false;
+
+        std::map<std::string, std::string> values;
 
         for (size_t i = 0; i < n_fields; ++i)
         {
-            std::cout << fields[i].key << " " << (const char*) fields[i].value << std::endl;
-
             if (not level_read and std::string(fields[i].key) == std::string(detail::mousetrap_level_field))
             {
                 level = (const char*) fields[i].value;
                 level_read = true;
-                continue;
             }
 
             if (not domain_read and std::string(fields[i].key) == std::string("GLIB_DOMAIN"))
             {
                 domain = (const char*) fields[i].value;
                 domain_read = true;
-                continue;
             }
 
             if (not message_read and std::string(fields[i].key) == std::string("MESSAGE"))
             {
                 message = (const char*) fields[i].value;
                 message_read = true;
-                continue;
             }
 
-            if (level_read and domain_read and message_read)
-                break;
+            if (std::string(fields[i].key) != std::string("MESSAGE"))
+                values.insert({std::string((const char*) fields[i].key), std::string((const char*) fields[i].value)});
+        }
+
+        if (_log_file != nullptr)
+        {
+            auto formatted = _log_format_function(std::string(message), values);
+            formatted += "\n";
+
+            GError* error = nullptr;
+            gsize written = 0;
+
+            g_output_stream_write_all(
+                G_OUTPUT_STREAM(_log_file_stream),
+                (void*) formatted.c_str(),
+                formatted.size(),
+                &written,
+                nullptr,
+                &error
+            );
+
+            if (error != nullptr)
+            {
+                std::cerr << "[FATAL] In log::log_writer: " << error->message << std::endl;
+                g_error_free(error);
+            }
         }
 
         // if non-mousetrap message, use default rejection filter
@@ -130,5 +164,18 @@ namespace mousetrap
     void log::set_surpress_info(LogDomain domain, bool b)
     {
         _allow_info.insert_or_assign(domain, not b);
+    }
+
+    void log::set_log_file(const std::string& path)
+    {
+        GError* error = nullptr;
+        _log_file = g_file_new_for_path(path.c_str());
+        _log_file_stream = g_file_append_to(_log_file, GFileCreateFlags::G_FILE_CREATE_NONE, nullptr, &error);
+
+        if (error != nullptr)
+        {
+            log::critical("In log::set_log_file: " + std::string(error->message), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
     }
 }

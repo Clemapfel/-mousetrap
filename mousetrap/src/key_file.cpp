@@ -3,8 +3,11 @@
 // Created on 10/26/22 by clem (mail@clemens-cords.com)
 //
 
-#include <iostream>
 #include <include/key_file.hpp>
+#include <include/log.hpp>
+
+#include <sstream>
+#include <iostream>
 
 namespace mousetrap
 {
@@ -51,7 +54,7 @@ namespace mousetrap
         auto* data = g_key_file_to_data(_native, &length, &error_maybe);
         if (error_maybe != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::operator std::string(): " << error_maybe->message << std::endl;
+            log::critical(std::string("In KeyFile::operator std::string(): ") + error_maybe->message, MOUSETRAP_DOMAIN);
             return std::string();
         }
 
@@ -81,7 +84,9 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::load_from_file: Unable to load file at `" << path << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::load_from_file: Unable to load file at `" << path << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return false;
         }
 
@@ -102,7 +107,9 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::load_from_string: Unable to load from string\n" << file << "\n\n" << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::load_from_string: Unable to load from string\n" << file << "\n\n" << error->message;
+            log::critical(str.str());
             return false;
         }
 
@@ -116,7 +123,9 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::save_to_file: Unable to save to `" << path << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::save_to_file: Unable to save to `" << path << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return false;
         }
         return true;
@@ -130,7 +139,9 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[WARNING] In KeyFile::get_keys: Unable to retrieve keys for group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_keys: Unable to retrieve keys for group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return {};
         }
 
@@ -148,7 +159,7 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::has_key: " << error->message << std::endl;
+            log::critical(std::string("In KeyFile::has_key: ") + error->message, MOUSETRAP_DOMAIN);
             return false;
         }
 
@@ -178,7 +189,12 @@ namespace mousetrap
         g_key_file_set_comment(_native, group.c_str(), key.c_str(), (" " + comment).c_str(), &error);
 
         if (error != nullptr)
-            std::cerr << "[ERROR] In KeyFile::add_comment_above: Unable to add comment for `" << group << "." << key << "`: " << error->message << std::endl;
+        {
+            std::stringstream str;
+            str << "In KeyFile::add_comment_above: Unable to add comment for `" << group << "." << key << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
     }
 
     void KeyFile::add_comment_above(GroupKey group, const std::string& comment)
@@ -187,7 +203,12 @@ namespace mousetrap
         g_key_file_set_comment(_native, group.c_str(), nullptr, (" " + comment).c_str(), &error);
 
         if (error != nullptr)
-            std::cerr << "[ERROR] In KeyFile::add_comment_above: Unable to add comment for `" << group << "`: " << error->message << std::endl;
+        {
+            std::stringstream str;
+            str << "In KeyFile::add_comment_above: Unable to add comment for `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
     }
 
     std::string KeyFile::get_comment_above(GroupKey group, KeyID key)
@@ -196,7 +217,12 @@ namespace mousetrap
         auto* out = g_key_file_get_comment(_native, group.c_str(), key.c_str(), &error);
 
         if (error != nullptr)
-            std::cerr << "[ERROR] In KeyFile::get_comment_above: Unable to retrieve comment for `" << group << "." << key << "`: " << error->message << std::endl;
+        {
+            std::stringstream str;
+            str << "In KeyFile::get_comment_above: Unable to retrieve comment for `" << group << "." << key << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
 
         return std::string(out == nullptr ? "" : out);
     }
@@ -207,7 +233,12 @@ namespace mousetrap
         auto* out = g_key_file_get_comment(_native, group.c_str(), nullptr, &error);
 
         if (error != nullptr)
-            std::cerr << "[ERROR] In KeyFile::get_comment_above: Unable to retrieve comment for `" << group << "`: " << error->message << std::endl;
+        {
+            std::stringstream str;
+            str << "In KeyFile::get_comment_above: Unable to retrieve comment for `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
 
         return std::string(out == nullptr ? "" : out);
     }
@@ -219,7 +250,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return "";
         }
 
@@ -234,7 +268,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<bool>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<bool>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return false;
         }
 
@@ -250,7 +287,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<bool>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<bool>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -269,7 +309,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<int>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<int>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return -1;
         }
 
@@ -285,7 +328,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<int>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<int>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -304,7 +350,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<size_t>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<size_t>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return -1;
         }
 
@@ -320,7 +369,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<int>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<int>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -339,7 +391,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<double>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<double>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return -1;
         }
 
@@ -355,7 +410,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<double>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<double>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -381,7 +439,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<float>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<float>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -400,7 +461,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::string>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::string>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return "";
         }
 
@@ -422,7 +486,10 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<std::vector<std::string>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<std::vector<std::string>>: Unable to retrieve value for key `" << key << "` in group `" << group << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return {};
         }
 
@@ -447,7 +514,9 @@ namespace mousetrap
         auto list = get_value_as<std::vector<float>>(group, key);
         if (not (list.size() != 3 or list.size() != 4))
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<HSVA>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Incorrect number of color components";
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<HSVA>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Incorrect number of color components";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return HSVA(0, 0, 0, 0);
         }
 
@@ -468,7 +537,8 @@ namespace mousetrap
         auto list = get_value_as<std::vector<float>>(group, key);
         if (not (list.size() != 3 or list.size() != 4))
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<RGBA>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Incorrect number of color components";
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<RGBA>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Incorrect number of color components";
             return HSVA(0, 0, 0, 0);
         }
 
@@ -491,7 +561,8 @@ namespace mousetrap
         auto serialized = get_value_as<std::vector<float>>(group, key);
         if (not (serialized.size() > (4 + 2)) and (serialized.size() - 2) % 4 == 0)
         {
-            std::cerr << "[ERROR] In KeyFile::get_value_as<Image>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Expected float vector of 4-mers but number of elements is not divisible by four";
+            std::stringstream str;
+            str << "In KeyFile::get_value_as<Image>: Unable to retrieve value for key `" << key << "` in group `" << group << ": Expected float vector of 4-mers but number of elements is not divisible by four";
             return out;
         }
 
@@ -567,10 +638,14 @@ namespace mousetrap
     template<>
     void KeyFile::set_value_as(GroupKey group, KeyID key, size_t value)
     {
-        if (value > std::numeric_limits<int>::max())
-            std::cerr << "[WARNING] In KeyFile::set_value_as<size_t>: Value " << value << " is too large to be stored as int" << std::endl;
+        if (value > std::numeric_limits<gint64>::max())
+        {
+            std::stringstream str;
+            str << "[WARNING] In KeyFile::set_value_as<size_t>: Value " << value << " is too large to be stored as int";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+        }
 
-        g_key_file_set_integer(_native, group.c_str(), key.c_str(), value);
+        g_key_file_set_int64(_native, group.c_str(), key.c_str(), value);
     }
 
     template<>
@@ -584,7 +659,9 @@ namespace mousetrap
         {
             if (i > std::numeric_limits<int>::max() and once)
             {
-                std::cerr << "[WARNING] In KeyFile::set_value_as<std::vector<size_t>>: Value " << i << " is too large to be stored as int" << std::endl;
+                std::stringstream str;
+                str << "In KeyFile::set_value_as<std::vector<size_t>>: Value " << i << " is too large to be stored as int";
+                log::critical(str.str(), MOUSETRAP_DOMAIN);
                 once = false;
             }
 

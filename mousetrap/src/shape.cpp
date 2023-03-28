@@ -6,8 +6,10 @@
 #include <include/shader.hpp>
 #include <include/gl_common.hpp>
 #include <include/shape.hpp>
+#include <include/log.hpp>
 
 #include <iostream>
+#include <sstream>
 
 namespace mousetrap
 {
@@ -608,7 +610,9 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_color: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            std::stringstream str;
+            str << "In mousetrap::Shape::set_vertex_color: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 
@@ -621,7 +625,10 @@ namespace mousetrap
     {
         if (index > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            std::stringstream str;
+            str << "In mousetrap::Shape::get_vertex_color: index " << index << " out of bounds for an object with " << _vertices.size() << " vertices";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+
             return RGBA(0, 0, 0, 0);
         }
         return RGBA(_vertices.at(index).color);
@@ -631,7 +638,9 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_position: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            std::stringstream str;
+            str << "[ERROR] In mousetrap::Shape::set_vertex_position: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 
@@ -644,7 +653,9 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::get_vertex_position: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            std::stringstream str;
+            str << "In mousetrap::Shape::get_vertex_position: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return Vector3f();
         }
 
@@ -656,7 +667,9 @@ namespace mousetrap
     {
         if (i > _vertices.size())
         {
-            std::cerr << "[ERROR] In mousetrap::Shape::set_vertex_texture_coordinate: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices" <<  std::endl;
+            std::stringstream str;
+            str << "In mousetrap::Shape::set_vertex_texture_coordinate: index " << i << " out of bounds for an object with " << _vertices.size() << " vertices";
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 

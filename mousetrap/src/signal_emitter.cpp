@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <include/signal_emitter.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -14,8 +15,7 @@ namespace mousetrap
 
         if (it == _signal_handlers.end())
         {
-            std::cerr << "[WARNING] In Widget::set_signal_blocked: no signal with id \"" << signal_id << "\" connected."
-                      << std::endl;
+            log::warning("In Widget::set_signal_blocked: no signal with id \"" + signal_id + "\" connected.", MOUSETRAP_DOMAIN);
             return;
         }
 

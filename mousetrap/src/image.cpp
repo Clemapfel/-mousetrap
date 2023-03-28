@@ -4,6 +4,9 @@
 //
 
 #include <include/image.hpp>
+#include <include/log.hpp>
+
+#include <sstream>
 #include <iostream>
 
 namespace mousetrap
@@ -79,7 +82,7 @@ namespace mousetrap
 
         if (error_maybe != nullptr)
         {
-            std::cerr << "[WARNING] In Image::create_from_file: unable to open file \"" << path << "\"" << std::endl;
+            log::critical("In Image::create_from_file: unable to open file \"" + path + "\"", MOUSETRAP_DOMAIN);
             g_error_free(error_maybe);
             _size = {0, 0};
             return false;
@@ -104,7 +107,7 @@ namespace mousetrap
         gdk_pixbuf_save(_data, path.c_str(), "png", &error, NULL);
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In Image::save_to_file: " << error->message << std::endl;
+            log::critical(std::string("In Image::save_to_file: ") + error->message, MOUSETRAP_DOMAIN);
             g_error_free(error);
             return false;
         }
@@ -165,7 +168,10 @@ namespace mousetrap
 
         if (i >= get_data_size())
         {
-            std::cerr << "[ERROR] In Image::get_pixel: indices " << x << " " << y << " are out of bounds for an image of size " << _size.x << "x" << _size.y << std::endl;
+            std::stringstream str;
+            str << "[ERROR] In Image::get_pixel: indices " << x << " " << y << " are out of bounds for an image of size " << _size.x << "x" << _size.y;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+
             return RGBA(0, 0, 0, 0);
         }
 
@@ -185,7 +191,10 @@ namespace mousetrap
 
         if (i >= get_data_size())
         {
-            std::cerr << "[ERROR] In Image::set_pixel: index " << i / 4 << " out of bounds for an image of with " << _size.x * _size.y << " pixels" << std::endl;
+            std::stringstream str;
+            str << "In Image::set_pixel: index " << i / 4 << " out of bounds for an image of with " << _size.x * _size.y << " pixels";
+
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 

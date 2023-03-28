@@ -3,6 +3,8 @@
 //
 
 #include <include/notebook.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -26,7 +28,9 @@ namespace mousetrap
         );
 
         if (out == -1)
-            std::cerr << "[ERROR] In Notebook::push_front: Failed to insert page" << std::endl;
+        {
+            log::critical("In Notebook::push_front: Failed to insert page", MOUSETRAP_DOMAIN);
+        }
 
         gtk_notebook_set_tab_reorderable(
             get_native(),
@@ -68,7 +72,7 @@ namespace mousetrap
         );
 
         if (out == -1)
-            std::cerr << "[ERROR] In Notebook::insert: Failed to insert page" << std::endl;
+            log::critical("In Notebook::insert: Failed to insert page", MOUSETRAP_DOMAIN);
 
         gtk_notebook_set_tab_reorderable(
             get_native(),

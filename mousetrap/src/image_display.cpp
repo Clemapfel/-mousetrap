@@ -4,6 +4,8 @@
 //
 
 #include <include/image_display.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -52,7 +54,7 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[WARNING] In ImageDisplay::create_from_file: Unable to open file at \"" << path << "\": " << error->message << std::endl;
+            log::critical("In ImageDisplay::create_from_file: Unable to open file at \"" + path + "\": " + std::string(error->message), MOUSETRAP_DOMAIN);
             g_error_free(error);
         }
 

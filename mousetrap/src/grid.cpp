@@ -3,6 +3,8 @@
 //
 
 #include <include/grid.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -31,7 +33,7 @@ namespace mousetrap
     {
         if (widget == nullptr)
         {
-            std::cerr << "[ERROR] IN Grid::get_position: Querying position of a nullptr" << std::endl;
+            log::critical("In Grid::get_position: Querying position of a nullptr", MOUSETRAP_DOMAIN);
             return Vector2i();
         }
 

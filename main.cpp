@@ -54,13 +54,6 @@ static void startup(GApplication*)
     window = new Window(*app);
     window->set_show_menubar(true);
 
-    log::initialize();
-    log::debug("debug", MOUSETRAP_DOMAIN);
-    log::info("info", MOUSETRAP_DOMAIN);
-    log::warning("warning", MOUSETRAP_DOMAIN);
-    log::critical("error", MOUSETRAP_DOMAIN);
-    //log::fatal("fatal", "mousetrap");
-
     window->show();
     window->present();
     window->set_is_focusable(true);
@@ -70,6 +63,7 @@ static void startup(GApplication*)
 int main()
 {
     app = new Application("app.mousetrap");
+
     app->connect_signal_activate([](Application* app)
     {
         // TODO menubar doesn't show up

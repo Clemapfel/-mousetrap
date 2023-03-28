@@ -3,6 +3,8 @@
 //
 
 #include <include/icon.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -65,7 +67,7 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In Icon::create_from_theme: " << error->message << std::endl;
+            log::critical(std::string("In Icon::create_from_theme: ") + error->message, MOUSETRAP_DOMAIN);
             g_error_free(error);
         }
     }

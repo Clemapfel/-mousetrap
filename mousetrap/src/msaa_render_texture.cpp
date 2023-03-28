@@ -3,6 +3,7 @@
 //
 
 #include <include/msaa_render_texture.hpp>
+#include <include/log.hpp>
 
 #include <iostream>
 
@@ -69,7 +70,9 @@ namespace mousetrap
     void MultisampledRenderTexture::bind_as_rendertarget() const
     {
         if (_width == 0 or _height == 0)
-            std::cerr << "[WARNING] In MultisampledRenderTexture::bind_as_rendertarget: Framebuffes uninitialized, call `MultisampledRenderTexture::create` first" << std::endl;
+        {
+            log::critical("In MultisampledRenderTexture::bind_as_rendertarget: Framebuffes uninitialized, call `MultisampledRenderTexture::create` first", MOUSETRAP_DOMAIN);
+        }
 
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_before_buffer);
         glBindFramebuffer(GL_FRAMEBUFFER, _buffer);

@@ -3,6 +3,8 @@
 //
 
 #include <include/music.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -80,7 +82,7 @@ namespace mousetrap
     void Music::set_spacial_position(float x, float y, float z)
     {
         if (_native.getChannelCount() != 1)
-            std::cerr << "[WARNING] In Music::set_spacial_position: Only 1-Channel (Mono) sounds can be spatialized" << std::endl;
+            log::critical("In Music::set_spacial_position: Only 1-Channel (Mono) sounds can be spatialized", MOUSETRAP_DOMAIN);
 
         _native.setPosition(x, y, z);
     }

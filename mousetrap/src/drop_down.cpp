@@ -4,6 +4,8 @@
 //
 
 #include <include/drop_down.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -171,7 +173,7 @@ namespace mousetrap
             }
         }
 
-        std::cerr << "[ERROR] In DropDown::set_selected: No item with ID " << id._value << std::endl;
+        log::critical("In DropDown::set_selected: No item with ID " + std::to_string(id._value), MOUSETRAP_DOMAIN);
     }
 
     DropDown::ItemID DropDown::get_selected() const

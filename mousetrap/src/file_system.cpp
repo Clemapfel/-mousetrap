@@ -5,6 +5,9 @@
 
 #include <include/file_system.hpp>
 #include <include/file_monitor.hpp>
+#include <include/log.hpp>
+
+#include <sstream>
 #include <iostream>
 
 namespace mousetrap
@@ -143,7 +146,9 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In FileDescriptor::query_info: Unable to retrieve info for attribute `" << attribute_query_string << "`: " << error->message << std::endl;
+            std::stringstream str;
+            str << "In FileDescriptor::query_info: Unable to retrieve info for attribute `" << attribute_query_string << "`: " << error->message << std::endl;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             g_error_free(error);
             return "";
         }

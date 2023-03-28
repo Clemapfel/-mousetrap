@@ -8,6 +8,7 @@
 
 #include <string>
 #include <map>
+#include <functional>
 
 namespace mousetrap
 {
@@ -59,17 +60,17 @@ namespace mousetrap
             /// @param domain logging domain, optional
             static void info(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief
+            /// @brief print a warning message, appropriate to inform user of unexpected behavior that cannot cause an error
             /// @param message message
             /// @param domain logging domain, optional
             static void warning(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief
+            /// @brief inform user of an error, this function does not interrupt runtime
             /// @param message message
             /// @param domain logging domain, optional
             static void critical(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief
+            /// @brief inform user of a critical error, this function will exit runtime
             /// @param message message
             /// @param domain logging domain, optional
             static void fatal(const std::string& message, LogDomain = USER_DOMAIN);
@@ -84,6 +85,10 @@ namespace mousetrap
             /// @param b true if info messages should be surpressed, false otherwise
             static void set_surpress_info(LogDomain, bool);
 
+            /// @brief specify a log file, any message regardless of priority will be appended to it. File will not be overwritten, if it does not exist, it will be created
+            /// @param path absolute path
+            static void set_log_file(const std::string& path);
+
         private:
             static inline bool _initialized = false;
             static inline bool _forward_to_file = false;
@@ -91,6 +96,10 @@ namespace mousetrap
 
             static inline std::map<LogDomain, bool> _allow_debug;
             static inline std::map<LogDomain, bool> _allow_info;
-    };
 
+            static inline std::function<std::string(const std::string& message, const std::map<std::string, std::string>& fields)> _log_format_function;
+
+            static inline GFile* _log_file = nullptr;
+            static inline GFileOutputStream* _log_file_stream = nullptr;
+    };
 }

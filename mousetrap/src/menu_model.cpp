@@ -4,6 +4,8 @@
 //
 
 #include <include/menu_model.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -85,7 +87,11 @@ namespace mousetrap
     void MenuModel::add_submenu(const std::string& label, MenuModel* model)
     {
         if (model->_submenus.find(this) != model->_submenus.end())
-            std::cerr << "[ERROR] In MenuModel::add_submenu: Trying to add menu " << model << " to " << this << ", even though " << this << " is already a submenu of " << model << ". This will create an infinite loop on initialization." << std::endl;
+        {
+            std::stringstream str;
+            str << "In MenuModel::add_submenu: Trying to add menu " << model << " to " << this << ", even though " << this << " is already a submenu of " << model << ". This will create an infinite loop on initialization." << std::endl;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+        }
 
         _submenus.insert(model);
 

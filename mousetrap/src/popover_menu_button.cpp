@@ -4,6 +4,8 @@
 //
 
 #include <include/popover_menu_button.hpp>
+#include <include/log.hpp>
+
 #include <iostream>
 
 namespace mousetrap
@@ -22,8 +24,11 @@ namespace mousetrap
         for (auto& pair : _model->get_widgets())
         {
             if (not gtk_popover_menu_add_child(get_native(), pair.second->operator GtkWidget*(), pair.first.c_str()))
-                std::cerr << "[WARNING] In PopoverMenu::refresh_widgets: Failed to add Widget of type "
-                          << G_STRINGIFY(pair.second->operator GtkWidget*()) << " to submenu." << std::endl;
+            {
+                std::stringstream str;
+                str << "In PopoverMenu::refresh_widgets: Failed to add Widget of type " << G_STRINGIFY(pair.second->operator GtkWidget*()) << " to submenu." << std::endl;
+                log::critical(str.str(), MOUSETRAP_DOMAIN);
+            }
         }
     }
 
