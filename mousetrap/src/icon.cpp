@@ -134,12 +134,16 @@ namespace mousetrap
 
     void IconTheme::add_resource_path(const std::string& path)
     {
+        verify_folder_is_freedesktop_icon_theme_compliant("set_resource_path", path);
+
         gtk_icon_theme_add_resource_path(_native, path.c_str());
         gtk_icon_theme_add_search_path(_native, path.c_str());
     }
 
     void IconTheme::set_resource_path(const std::string& path)
     {
+        verify_folder_is_freedesktop_icon_theme_compliant("set_resource_path", path);
+
         std::array<const char*, 2> paths = {
             path.c_str(),
             nullptr
@@ -147,5 +151,18 @@ namespace mousetrap
 
         gtk_icon_theme_set_resource_path(_native, paths.data());
         gtk_icon_theme_set_search_path(_native, paths.data());
+    }
+
+    void IconTheme::verify_folder_is_freedesktop_icon_theme_compliant(const std::string& function_scope, const std::string& path)
+    {
+        std::string reason = "";
+
+        // TODO
+
+        return;
+
+        error:
+            std::cerr << "[ERROR] In mousetrap::IconTheme::" << function_scope << ": Folder at " << path << " is not a valid icon theme folder. Reason: " << reason << std::endl;
+            std::cerr << "\t For more information, see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html" << std::endl;
     }
 }

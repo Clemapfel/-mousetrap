@@ -327,3 +327,27 @@ set_target_properties(mousetrap_c_adapter PROPERTIES
 add_executable(debug main.cpp)
 target_link_libraries(debug PUBLIC mousetrap)
 target_include_directories(debug PUBLIC "${CMAKE_SOURCE_DIR}")
+
+## TESTS
+
+option(BUILD_TESTING "Build all tests" ON)
+if (NOT BUILD_TESTING)
+    return()
+endif()
+
+set(TEST_PREFIX "test_")
+
+function(declare_test name)
+    add_executable(
+        "${TEST_PREFIX}${name}"
+        "mousetrap/test/${name}.cpp"
+        mousetrap/test/test.hpp
+    )
+    target_link_libraries("${TEST_PREFIX}${name}" PRIVATE mousetrap)
+    target_include_directories(debug PUBLIC ${CMAKE_SOURCE_DIR})
+    add_test(NAME "${TEST_PREFIX}${name}" COMMAND "${TEST_PREFIX}${name}")
+endfunction()
+
+declare_test(application)
+declare_test(window)
+

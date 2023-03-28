@@ -53,6 +53,8 @@ namespace mousetrap
             void set_resource_path(const std::string&);
 
         private:
+            void verify_folder_is_freedesktop_icon_theme_compliant(const std::string& function_scope, const std::string& path);
+
             GtkIconTheme* _native;
     };
 
