@@ -13,17 +13,18 @@
 
 namespace mousetrap
 {
-    /// @brief test API used for JLUNA_TEST, not intended for end-users
+    /// @brief test API, for internal use only
     struct Test
     {
         static inline std::map<std::string, std::string> _failed = {};
         static inline std::mutex _mutex = std::mutex();
+        static inline size_t _count = 0;
 
         class AssertionException : public std::exception
         {
             public:
                 AssertionException(const std::string& s)
-                : message(s)
+                    : message(s)
                 {}
 
                 const char* what() const noexcept final
@@ -38,7 +39,7 @@ namespace mousetrap
         template<typename Lambda_t>
         static void test(const std::string& name, Lambda_t&& lambda)
         {
-            std::cout << name << ": ";
+            std::cout << (_count < 10 ? "0" : "") << _count++ << " | " << name << " | ";
 
             std::cout.setstate(std::ios_base::failbit);
             std::cerr.setstate(std::ios_base::failbit);
