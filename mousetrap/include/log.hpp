@@ -15,7 +15,7 @@ namespace mousetrap
     enum class LogLevel
     {
         /// @brief error, exits application
-        ERROR = G_LOG_LEVEL_ERROR,
+        FATAL = G_LOG_LEVEL_ERROR,
 
         /// @brief critical, signals that an error occurred but does not exit runtime
         CRITICAL = G_LOG_LEVEL_CRITICAL,
@@ -59,17 +59,17 @@ namespace mousetrap
             /// @param domain logging domain, optional
             static void info(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief print a debug message, surpressed unless set_surpress_debug is set to true
+            /// @brief
             /// @param message message
             /// @param domain logging domain, optional
             static void warning(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief print a debug message, surpressed unless set_surpress_debug is set to true
+            /// @brief
             /// @param message message
             /// @param domain logging domain, optional
             static void critical(const std::string& message, LogDomain = USER_DOMAIN);
 
-            /// @brief print a debug message, surpressed unless set_surpress_debug is set to true
+            /// @brief
             /// @param message message
             /// @param domain logging domain, optional
             static void fatal(const std::string& message, LogDomain = USER_DOMAIN);
@@ -79,7 +79,7 @@ namespace mousetrap
             /// @param b true if debug messages should be surpressed, false otherwise
             static void set_surpress_debug(LogDomain, bool);
 
-            /// @brief surpress info level log message for given log domain. false by default
+            /// @brief surpress info level log message for given log domain. true by default
             /// @param domain logging domain
             /// @param b true if info messages should be surpressed, false otherwise
             static void set_surpress_info(LogDomain, bool);
@@ -89,8 +89,8 @@ namespace mousetrap
             static inline bool _forward_to_file = false;
             static GLogWriterOutput log_writer(GLogLevelFlags log_level, const GLogField* fields, gsize n_fields, gpointer);
 
-            static inline std::map<LogDomain, bool> _surpress_debug;
-            static inline std::map<LogDomain, bool> _surpress_info;
+            static inline std::map<LogDomain, bool> _allow_debug;
+            static inline std::map<LogDomain, bool> _allow_info;
     };
 
 }

@@ -7,6 +7,11 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        constexpr const char* mousetrap_level_field = "MOUSETRAP_LEVEL";
+    }
+
     void log::initialize()
     {
         if (_initialized)
@@ -30,7 +35,9 @@ namespace mousetrap
 
         for (size_t i = 0; i < n_fields; ++i)
         {
-            if (not level_read and std::string(fields[i].key) == std::string("MOUSETRAP_LEVEL"))
+            std::cout << fields[i].key << " " << (const char*) fields[i].value << std::endl;
+
+            if (not level_read and std::string(fields[i].key) == std::string(detail::mousetrap_level_field))
             {
                 level = (const char*) fields[i].value;
                 level_read = true;
@@ -51,22 +58,25 @@ namespace mousetrap
                 continue;
             }
 
-            if (priority_read and domain_read and message_read)
+            if (level_read and domain_read and message_read)
                 break;
         }
 
-        std::cout << level << std::endl;
-
-        // only allow debug when explicitly enabled
-        auto debug_it = _surpress_debug.find(domain);
-        if (level == std::string("DEBUG"))
-            if (debug_it == _surpress_debug.end() or debug_it->second == false;)
+        // if non-mousetrap message, use default rejection filter
+        if (level == nullptr)
+            if (g_log_writer_default_would_drop(log_level, domain))
                 return G_LOG_WRITER_HANDLED;
 
-        // always allow info unless explicitly disabled
-        auto info_it = _surpress_info.find(domain);
-        if (level == std::string("INFO"))
-            if (info_it != _surpress_info.end() and info_it->second == true)
+        // reject debug unless enabled
+        auto debug_it = _allow_debug.find(domain);
+        if (level_read and std::string(level) == std::string("DEBUG"))
+            if (debug_it == _allow_debug.end() or debug_it->second == false)
+                return G_LOG_WRITER_HANDLED;
+
+        // reject info unless enabled
+        auto info_it = _allow_debug.find(domain);
+        if (level_read and std::string(level) == std::string("INFO"))
+            if (info_it == _allow_debug.end() or info_it->second == false)
                 return G_LOG_WRITER_HANDLED;
 
         return g_log_writer_standard_streams(log_level, fields, n_fields, nullptr);
@@ -74,51 +84,51 @@ namespace mousetrap
 
     void log::debug(const std::string& message, LogDomain domain)
     {
-        g_log_structured(domain, (GLogLevelFlags) LogLevel::DEBUG, 
-            "MESSAGE", message.c_str(),
-            "MOUSETRAP_LEVEL", "DEBUG"
+        g_log_structured(domain, (GLogLevelFlags) LogLevel::DEBUG,
+             detail::mousetrap_level_field, "DEBUG",
+             "MESSAGE", message.c_str()
         );
     }
 
     void log::info(const std::string& message, LogDomain domain)
     {
         g_log_structured(domain, (GLogLevelFlags) LogLevel::INFO,
-             "MESSAGE", message.c_str(),
-             "MOUSETRAP_LEVEL", "INFO"
-        );    
+             detail::mousetrap_level_field, "INFO",
+             "MESSAGE", message.c_str()
+        );
     }
 
     void log::warning(const std::string& message, LogDomain domain)
     {
         g_log_structured(domain, (GLogLevelFlags) LogLevel::WARNING,
-             "MESSAGE", message.c_str(),
-             "MOUSETRAP_LEVEL", "WARNING"
-        );    
+             detail::mousetrap_level_field, "WARNING",
+             "MESSAGE", message.c_str()
+        );
     }
 
     void log::critical(const std::string& message, LogDomain domain)
     {
         g_log_structured(domain, (GLogLevelFlags) LogLevel::CRITICAL,
-             "MESSAGE", message.c_str(),
-             "MOUSETRAP_LEVEL", "CRITICAL"
-        );    
+             detail::mousetrap_level_field, "CRITICAL",
+             "MESSAGE", message.c_str()
+        );
     }
 
     void log::fatal(const std::string& message, LogDomain domain)
     {
         g_log_structured(domain, (GLogLevelFlags) LogLevel::FATAL,
-             "MESSAGE", message.c_str(),
-             "MOUSETRAP_LEVEL", "FATAL"
-        );    
+             detail::mousetrap_level_field, "FATAL",
+             "MESSAGE", message.c_str()
+        );
     }
 
     void log::set_surpress_debug(LogDomain domain, bool b)
     {
-        _surpress_debug.insert_or_assign({domain, not b});
+        _allow_debug.insert_or_assign(domain, not b);
     }
 
     void log::set_surpress_info(LogDomain domain, bool b)
     {
-        _surpress_info.insert_or_assign({domain, b});
+        _allow_info.insert_or_assign(domain, not b);
     }
 }
