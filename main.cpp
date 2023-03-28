@@ -26,6 +26,7 @@
 #include <mousetrap/include/image_display.hpp>
 #include <mousetrap/include/scrolled_window.hpp>
 #include <mousetrap/include/icon.hpp>
+#include <mousetrap/include/log.hpp>
 
 #include <deque>
 #include <iostream>
@@ -37,54 +38,28 @@ inline Application* app = nullptr;
 
 inline Action* action;
 
+static void log_handler(const gchar* log_domain, GLogLevelFlags flags, const char* message, gpointer data)
+{
+    std::cout << "[HANDLED] " << message << std::endl;
+}
+
+static GLogWriterOutput log_writer(GLogLevelFlags log_level, const GLogField* fields, gsize n_fields, gpointer user_data)
+{
+    g_log_writer_standard_streams(log_level, fields, n_fields, user_data);
+    return G_LOG_WRITER_HANDLED;
+}
+
 static void startup(GApplication*)
 {
     window = new Window(*app);
     window->set_show_menubar(true);
 
-    action = new Action("global.test_action");
-    action->set_function([](auto test2){
-    }, "testest");
-    action->add_shortcut("<Control>c");
-    app->add_action(action);
-
-    auto menu_model = MenuModel();
-    menu_model.add_action("test", *action);
-
-    window->connect_signal_close_request([](Window*) -> bool {
-        std::cout << "close" << std::endl;
-        return false;
-    });
-
-    auto* box = new Box(Orientation::VERTICAL);
-    auto* spinner = new Spinner();
-
-    auto* button_spin = new Button();
-
-    auto* view = new ListView(Orientation::VERTICAL);
-    auto* theme = new IconTheme();
-    theme->set_resource_path("/home/clem/Desktop/icons_");
-    exit(theme->has_icon("rat_icon_desktop"));
-
-    for (auto id : theme->get_icon_names())
-    {
-        auto* icon = new Icon();
-        icon->create_from_theme(*theme, id, 64);
-        auto* image = new ImageDisplay();
-        image->create_from_icon(*icon);
-
-        auto* box = new Box(Orientation::HORIZONTAL);
-        box->set_spacing(10);
-
-        box->push_back(image);
-        box->push_back(new Label(id));
-        view->push_back(box);
-    }
-
-    auto* scrolled_window = new ScrolledWindow();
-    scrolled_window->set_child(view);
-
-    window->set_child(scrolled_window);
+    log::initialize();
+    log::debug("debug", MOUSETRAP_DOMAIN);
+    log::info("info", MOUSETRAP_DOMAIN);
+    log::warning("warning", MOUSETRAP_DOMAIN);
+    log::critical("error", MOUSETRAP_DOMAIN);
+    //log::fatal("fatal", "mousetrap");
 
     window->show();
     window->present();

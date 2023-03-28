@@ -4,6 +4,7 @@
 //
 
 #include <include/application.hpp>
+#include <include/log.hpp>
 #include <iostream>
 
 namespace mousetrap
@@ -19,6 +20,7 @@ namespace mousetrap
 
         _native = gtk_application_new(id.c_str(), G_APPLICATION_DEFAULT_FLAGS);
         _native = g_object_ref(_native);
+        log::initialize();
     }
 
     Application::~Application()

@@ -18,6 +18,7 @@
 + clipboard: allow arbitrary datatypes
 + Sound: Mutate SoundBuffer, allow Music stream from memory
 + Expose GResource interface
++ Log: allow stream to file
 
 # Design Goals
 
