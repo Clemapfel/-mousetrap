@@ -21,7 +21,7 @@ namespace mousetrap
     {}
 
     FileDescriptor::FileDescriptor(GFile* file)
-    : _native(file)
+        : _native(file)
     {
         if (_native != nullptr)
             g_object_ref(file);
@@ -46,36 +46,33 @@ namespace mousetrap
     }
 
     FileDescriptor::FileDescriptor(const FileDescriptor& other)
-        : _native(other._native)
-    {
-        g_object_ref(other._native);
-    }
+        : FileDescriptor(g_file_dup(other._native))
+    {}
 
     FileDescriptor::FileDescriptor(FileDescriptor&& other)
         : _native(other._native)
     {
-        g_object_ref(other._native);
         other._native = nullptr;
     }
 
     FileDescriptor& FileDescriptor::operator=(const FileDescriptor& other)
     {
-        g_object_ref(other._native);
-        this->_native = other._native;
+        if (_native != nullptr)
+            g_object_unref(_native);
 
+        _native = g_file_dup(other._native);
+        g_object_ref(_native);
         return *this;
     }
 
     FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other)
     {
-        g_object_ref(other._native);
-        this->_native = other._native;
+        _native = other._native;
         other._native = nullptr;
-
         return *this;
     }
 
-    FileDescriptor::operator GFile*()
+    FileDescriptor::operator GFile*() const
     {
         return _native;
     }
@@ -120,14 +117,15 @@ namespace mousetrap
         return g_file_test(get_path().c_str(), G_FILE_TEST_IS_EXECUTABLE);
     }
 
-    FileDescriptor FileDescriptor::follow_symlink() const
+    FileDescriptor FileDescriptor::read_symlink() const
     {
         GError* error = nullptr;
         auto* out = g_file_read_link(get_path().c_str(), &error);
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In FileSystem::file_read_symlink: " << error->message << std::endl;
+            log::critical(std::string("In FileDescriptor::read_symlink: ") + error->message, MOUSETRAP_DOMAIN);
+            g_error_free(error);
             return FileDescriptor();
         }
 
@@ -144,28 +142,44 @@ namespace mousetrap
 
     FilePath FileDescriptor::get_path() const
     {
-        char* path = G_IS_FILE(_native) ? g_file_get_path(_native) : nullptr;
+        if (_native == nullptr)
+            return "";
+
+        auto* path = g_file_get_path(_native);
         return path == nullptr ? "" : path;
     }
 
     FilePath FileDescriptor::get_path_relative_to(const FileDescriptor& other) const
     {
-        return g_file_get_relative_path(_native, other._native);
+        if (_native == nullptr or other._native == nullptr)
+            return "";
+
+        auto* path = g_file_get_relative_path(_native, other._native);
+        return path != nullptr ? path : "";
     }
 
     FileDescriptor FileDescriptor::get_parent() const
     {
+        if (_native == nullptr)
+            return FileDescriptor();
+
         return g_file_get_parent(_native);
     }
 
     FileURI FileDescriptor::get_uri() const
     {
+        if (_native == nullptr)
+            return "";
+
         auto* uri = g_file_get_uri(_native);
         return uri == nullptr ? "" : uri;
     }
 
     std::string FileDescriptor::get_file_extension() const
     {
+        if (_native == nullptr)
+            return "";
+
         auto name = get_name();
 
         size_t i = name.size()-1;
@@ -177,9 +191,6 @@ namespace mousetrap
 
     std::string FileDescriptor::get_content_type() const
     {
-        if (is_folder())
-            return "folder";
-
         return query_info(G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE);
     }
 
@@ -203,17 +214,80 @@ namespace mousetrap
 
     bool FileDescriptor::operator==(const FileDescriptor& other) const
     {
+        if (this->_native == nullptr or other._native == nullptr)
+            return false;
+
         return g_file_equal(this->_native, other._native);
     }
 
     bool FileDescriptor::operator!=(const FileDescriptor& other) const
     {
+        if (this->_native == nullptr or other._native == nullptr)
+            return false;
+
         return not this->operator==(other);
     }
 
     size_t FileDescriptor::hash() const
     {
         return g_file_hash(_native);
+    }
+
+    std::vector<FileDescriptor> FileDescriptor::get_children(bool recursive)
+    {
+        std::vector<FileDescriptor> out;
+        if (not is_folder())
+            return out;
+
+        std::function<void(GFile*, std::vector<FileDescriptor>*)> enumerate;
+        enumerate = [enumerate, recursive](GFile* file, std::vector<FileDescriptor>* out)
+        {
+            GError* error = nullptr;
+            auto* enumerator = g_file_enumerate_children(
+            file,
+            G_FILE_ATTRIBUTE_STANDARD_NAME,
+            G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+            nullptr,
+            &error
+            );
+
+            if (error != nullptr)
+            {
+                std::stringstream str;
+                str << "In filesystem::get_all_files_in: Error when trying to enumerate children of file at `" << g_file_get_path(file) << "`: " << error->message;
+                log::critical(str.str(), MOUSETRAP_DOMAIN);
+                g_error_free(error);
+                return;
+            }
+
+            if (enumerator == nullptr)
+                return;
+
+            auto* current = g_file_enumerator_next_file(enumerator, nullptr, &error);
+            while (current != nullptr)
+            {
+                if (error != nullptr)
+                {
+                    std::stringstream str;
+                    str << "In filesystem::get_all_files_in: Error when trying to enumerate children of file at `" << g_file_get_path(file) << "`: " << error->message;
+                    log::critical(str.str(), MOUSETRAP_DOMAIN);
+                    g_error_free(error);
+                    return;
+                }
+
+                auto to_push = FileDescriptor(g_file_enumerator_get_child(enumerator, current));
+                out->emplace_back(to_push);
+                current = g_file_enumerator_next_file(enumerator, nullptr, &error);
+
+                if (to_push.is_folder() and recursive)
+                    enumerate(to_push.operator GFile*(), out);
+            }
+
+            g_object_unref(enumerator);
+        };
+
+        enumerate(_native, &out);
+        return out;
     }
 
     FileMonitor FileDescriptor::create_monitor() const
@@ -223,7 +297,143 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            std::cerr << "[ERROR] In FileDescriptor::create_monitor: " << error->message << std::endl;
+            log::critical(std::string("In FileDescriptor::create_monitor: ") + error->message, MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
+
+        return out;
+    }
+
+    bool FileSystem::create_file_at(const FileDescriptor& destination, bool should_replace_destination)
+    {
+        int flags = G_FILE_CREATE_NONE;
+
+        if (should_replace_destination)
+            flags |= G_FILE_CREATE_REPLACE_DESTINATION;
+
+        GError* error = nullptr;
+        auto* stream = g_file_create(destination.operator GFile *(), static_cast<GFileCreateFlags>(flags), nullptr, &error);
+
+        if (error != nullptr)
+        {
+            std::stringstream str;
+            str << "In FileSystem::new_file: Unable to create file at `" << destination.get_name() << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+        }
+
+        auto out = stream == nullptr;
+        g_object_unref(stream);
+        return out;
+    }
+
+    bool FileSystem::create_directory_at(const FileDescriptor& destination)
+    {
+        return g_mkdir_with_parents(destination.get_path().c_str(), 0);
+    }
+
+    bool FileSystem::delete_at(const FileDescriptor& file)
+    {
+        GError* error = nullptr;
+        auto out = g_file_delete(file.operator GFile *(), nullptr, &error);
+
+        if (error != nullptr)
+        {
+            std::stringstream str;
+            str << "In FileSystem::delete_file: Unable to delete file at `" << file.get_name() << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+        }
+
+        return out;
+    }
+
+    bool FileSystem::copy(
+        const FileDescriptor& from,
+        const FileDescriptor& to,
+        bool allow_overwrite,
+        bool make_backup,
+        bool follow_symlinks
+    )
+    {
+        int flags = G_FILE_COPY_NONE | G_FILE_COPY_ALL_METADATA;
+
+        if (allow_overwrite)
+            flags |= G_FILE_COPY_OVERWRITE;
+
+        if (make_backup)
+            flags |= G_FILE_COPY_BACKUP;
+
+        if (not follow_symlinks)
+            flags |= G_FILE_COPY_NOFOLLOW_SYMLINKS;
+
+        GError* error = nullptr;
+        auto out = g_file_copy(
+            from.operator GFile *(),
+            to.operator GFile *(),
+            static_cast<GFileCopyFlags>(flags),
+            nullptr, nullptr, nullptr,
+            &error
+        );
+
+        if (error != nullptr)
+        {
+            std::stringstream str;
+            str << "In FileSystem::copy: Unable to copy file from `" << from.get_path() << "` to `" << to.get_path() << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
+
+        return out;
+    }
+
+    bool FileSystem::move(
+        const FileDescriptor& from,
+        const FileDescriptor& to,
+        bool allow_overwrite,
+        bool make_backup,
+        bool follow_symlinks
+    )
+    {
+        int flags = G_FILE_COPY_NONE | G_FILE_COPY_ALL_METADATA;
+
+        if (allow_overwrite)
+            flags |= G_FILE_COPY_OVERWRITE;
+
+        if (make_backup)
+            flags |= G_FILE_COPY_BACKUP;
+
+        if (not follow_symlinks)
+            flags |= G_FILE_COPY_NOFOLLOW_SYMLINKS;
+
+        GError* error = nullptr;
+        auto out = g_file_move(
+        from.operator GFile *(),
+        to.operator GFile *(),
+        static_cast<GFileCopyFlags>(flags),
+        nullptr, nullptr, nullptr,
+        &error
+        );
+
+        if (error != nullptr)
+        {
+            std::stringstream str;
+            str << "In FileSystem::copy: Unable to copy file from `" << from.get_name() << "` to `" << to.get_name() << "`: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
+            g_error_free(error);
+        }
+
+        return out;
+    }
+
+    bool FileSystem::move_to_trash(const FileDescriptor& file)
+    {
+        GError* error = nullptr;
+        auto out = g_file_trash(file.operator GFile *(), nullptr, &error);
+
+        if (error != nullptr)
+        {
+            std::stringstream str;
+            str << "[WARNING] In FileSystem::move_to_trash: Unable to move file `" << file.get_name() << "` to trash: " << error->message;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             g_error_free(error);
         }
 

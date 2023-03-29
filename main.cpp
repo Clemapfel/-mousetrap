@@ -27,6 +27,7 @@
 #include <mousetrap/include/scrolled_window.hpp>
 #include <mousetrap/include/icon.hpp>
 #include <mousetrap/include/log.hpp>
+#include <mousetrap/include/file_monitor.hpp>
 
 #include <deque>
 #include <iostream>
@@ -55,9 +56,12 @@ static void startup(GApplication*)
     window->set_show_menubar(true);
 
     auto file = FileDescriptor();
-    file.create_from_path("/");
-    std::cout << file.get_parent().get_path() << std::endl;
-    std::cout << file.exists() << std::endl;
+    file.create_from_path("/home/clem/Workspace/rat_game/main.cpp");
+    static auto monitor = file.create_monitor();
+    monitor.connect_signal_file_changed([](FileMonitor*, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor&){
+        std::cout << (int) event << file.get_path() << std::endl;
+    });
+
 
     window->show();
     window->present();

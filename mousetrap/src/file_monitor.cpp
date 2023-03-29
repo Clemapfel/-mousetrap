@@ -8,6 +8,7 @@
 namespace mousetrap
 {
     FileMonitor::FileMonitor(FileMonitor&& other) noexcept
+        : CTOR_SIGNAL(FileMonitor, file_changed)
     {
         _native = other._native;
         other._native = nullptr;
@@ -21,7 +22,7 @@ namespace mousetrap
     }
 
     FileMonitor::FileMonitor(GFileMonitor* native)
-        : _native(native)
+        : _native(native), CTOR_SIGNAL(FileMonitor, file_changed)
     {
         g_object_ref(_native);
         g_signal_connect(_native, "changed", G_CALLBACK(on_changed), this);
