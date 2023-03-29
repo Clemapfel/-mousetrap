@@ -4,6 +4,7 @@
 //
 
 #include <include/adjustment.hpp>
+#include <include/log.hpp>
 #include <glm/glm.hpp>
 
 namespace mousetrap
@@ -25,7 +26,21 @@ namespace mousetrap
 
     Adjustment::Adjustment(float current, float lower, float upper, float increment)
         : Adjustment(gtk_adjustment_new(current, lower, upper, increment, 0, glm::distance(lower, upper)))
-    {}
+    {
+        if (upper < lower)
+        {
+            std::stringstream str;
+            str << "In Adjustment::Adjustment: lower " << lower << " larged than upper " << upper;
+            log::warning(str.str(), MOUSETRAP_DOMAIN);
+        }
+
+        if (increment < 0)
+        {
+            std::stringstream str;
+            str << "In Adjustment:Adjustment: " << increment << " is not a valid increment, increment has to be positive";
+            log::warning(str.str(), MOUSETRAP_DOMAIN);
+        }
+    }
 
     Adjustment::~Adjustment()
     {
@@ -110,15 +125,42 @@ namespace mousetrap
     void Adjustment::set_lower(float value)
     {
         gtk_adjustment_set_lower(_native, value);
+
+        auto lower = gtk_adjustment_get_lower(_native);
+        auto upper = gtk_adjustment_get_upper(_native);
+
+        if (upper < lower)
+        {
+            std::stringstream str;
+            str << "In Adjustment::set_lower: lower " << lower << " larged than upper " << upper;
+            log::warning(str.str(), MOUSETRAP_DOMAIN);
+        }
     }
 
     void Adjustment::set_upper(float value)
     {
         gtk_adjustment_set_upper(_native, value);
+
+        auto lower = gtk_adjustment_get_lower(_native);
+        auto upper = gtk_adjustment_get_upper(_native);
+
+        if (upper < lower)
+        {
+            std::stringstream str;
+            str << "In Adjustment::set_upper: lower " << lower << " larged than upper " << upper;
+            log::warning(str.str(), MOUSETRAP_DOMAIN);
+        }
     }
 
     void Adjustment::set_increment(float value)
     {
+        if (value < 0)
+        {
+            std::stringstream str;
+            str << "In Adjustment:set_increment: " << value << " is not a valid increment, increment has to be positive";
+            log::warning(str.str(), MOUSETRAP_DOMAIN);
+        }
+
         gtk_adjustment_set_step_increment(_native, value);
     }
 }

@@ -4,6 +4,7 @@
 
 #include <include/action.hpp>
 #include <include/application.hpp>
+#include <include/log.hpp>
 
 #include <iostream>
 
@@ -43,12 +44,17 @@ namespace mousetrap
             _stateless_f();
         else if (_stateful_f)
             _stateful_f();
+
+        if (not _stateful_f and not _stateless_f)
+            log::warning("In Action::activate: Activating action with id " + get_id() + ", but set_function or set_stateful_function has not been called yet", MOUSETRAP_DOMAIN);
     }
 
     void Action::set_state(bool b)
     {
         if (get_is_stateful())
             g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(b));
+        else
+            log::warning("In Action::set_state: Action with id " + get_id() + " is stateless", MOUSETRAP_DOMAIN);
     }
 
     void Action::add_shortcut(const ShortcutTriggerID& shortcut)
@@ -56,8 +62,10 @@ namespace mousetrap
         auto* trigger = gtk_shortcut_trigger_parse_string(shortcut.c_str());
         if (trigger == nullptr)
         {
-            std::cerr << "[WARNING] In Action::add_shortcut: Unable to parse shortcut trigger `" << shortcut
+            auto str = std::stringstream();
+            str << "In Action::add_shortcut: Unable to parse shortcut trigger `" << shortcut
                       << "`. Ignoring this shortcut binding" << std::endl;
+            log::critical(str.str(), MOUSETRAP_DOMAIN);
             return;
         }
 

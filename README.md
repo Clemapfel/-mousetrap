@@ -1,7 +1,23 @@
 # mousetrap
 
-
 > > This repo is under rapid active development and should not be interacted with by the public. Licensed CC-BY-SA-NC
+
+GTK4 is well optimized, incredibly powerful and utterly inscrutable. It has hundreds of thousands of lines of code and with functionality split between GTK, GDK, Glib and more,
+learning the library tsake weeks, meaning many user will feel overwhelmed and never try at all. Mousetrap aims to address this, by
+wrapping GTK4 in a way that is much easier to understand and use, allowing beginners to start developing applications within minutes instead of days.
+
+## Advantages of mousetrap over GTK4
++ supports C++ types, allowing lambdas to be used in place of static c functions
++ Adds Image- and Sound-processing utilities, including natively playing sounds at runtime
++ Adds high-level, fully abstracted OpenGL functionality, such as native 2d shapes, textures, render textures, shaders, blend-modes, transforms and more
++ Input of funtions are sanity checked and verbose warnings are printed, speeding up debugging and preventing bugs
++ All widgets can be ininitialized with a single line of code, this includes complex widgets like `TreeListView` or `ColumnView` which would take dozens of lines to create in native GTK4
++ Documentation is in a single place, as opposed to being split across multiple websites
++ Many things have been redesigned for improved clarity and usability, especially the signal and action architecture
++ focuses on stability, misuse of the library should never crash the application
+
+The main disadvantage of mousetrap is that not every GTK4 functionality is imported, making mousetrap somewhat less flexible. However, **every non-deprecated GTK4-widget is available**, 
+meaning there is no limiation put upon the actual graphical user interface.
 
 # TODO
 + Search Bar
@@ -19,6 +35,7 @@
 + Sound: Mutate SoundBuffer, allow Music stream from memory
 + Expose GResource interface
 + Log: allow stream to file
++ FileSystem: allow async operations
 
 # Design Goals
 

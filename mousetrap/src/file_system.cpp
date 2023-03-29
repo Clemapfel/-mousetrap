@@ -33,24 +33,26 @@ namespace mousetrap
             g_object_unref(_native);
     }
 
-    void FileDescriptor::create_from_path(const FilePath& path)
+    bool FileDescriptor::create_from_path(const FilePath& path)
     {
         _native = g_file_new_for_path(path.c_str());
+        return _native != nullptr and exists();
     }
 
-    void FileDescriptor::create_from_uri(const FileURI& uri)
+    bool FileDescriptor::create_from_uri(const FileURI& uri)
     {
         _native = g_file_new_for_uri(uri.c_str());
+        return _native != nullptr and exists();
     }
 
     FileDescriptor::FileDescriptor(const FileDescriptor& other)
-    : _native(other._native)
+        : _native(other._native)
     {
         g_object_ref(other._native);
     }
 
     FileDescriptor::FileDescriptor(FileDescriptor&& other)
-    : _native(other._native)
+        : _native(other._native)
     {
         g_object_ref(other._native);
         other._native = nullptr;
@@ -78,23 +80,65 @@ namespace mousetrap
         return _native;
     }
 
-    bool FileDescriptor::is_valid() const
+    bool FileDescriptor::exists() const
     {
-        return _native != nullptr and (is_file() or is_folder());
+        if (_native == nullptr)
+            return false;
+
+        return g_file_test(get_path().c_str(), G_FILE_TEST_EXISTS);
     }
 
     bool FileDescriptor::is_file() const
     {
+        if (_native == nullptr)
+            return false;
+
         return g_file_test(get_path().c_str(), G_FILE_TEST_IS_REGULAR);
     }
 
     bool FileDescriptor::is_folder() const
     {
+        if (_native == nullptr)
+            return false;
+
         return g_file_test(get_path().c_str(), G_FILE_TEST_IS_DIR);
     }
 
-    FilePath FileDescriptor::get_name() const
+    bool FileDescriptor::is_symlink() const
     {
+        if (_native == nullptr)
+            return false;
+
+        return g_file_test(get_path().c_str(), G_FILE_TEST_IS_SYMLINK);
+    }
+
+    bool FileDescriptor::is_executable() const
+    {
+        if (_native == nullptr)
+            return false;
+
+        return g_file_test(get_path().c_str(), G_FILE_TEST_IS_EXECUTABLE);
+    }
+
+    FileDescriptor FileDescriptor::follow_symlink() const
+    {
+        GError* error = nullptr;
+        auto* out = g_file_read_link(get_path().c_str(), &error);
+
+        if (error != nullptr)
+        {
+            std::cerr << "[ERROR] In FileSystem::file_read_symlink: " << error->message << std::endl;
+            return FileDescriptor();
+        }
+
+        return FileDescriptor(std::string(out));
+    }
+
+    std::string FileDescriptor::get_name() const
+    {
+        if (_native == nullptr)
+            return "";
+
         return g_file_get_basename(_native);
     }
 

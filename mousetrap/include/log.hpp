@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <sstream>
 
 namespace mousetrap
 {
@@ -41,7 +42,7 @@ namespace mousetrap
     constexpr const char* USER_DOMAIN = "debug";
 
     /// @brief uninstantiatable singleton, provides global logging functionality
-    struct log
+    class log
     {
         public:
             /// @brief ctor deleted, singleton instance that cannot be instantiated
@@ -89,6 +90,15 @@ namespace mousetrap
             /// @param path absolute path
             static void set_log_file(const std::string& path);
 
+            /// @brief set formatting function, this functino transforms the log message into a string which will be appended to the log file. This function is not applied to messages printed to cout or cerr
+            /// @tparam Function_t lambda with signatures (const std::string& message, const std::map<std::string, std::string>& fields) -> std::string
+            /// @param function
+            template<typename Function_t>
+            static void set_log_file_formatting_function(Function_t function);
+
+            /// @brief reset formatting function to default
+            static void reset_log_file_formatting_function();
+
         private:
             static inline bool _initialized = false;
             static inline bool _forward_to_file = false;
@@ -96,6 +106,8 @@ namespace mousetrap
 
             static inline std::map<LogDomain, bool> _allow_debug;
             static inline std::map<LogDomain, bool> _allow_info;
+
+            static std::string default_file_formatting_function(const std::string& message, const std::map<std::string, std::string>& fields);
 
             static inline std::function<std::string(const std::string& message, const std::map<std::string, std::string>& fields)> _log_format_function;
 

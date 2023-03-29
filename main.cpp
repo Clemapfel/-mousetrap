@@ -54,6 +54,11 @@ static void startup(GApplication*)
     window = new Window(*app);
     window->set_show_menubar(true);
 
+    auto file = FileDescriptor();
+    file.create_from_path("/");
+    std::cout << file.get_parent().get_path() << std::endl;
+    std::cout << file.exists() << std::endl;
+
     window->show();
     window->present();
     window->set_is_focusable(true);

@@ -13,6 +13,18 @@ namespace mousetrap
         constexpr const char* mousetrap_level_field = "MOUSETRAP_LEVEL";
     }
 
+    std::string log::default_file_formatting_function(const std::string& message, const std::map<std::string, std::string>& fields)
+    {
+        auto timestamp = get_timestamp_now();
+
+        std::stringstream out;
+        out << "[" << timestamp << "]: " << message << "\n";
+        for (auto& pair : fields)
+            out << "\t" << pair.first << " " << pair.second << "\n";
+
+        return out.str();
+    }
+
     void log::initialize()
     {
         if (_initialized)
@@ -20,17 +32,21 @@ namespace mousetrap
         
         g_log_set_writer_func(log_writer, nullptr, nullptr);
         _initialized = true;
+        reset_log_file_formatting_function();
+    }
 
+    template <typename Function_t>
+    void log::set_log_file_formatting_function(Function_t function)
+    {
+        _log_format_function = [f = function](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
+            f(message, values);
+        };
+    }
+
+    void log::reset_log_file_formatting_function()
+    {
         _log_format_function = [](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
-
-            auto timestamp = get_timestamp_now();
-
-            std::stringstream out;
-            out << "[" << timestamp << "]: " << message << "\n";
-            for (auto& pair : values)
-                out << "\t" << pair.first << " " << pair.second << "\n";
-
-            return out.str();
+            return log::default_file_formatting_function(message, values);
         };
     }
 
