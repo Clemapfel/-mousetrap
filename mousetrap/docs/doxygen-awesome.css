@@ -40,7 +40,7 @@ html {
     --page-secondary-foreground-color: #dbe4eb;
 
     --separator-color: #38393b;
-    --side-nav-background: #252628;
+    --side-nav-background: #2b2d30;
 
     /* border radius for all rounded components. Will affect many components, like dropdowns, memitems, codeblocks, ... */
     --border-radius-large: 8px;
