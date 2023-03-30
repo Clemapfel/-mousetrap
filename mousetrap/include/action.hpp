@@ -78,6 +78,10 @@ namespace mousetrap
             /// @param new_state
             void set_state(bool);
 
+            /// @brief get state of a stateful action, if the action is not stateful, returns false
+            /// @return false if state is set to false or the action is not stateful, true otherwise
+            bool get_state() const;
+
             /// @brief trigger the action
             void activate() const;
 

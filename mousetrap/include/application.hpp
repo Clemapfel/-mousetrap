@@ -23,7 +23,6 @@ namespace mousetrap
     /// @brief object representing an entire application, supplies the main render loop, mapping of actions
     class Application : public SignalEmitter,
         HAS_SIGNAL(Application, activate),
-        HAS_SIGNAL(Application, startup),
         HAS_SIGNAL(Application, shutdown)
     {
         public:

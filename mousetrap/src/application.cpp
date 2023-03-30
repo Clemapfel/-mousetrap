@@ -11,7 +11,6 @@ namespace mousetrap
 {
     Application::Application(const std::string& id)
         : CTOR_SIGNAL(Application, activate),
-          CTOR_SIGNAL(Application, startup),
           CTOR_SIGNAL(Application, shutdown)
     {
         log::initialize();

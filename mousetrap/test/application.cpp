@@ -25,7 +25,6 @@ int main()
     auto app = Application("mousetrap.test.application");
 
     static bool activate_triggered = false;
-    static bool startup_triggered = false;
     static bool shutdown_triggered = false;
 
     BEGIN_TEST("init")
@@ -52,10 +51,6 @@ int main()
         state->window.close();
     });
 
-    app.connect_signal_startup([](Application*){
-        startup_triggered = true;
-    });
-
     app.connect_signal_shutdown([](Application*){
         shutdown_triggered = true;
         delete state;
@@ -66,7 +61,6 @@ int main()
     BEGIN_TEST("signals")
 
     Test::assert_that(activate_triggered);
-    Test::assert_that(startup_triggered);
     Test::assert_that(shutdown_triggered);
 
     END_TEST

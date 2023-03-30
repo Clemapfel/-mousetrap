@@ -57,6 +57,17 @@ namespace mousetrap
             log::warning("In Action::set_state: Action with id " + get_id() + " is stateless", MOUSETRAP_DOMAIN);
     }
 
+    bool Action::get_state() const
+    {
+        if (get_is_stateful())
+            return g_variant_get_boolean(g_action_get_state(G_ACTION(_g_action)));
+        else
+        {
+            log::warning("In Action::get_state: Action with id " + get_id() + " is stateless", MOUSETRAP_DOMAIN);
+            return false;
+        }
+    }
+
     void Action::add_shortcut(const ShortcutTriggerID& shortcut)
     {
         auto* trigger = gtk_shortcut_trigger_parse_string(shortcut.c_str());

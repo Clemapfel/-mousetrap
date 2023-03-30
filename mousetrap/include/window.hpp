@@ -19,8 +19,15 @@ namespace mousetrap
     {
         public:
             /// @brief construct
+            Window();
+
+            /// @brief construct
             /// @param application
             Window(Application&);
+
+            /// @brief link with application
+            /// @param application
+            void set_application(Application&);
 
             /// @brief attempt to maximize the window
             /// @param b true if window should be maximize, false otherwise

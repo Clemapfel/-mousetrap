@@ -2,6 +2,8 @@
 // Copyright (c) Clemens Cords (mail@clemens-cords.com), created 3/20/23
 //
 
+#include <iostream>
+
 namespace mousetrap
 {
     template<typename Function_t>

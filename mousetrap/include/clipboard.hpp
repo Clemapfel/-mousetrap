@@ -6,9 +6,10 @@
 
 #include <gtk/gtk.h>
 #include <string>
+#include <include/file_system.hpp>
 
-#include "image.hpp"
-#include "widget.hpp"
+#include <include/image.hpp>
+#include <include/widget.hpp>
 
 namespace mousetrap
 {
