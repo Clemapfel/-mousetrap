@@ -93,7 +93,7 @@ namespace mousetrap
 
         private:
             GtkApplication* _native;
-            std::unordered_map<ActionID, Action*> _actions;
+            std::unordered_map<ActionID, std::reference_wrapper<Action>> _actions;
 
             bool _holding = false;
             bool _busy = false;

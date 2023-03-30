@@ -28,6 +28,9 @@
 #include <mousetrap/include/icon.hpp>
 #include <mousetrap/include/log.hpp>
 #include <mousetrap/include/file_monitor.hpp>
+#include <mousetrap/include/separator.hpp>
+#include <mousetrap/include/aspect_frame.hpp>
+#include <mousetrap/include/clipboard.hpp>
 
 #include <deque>
 #include <iostream>
@@ -55,13 +58,15 @@ static void startup(GApplication*)
     window = new Window(*app);
     window->set_show_menubar(true);
 
-    auto file = FileDescriptor();
-    file.create_from_path("/home/clem/Workspace/rat_game/main.cpp");
-    static auto monitor = file.create_monitor();
-    monitor.connect_signal_file_changed([](FileMonitor*, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor&){
-        std::cout << (int) event << file.get_path() << std::endl;
+    static auto button = Button();
+    button.connect_signal_clicked([](Button* button){
+        static auto clipboard = Clipboard(window);
+        clipboard.get_string([](Clipboard*, const std::string& str){
+            std::cout << FileDescriptor(str).get_uri() << std::endl;
+        });
     });
 
+    window->set_child(&button);
 
     window->show();
     window->present();

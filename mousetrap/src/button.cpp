@@ -34,7 +34,7 @@ namespace mousetrap
         return _child;
     }
 
-    void Button::set_action(Action& action)
+    void Button::set_action(const Action& action)
     {
         gtk_actionable_set_action_name(GTK_ACTIONABLE(get_native()), ("app."+ action.get_id()).c_str());
     }

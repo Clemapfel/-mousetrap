@@ -37,7 +37,7 @@ namespace mousetrap
             Widget* get_child() const;
 
             /// @brief set action triggered when the button is activated, if the action is disabled the button is also disabled automatically
-            void set_action(Action&);
+            void set_action(const Action&);
 
         private:
             Widget* _child = nullptr;

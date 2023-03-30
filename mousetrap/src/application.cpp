@@ -55,7 +55,9 @@ namespace mousetrap
 
     void Application::release()
     {
-        if (_holding)
+        if (not _holding)
+            log::warning("In Application::release: Attempting to release application, but it is not currently holding");
+        else
             g_application_release(G_APPLICATION(_native));
     }
 
@@ -67,7 +69,9 @@ namespace mousetrap
 
     void Application::unmark_as_busy()
     {
-        if (_busy)
+        if (not _busy)
+            log::warning("In Application::unmark_as_busy: Application is not currently marked busy");
+        else
             g_application_unmark_busy(G_APPLICATION(_native));
     }
 
@@ -93,14 +97,20 @@ namespace mousetrap
 
     void Application::add_action(Action* action)
     {
-        auto inserted = _actions.insert({action->get_id(), action}).first->second;
+        if (action == nullptr)
+            return;
+
+        if (action->operator GAction *() == nullptr)
+            log::warning("In Application::add_action: Attempting to add action `" + action->get_id() + "` to application, but the actions behavior was not set yet. Call Action::set_function or Action::set_stateful_function first");
+
+        auto inserted = _actions.insert({action->get_id(), std::ref(*action)}).first->second;
         auto* self = operator GActionMap*();
-        g_action_map_add_action(self, inserted->operator GAction *());
+        g_action_map_add_action(self, inserted.get().operator GAction *());
 
         auto* app = operator GtkApplication*();
 
         auto accels = std::vector<const char*>();
-        for (auto& s : inserted->get_shortcuts())
+        for (auto& s : inserted.get().get_shortcuts())
         {
             if (s != "never")
                 accels.push_back(s.c_str());
@@ -108,11 +118,14 @@ namespace mousetrap
         accels.push_back(NULL);
 
         if (not accels.empty())
-            gtk_application_set_accels_for_action(app, ("app." + inserted->get_id()).c_str(), accels.data());
+            gtk_application_set_accels_for_action(app, ("app." + inserted.get().get_id()).c_str(), accels.data());
     }
 
     void Application::remove_action(const ActionID& id)
     {
+        if (not has_action(id))
+            log::warning("In Application::remove_action: No action with id `" + id + "` registered");
+
         auto* self = operator GActionMap*();
         _actions.erase(id);
         g_action_map_remove_action(self, ("app." + id).c_str());
@@ -125,7 +138,11 @@ namespace mousetrap
 
     Action* Application::get_action(const ActionID& id)
     {
-        return _actions.at(id);
+        auto it = _actions.find(id);
+        if (it == _actions.end())
+            return nullptr;
+        else
+            return &(it->second.get());
     }
 
     void Application::set_menubar(MenuModel* model)

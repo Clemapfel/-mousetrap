@@ -3,6 +3,7 @@
 //
 
 #include <include/clipboard.hpp>
+#include <include/file_system.hpp>
 
 namespace mousetrap
 {
@@ -58,11 +59,22 @@ namespace mousetrap
         return gdk_content_formats_contain_gtype(formats, GDK_TYPE_TEXTURE);
     }
 
+    bool Clipboard::contains_file() const
+    {
+        auto* formats = gdk_clipboard_get_formats(_native);
+        return gdk_content_formats_contain_gtype(formats, G_TYPE_FILE);
+    }
+
     void Clipboard::set_image(const Image& image)
     {
         auto* pixbuf = image.operator GdkPixbuf*();
         auto* texture = gdk_texture_new_for_pixbuf(pixbuf);
         gdk_clipboard_set_texture(_native, texture);
+    }
+
+    void Clipboard::set_file(const FileDescriptor& file)
+    {
+        gdk_clipboard_set(_native, G_TYPE_FILE, file.operator GFile*());
     }
 
     void Clipboard::get_image_callback_wrapper(GObject* clipboard, GAsyncResult* result, gpointer self)

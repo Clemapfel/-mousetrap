@@ -5,6 +5,7 @@
 
 #include <include/blend_mode.hpp>
 #include <include/gl_common.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -172,6 +173,9 @@ namespace mousetrap
         else if (str == "MAX" or str == "max")
             return MAX;
         else
+        {
+            log::critical("In blend_mode_from_string: Unrecognized blend mode `" + str + "`");
             return NONE;
+        }
     }
 }

@@ -30,6 +30,10 @@ namespace mousetrap
             /// @return true if image, false otherwise
             bool contains_image() const;
 
+            /// @brief check if the clipboard contains a file, use get_string to retrieve the file path
+            /// @return true if file, false otherwise
+            bool contains_file() const;
+
             /// @brief check if the clipboards content was set from within the same application the widget belongs to
             /// @return boolean
             bool is_local() const;
@@ -67,6 +71,10 @@ namespace mousetrap
             /// @return true if data can be serialized into an image, false otherwise
             template<typename Function_t>
             bool get_image(Function_t on_image_read);
+
+            /// @brief override data with a file
+            /// @param file
+            void set_file(const FileDescriptor&);
 
         protected:
             Clipboard(GdkClipboard*);

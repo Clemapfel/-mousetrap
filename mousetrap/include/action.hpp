@@ -22,7 +22,6 @@ namespace mousetrap
     class Action
     {
         public:
-
             /// @brief construct an action with immutable id
             /// @param id string, usually of the form `scope.action_name`
             Action(const std::string& id);

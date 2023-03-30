@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <include/box.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -87,6 +88,9 @@ namespace mousetrap
 
     void Box::set_spacing(float spacing)
     {
+        if (spacing < 0)
+            log::critical("In Box::set_spacing: Spacing cannot be negative");
+
         gtk_box_set_spacing(get_native(), spacing);
     }
 
