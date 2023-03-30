@@ -13,7 +13,7 @@
 
 namespace mousetrap
 {
-    /// @brief object that can emit GLib signals, for internal use only
+    /// @brief object that can emit GLib signals \internal
     class SignalEmitter
     {
         public:
@@ -25,7 +25,7 @@ namespace mousetrap
             /// @param vector of signals names
             std::vector<std::string> get_all_signal_names();
 
-            /// @brief connect static function to signal, does not work with lambdas, for internal use only
+            /// @brief connect static function to signal, does not work with lambdas \internal
             /// @tparam Function_t static function pointer, the user is responsible for asserting that the function has the correct signature
             /// @param signal_id glib id of the signal
             /// @param data void-pointer to arbitrary data
@@ -36,7 +36,7 @@ namespace mousetrap
             /// @param signal_id
             void disconnect_signal(const std::string& signal_id);
 
-            /// @brief expose as GObject, for internal use only
+            /// @brief expose as GObject \internal
             virtual operator GObject*() = 0;
 
         private:

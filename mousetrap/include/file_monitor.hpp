@@ -69,7 +69,7 @@ namespace mousetrap
             /// @return reference to self after assignment
             FileMonitor& operator=(FileMonitor&&) noexcept;
 
-            /// @brief expose as GObject, for internal use only
+            /// @brief expose as GObject \internal
             operator GObject*() override;
 
             /// @brief cancel the file monitor, cannot be undone

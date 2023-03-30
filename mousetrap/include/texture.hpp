@@ -21,7 +21,7 @@ namespace mousetrap
             /// @brief construct as texture of size 0x0
             Texture();
 
-            /// @brief construct from already allocated GPU-side texture, for internal use only
+            /// @brief construct from already allocated GPU-side texture \internal
             Texture(GLNativeHandle);
 
             /// @brief destruct, frees GPU-side memory

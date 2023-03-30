@@ -66,7 +66,7 @@ namespace mousetrap
             /// @brief expose as GtkWidget, for interal use only
             virtual operator GtkWidget*() const;
 
-            /// @brief expose as GObject, for internal use only
+            /// @brief expose as GObject \internal
             operator GObject*() override;
 
             /// @brief get minimum allocated size

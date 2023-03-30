@@ -45,7 +45,7 @@ namespace mousetrap
             /// @return pointer to sample data, stored linearly in memory
             const Sample_t* get_samples() const;
 
-            /// @brief expose as sf::SoundBuffer, for internal use only
+            /// @brief expose as sf::SoundBuffer \internal
             operator sf::SoundBuffer*() const;
 
         private:

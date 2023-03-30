@@ -94,7 +94,7 @@ namespace mousetrap
             /// @return vector of shortcut triggers
             const std::vector<ShortcutTriggerID>& get_shortcuts() const;
 
-            /// @brief cast to GAction, for internal use only
+            /// @brief cast to GAction \internal
             explicit operator GAction*() const;
 
             /// @brief set whether triggering the action will execute the registered function

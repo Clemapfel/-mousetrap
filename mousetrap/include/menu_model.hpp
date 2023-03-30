@@ -89,7 +89,7 @@ namespace mousetrap
             /// @param menu_model model to use for populating the submenu items
             void add_submenu(const std::string& label, MenuModel*);
 
-            /// @brief expose as GMenuModel, for internal use only
+            /// @brief expose as GMenuModel \internal
             operator GMenuModel*();
 
         protected:

@@ -20,7 +20,7 @@ namespace mousetrap
             /// @brief constructor from widget, usually a window
             Clipboard(Widget*);
 
-            /// @brief expose as GdkClipboard, for internal use only
+            /// @brief expose as GdkClipboard \internal
             operator GdkClipboard*();
 
             /// @brief check if the clipboard contains a string

@@ -37,10 +37,10 @@ namespace mousetrap
             /// @brief destruct
             ~SelectionModel();
 
-            /// @brief expose as GtkSelectionModel, for internal use only
+            /// @brief expose as GtkSelectionModel \internal
             operator GtkSelectionModel*();
 
-            /// @brief expose as GObject, for internal use only
+            /// @brief expose as GObject \internal
             operator GObject*() override;
 
             /// @brief get indices of selected items

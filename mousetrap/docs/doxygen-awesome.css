@@ -29,17 +29,18 @@ SOFTWARE.
 
 html {
     /* primary theme color. This will affect the entire websites color scheme: links, arrows, labels, ... */
-    --primary-color: #1779c4;
-    --primary-dark-color: #335c80;
+    --primary-color: #55e0a1;
+    --primary-dark-color: #55e0a1;
     --primary-light-color: #70b1e9;
+    --icon-background-color: #1c9961;
+    --icon-foreground-color: #19191c;
 
-    /* page base colors */
-    --page-background-color: #ffffff;
-    --page-foreground-color: #2f4153;
-    --page-secondary-foreground-color: #6f7e8e;
+    --page-background-color: #1f1f23;
+    --page-foreground-color: #d0dbd7;
+    --page-secondary-foreground-color: #dbe4eb;
 
-    /* color for all separators on the website: hr, borders, ... */
-    --separator-color: #dedede;
+    --separator-color: #38393b;
+    --side-nav-background: #252628;
 
     /* border radius for all rounded components. Will affect many components, like dropdowns, memitems, codeblocks, ... */
     --border-radius-large: 8px;
@@ -137,25 +138,24 @@ html {
     --code-foreground: var(--page-foreground-color);
 
     /* fragment colors */
-    --fragment-background: #F8F9FA;
-    --fragment-foreground: #37474F;
-    --fragment-keyword: #bb6bb2;
-    --fragment-keywordtype: #8258b3;
-    --fragment-keywordflow: #d67c3b;
-    --fragment-token: #438a59;
-    --fragment-comment: #969696;
-    --fragment-link: #5383d6;
-    --fragment-preprocessor: #46aaa5;
-    --fragment-linenumber-color: #797979;
-    --fragment-linenumber-background: #f4f4f5;
-    --fragment-linenumber-border: #e3e5e7;
+    --fragment-background: #19191c;
+    --fragment-foreground: #C9C9C9;
+    --fragment-keyword: #FF0065;
+    --fragment-keywordtype: #FF0065;
+    --fragment-keywordflow: #FF0065;
+    --fragment-token: #E633FF;
+    --fragment-comment: #55e0a1;
+    --fragment-link: #00D6FE;
+    --fragment-preprocessor: #FF7B00;
+    --fragment-linenumber-color: #606366;
+    --fragment-linenumber-background: #2b2d30;
+    --fragment-linenumber-border: #2b2d30;
     --fragment-lineheight: 20px;
 
     /* sidebar navigation (treeview) colors */
-    --side-nav-background: #fbfbfb;
     --side-nav-foreground: var(--page-foreground-color);
-    --side-nav-arrow-opacity: 0;
-    --side-nav-arrow-hover-opacity: 0.9;
+    --side-nav-arrow-opacity: 1;
+    --side-nav-arrow-hover-opacity: 1;
 
     --toc-background: var(--side-nav-background);
     --toc-foreground: var(--side-nav-foreground);
@@ -185,8 +185,8 @@ html {
     html:not(.light-mode) {
         color-scheme: dark;
 
-        --primary-color: #1982d2;
-        --primary-dark-color: #86a9c4;
+        --primary-color: #55e0a1;
+        --primary-dark-color: #55e0a1;
         --primary-light-color: #4779ac;
 
         --box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
@@ -195,16 +195,16 @@ html {
 
         --menu-selected-background: rgba(0,0,0,.4);
 
-        --page-background-color: #1C1D1F;
-        --page-foreground-color: #d2dbde;
-        --page-secondary-foreground-color: #859399;
+        --page-background-color: #1f1f23;
+        --page-foreground-color: #d0dbd7;
+        --page-secondary-foreground-color: #dbe4eb;
         --separator-color: #38393b;
         --side-nav-background: #252628;
 
         --code-background: #2a2c2f;
 
         --tablehead-background: #2a2c2f;
-    
+
         --blockquote-background: #222325;
         --blockquote-foreground: #7e8c92;
 
@@ -227,18 +227,18 @@ html {
         --invariant-color-dark: #76ce96;
         --invariant-color-darker: #cceed5;
 
-        --fragment-background: #282c34;
-        --fragment-foreground: #dbe4eb;
-        --fragment-keyword: #cc99cd;
-        --fragment-keywordtype: #ab99cd;
-        --fragment-keywordflow: #e08000;
-        --fragment-token: #7ec699;
-        --fragment-comment: #999999;
-        --fragment-link: #98c0e3;
-        --fragment-preprocessor: #65cabe;
-        --fragment-linenumber-color: #cccccc;
-        --fragment-linenumber-background: #35393c;
-        --fragment-linenumber-border: #1f1f1f;
+        --fragment-background: #19191c;
+        --fragment-foreground: #C9C9C9;
+        --fragment-keyword: #FF0065;
+        --fragment-keywordtype: #FF0065;
+        --fragment-keywordflow: #FF0065;
+        --fragment-token: #E633FF;
+        --fragment-comment: #12FF8D;
+        --fragment-link: #00D6FE;
+        --fragment-preprocessor: #FF7B00;
+        --fragment-linenumber-color: #606366;
+        --fragment-linenumber-background: #19191c;
+        --fragment-linenumber-border: #2b2d30;
     }
 }
 
@@ -258,7 +258,7 @@ html.dark-mode {
 
     --page-background-color: #1C1D1F;
     --page-foreground-color: #d2dbde;
-    --page-secondary-foreground-color: #859399;
+    --page-secondary-foreground-color: #dbe4eb;
     --separator-color: #38393b;
     --side-nav-background: #252628;
 
@@ -819,18 +819,16 @@ html.dark-mode iframe#MSearchResults {
 #nav-tree .selected::after {
     content: "";
     position: absolute;
-    top: 1px;
+    top: 0px;
     bottom: 1px;
-    left: 0;
+    left: 0px;
     width: 4px;
     border-radius: 0 var(--border-radius-small) var(--border-radius-small) 0;
     background: var(--primary-color);
 }
 
-
 #nav-tree a {
     color: var(--side-nav-foreground) !important;
-    font-weight: normal;
 }
 
 #nav-tree a:focus {
@@ -844,12 +842,13 @@ html.dark-mode iframe#MSearchResults {
 .arrow {
     color: inherit;
     cursor: pointer;
-    font-size: 45%;
+    font-size: 60%;
     vertical-align: middle;
-    margin-right: 2px;
-    font-family: serif;
+    margin-right: 4px;
+    font-family: monospace;
     height: auto;
     text-align: right;
+    font-weight: bold;
 }
 
 #nav-tree div.item:hover .arrow, #nav-tree a:focus .arrow {
@@ -860,6 +859,10 @@ html.dark-mode iframe#MSearchResults {
     color: var(--primary-color) !important;
     font-weight: bolder;
     font-weight: 600;
+}
+
+#nav-tree .anchorlink a {
+    font-weight: bold
 }
 
 .ui-resizable-e {
@@ -885,7 +888,7 @@ div.header {
         flex-wrap: nowrap;
         align-items: flex-start;
     }
-    
+
     div.contents .textblock {
         min-width: 200px;
         flex-grow: 1;
@@ -928,7 +931,8 @@ td.memSeparator {
 }
 
 span.mlabel {
-    background: var(--primary-color);
+    background: var(--icon-background-color);
+    color: var(--icon-foreground-color);
     border: none;
     padding: 4px 9px;
     border-radius: 12px;
@@ -977,21 +981,21 @@ html.dark-mode div.contents .dotgraph iframe
 h2.groupheader {
     border-bottom: 0px;
     color: var(--page-foreground-color);
-    box-shadow: 
-        100px 0 var(--page-background-color), 
+    box-shadow:
+        100px 0 var(--page-background-color),
         -100px 0 var(--page-background-color),
         100px 0.75px var(--separator-color),
         -100px 0.75px var(--separator-color),
-        500px 0 var(--page-background-color), 
+        500px 0 var(--page-background-color),
         -500px 0 var(--page-background-color),
         500px 0.75px var(--separator-color),
         -500px 0.75px var(--separator-color),
-        900px 0 var(--page-background-color), 
+        900px 0 var(--page-background-color),
         -900px 0 var(--page-background-color),
         900px 0.75px var(--separator-color),
         -900px 0.75px var(--separator-color),
         1400px 0 var(--page-background-color),
-        -1400px 0 var(--page-background-color), 
+        -1400px 0 var(--page-background-color),
         1400px 0.75px var(--separator-color),
         -1400px 0.75px var(--separator-color),
         1900px 0 var(--page-background-color),
@@ -1128,7 +1132,6 @@ div.toc li a.aboveActive {
     color: var(--page-secondary-foreground-color) !important;
 }
 
-
 @media screen and (max-width: 999px) {
     div.contents .toc {
         max-height: 45vh;
@@ -1162,8 +1165,8 @@ div.toc li a.aboveActive {
 
     div.contents .toc.interactive > h3::before {
         content: "";
-        width: 0; 
-        height: 0; 
+        width: 0;
+        height: 0;
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
         border-top: 5px solid var(--primary-color);
@@ -1281,6 +1284,7 @@ div.fragment .line, pre.fragment {
 
 div.fragment span.keyword {
     color: var(--fragment-keyword);
+    font-weight: bold;
 }
 
 div.fragment span.keywordtype {
@@ -1297,6 +1301,7 @@ div.fragment span.stringliteral {
 
 div.fragment span.comment {
     color: var(--fragment-comment);
+    font-style: italic;
 }
 
 div.fragment a.code {
@@ -1854,8 +1859,8 @@ table.memberdecls img[src="closed.png"],
 table.memberdecls img[src="open.png"],
 div.dynheader img[src="open.png"],
 div.dynheader img[src="closed.png"] {
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 5px solid var(--primary-color);
@@ -1873,7 +1878,7 @@ table.memberdecls img {
 table.memberdecls img[src="closed.png"],
 div.dynheader img[src="closed.png"] {
     transform: rotate(-90deg);
-    
+
 }
 
 .compoundTemplParams {
@@ -1916,7 +1921,7 @@ div.dynheader img[src="closed.png"] {
         margin-bottom: calc(0px - var(--page-font-size));
     }
 
-    table.memberdecls .memItemRight, 
+    table.memberdecls .memItemRight,
     table.memberdecls .mdescRight,
     table.memberdecls .memTemplItemRight {
         border-top: 0;
@@ -2051,7 +2056,7 @@ table.directory tr.odd {
 }
 
 .icon {
-    background: var(--primary-color);
+    background: var(--icon-background-color);
     border-radius: var(--border-radius-small);
     font-size: var(--page-font-size);
     padding: calc(var(--page-font-size) / 5);
@@ -2102,8 +2107,8 @@ html.dark-mode .iconfopen, html.dark-mode .iconfclosed {
     background-color: transparent;
 }
 
-/* 
- Class Index Doxygen 1.8 
+/*
+ Class Index Doxygen 1.8
 */
 
 table.classindex {
@@ -2248,7 +2253,7 @@ div.contents .toc::-webkit-scrollbar-thumb,
     background-color: transparent;
     border: var(--webkit-scrollbar-padding) solid transparent;
     border-radius: calc(var(--webkit-scrollbar-padding) + var(--webkit-scrollbar-padding));
-    background-clip: padding-box;  
+    background-clip: padding-box;
 }
 
 #nav-tree:hover::-webkit-scrollbar-thumb,
@@ -2290,13 +2295,11 @@ div.memproto,
 .contents table:not(.memberdecls):not(.mlabels):not(.fieldtable):not(.memname) tbody,
 div.contents .toc {
     overflow-x: auto;
-    overflow-x: overlay;
 }
 
 #nav-tree {
     overflow-x: auto;
     overflow-y: auto;
-    overflow-y: overlay;
 }
 
 /*
@@ -2313,7 +2316,7 @@ div.memproto,
 div.contents .toc,
 .contents .dotgraph,
 .contents .tabs-overview-container {
-    scrollbar-width: thin;
+    scrollbar-width: initial;
 }
 
 /*

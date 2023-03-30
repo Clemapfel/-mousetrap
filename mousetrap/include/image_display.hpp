@@ -18,7 +18,7 @@ namespace mousetrap
             /// @brief default ctor, initialize as 0x0 image
             ImageDisplay();
 
-            /// @brief construct from GtkImage, for internal use only
+            /// @brief construct from GtkImage \internal
             /// @param image GtkImage instance
             ImageDisplay(GtkImage*);
 

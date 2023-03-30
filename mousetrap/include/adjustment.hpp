@@ -20,7 +20,7 @@ namespace mousetrap
             /// @brief default ctor
             Adjustment();
 
-            /// @brief create from gtk adjustment, for internal use only
+            /// @brief create from gtk adjustment \internal
             /// @param adjustment
             Adjustment(GtkAdjustment*);
 
@@ -49,10 +49,10 @@ namespace mousetrap
             /// @return reference to self after assignment
             Adjustment& operator=(Adjustment&&) noexcept;
 
-            /// @brief expose gtk adjustment, for internal use only
+            /// @brief expose gtk adjustment \internal
             explicit operator GtkAdjustment*();
 
-            /// @brief export g object for signal handling, for internal use only
+            /// @brief export g object for signal handling \internal
             explicit operator GObject*() override;
 
             /// @brief get lower bound

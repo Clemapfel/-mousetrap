@@ -22,7 +22,7 @@ namespace mousetrap
             friend class ColumnView;
 
             public:
-                /// @brief expose as GtkColumnViewColumn, for internal use only
+                /// @brief expose as GtkColumnViewColumn \internal
                 operator GtkColumnViewColumn*();
 
                 /// @brief replace the widget at position, if row_i out of bounds, TODO

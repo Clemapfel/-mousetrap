@@ -56,16 +56,16 @@ namespace mousetrap
             /// @brief undo a previous call to mousetrap::Application::mark_as_busy
             void unmark_as_busy();
 
-            /// @brief expose as GObject for signal handling, for internal use only
+            /// @brief expose as GObject for signal handling \internal
             explicit operator GObject*() override;
 
-            /// @brief expose as GApplication, for internal use only
+            /// @brief expose as GApplication \internal
             explicit operator GApplication*();
 
-            /// @brief expose as GtkApplication, for internal use only
+            /// @brief expose as GtkApplication \internal
             explicit operator GtkApplication*();
 
-            /// @brief expose as GActionMap, for internal use only
+            /// @brief expose as GActionMap \internal
             explicit operator GActionMap*();
 
             /// @brief add an action to application, see the manual page on actions for details

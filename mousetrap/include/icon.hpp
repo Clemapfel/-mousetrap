@@ -27,7 +27,7 @@ namespace mousetrap
             /// @param window
             IconTheme(const Window&);
 
-            /// @brief expose as GtkIconTheme, for internal use only
+            /// @brief expose as GtkIconTheme \internal
             operator GtkIconTheme*() const;
 
             /// @brief get list of registered icons
@@ -65,10 +65,10 @@ namespace mousetrap
             /// @brief construct as empty icon
             Icon();
 
-            /// @brief expose as GIcon, for internal use only
+            /// @brief expose as GIcon \internal
             operator GIcon*() const;
 
-            /// @brief expose as GtkIconPaintable, for internal use only
+            /// @brief expose as GtkIconPaintable \internal
             operator GtkIconPaintable*() const;
 
             /// @brief create icon from file
