@@ -6,4 +6,4 @@
 
 ### Advantages & Disadvantages over GTK4
 
-## Credits
+### Credits

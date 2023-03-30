@@ -1,10 +1,10 @@
-# Chapter 1: Actions
+# Chapter 2: Actions
 
 ## Introduction: Command Pattern
 
-## mousetrap::Application
+## Application
 
-## mousetrap::Action
+## Action
 
 ### Stateless Actions
 

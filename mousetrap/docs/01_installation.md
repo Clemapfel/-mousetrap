@@ -1,4 +1,4 @@
-# Installation 
+# Chapter 1: Installation 
 
 ## Download
 
@@ -8,4 +8,4 @@
 
 ### Compilation
 
-# Troubleshooting
+## Troubleshooting

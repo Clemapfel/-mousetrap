@@ -1,4 +1,4 @@
-# Chapter 3: Widgets
+# Chapter 4: Widgets
 
 ## mousetrap::Widget
 
