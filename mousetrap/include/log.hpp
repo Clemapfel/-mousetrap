@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 
 #include <string>
 #include <map>

@@ -35,6 +35,14 @@
 #include <deque>
 #include <iostream>
 
+#define SOL_ALL_SAFETIES_ON 1
+
+extern "C" {
+#include <lua.h>
+}
+
+#include <sol2/include/sol/sol.hpp>
+
 using namespace mousetrap;
 
 inline Window* window = nullptr;
@@ -66,7 +74,6 @@ static void startup(GApplication*)
         });
     });
 
-    window->set_child(&button);
 
     window->show();
     window->present();
@@ -76,6 +83,11 @@ static void startup(GApplication*)
 
 int main()
 {
+    sol::state lua;
+    lua.open_libraries(sol::lib::base);
+
+    lua.script("print('bark bark bark!')");
+
     app = new Application("app.mousetrap");
 
     app->connect_signal_activate([](Application* app)
@@ -91,50 +103,4 @@ int main()
     delete window;
 
     return out;
-    /*
-    sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(0, 0, 8, 3, 2));
-    window.setVerticalSyncEnabled(true);
-    window.setActive(true);
-
-    initialize_opengl();
-
-    std::set<Vector2f> test;
-
-    std::deque<Shape> shapes;
-    for (size_t x = 0; x < 4; ++x)
-    {
-        shapes.emplace_back();
-        shapes.back().as_rectangle(Vector2f(x / 4.f), Vector2f{0.5, 0.5});
-        shapes.back().set_color(HSVA(rand() / float(RAND_MAX), 1, 1, 1));
-    }
-
-    std::deque<RenderTask> tasks;
-    for (auto& shape : shapes)
-    {
-        tasks.emplace_back(&shape);
-    }
-
-    bool running = true;
-    while (running)
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                running = false;
-            else if (event.type == sf::Event::Resized)
-                glViewport(0, 0, event.size.width, event.size.height);
-        }
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        for (auto& task : tasks)
-            task.render();
-
-        glFlush();
-        window.display();
-    }
-
-    return 0;
-     */
 }

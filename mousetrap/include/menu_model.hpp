@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 #include <include/widget.hpp>
 #include <include/action.hpp>
 

@@ -1,3 +1,6 @@
 [submodule "mousetrap/docs/doxygen-awesome-css"]
 	path = mousetrap/docs/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "sol2"]
+	path = sol2
+	url = https://github.com/ThePhD/sol2

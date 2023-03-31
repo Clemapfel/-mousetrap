@@ -6,7 +6,7 @@
 
 #include <include/file_descriptor.hpp>
 
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 #include <string>
 #include <vector>
 

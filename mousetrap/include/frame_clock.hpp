@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 #include <include/time.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>

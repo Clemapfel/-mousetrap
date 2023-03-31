@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 
 #include <include/vector.hpp>
 #include <include/signal_emitter.hpp>
@@ -308,6 +308,11 @@ namespace mousetrap
         protected:
             WidgetImplementation(GtkWidget_t*);
             GtkWidget_t* get_native() const;
+
+            static void on_destroy(GtkWidget* widget, WidgetImplementation<GtkWidget_t>*)
+            {
+                printf("destroyed %p", widget);
+            }
     };
 };
 
