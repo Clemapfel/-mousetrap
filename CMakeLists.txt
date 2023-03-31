@@ -342,13 +342,17 @@ get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
 get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
 add_library(mousetrap_julia_binding SHARED
-    julia/julia_binding.hpp
     julia/julia_binding.cpp
 )
 
 target_link_libraries(mousetrap_julia_binding PUBLIC
     ${mousetrap}
     JlCxx::cxxwrap_julia
+)
+
+target_include_directories(mousetrap_julia_binding PUBLIC
+    ${CMAKE_SOURCE_DIR}/mousetrap
+    "${GTK_INCLUDE_DIRS}"
 )
 
 set_target_properties(mousetrap_julia_binding PROPERTIES
