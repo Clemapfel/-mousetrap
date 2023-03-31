@@ -15,6 +15,8 @@ namespace mousetrap
 
     void Grid::insert(Widget* widget, Vector2i row_column_index, size_t n_horizontal_cells, size_t n_vertical_cells)
     {
+        WARN_IF_SELF_INSERTION(Grid::insert, this, widget);
+
         if (widget == nullptr)
             return;
 

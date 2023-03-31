@@ -129,6 +129,7 @@ namespace mousetrap {
             GListStore* _model;
 
             static inline size_t _current_id = 0;
+            void assert_label_is_not_self(const std::string& scope, Widget*, Widget*);
     };
 }
 

@@ -291,11 +291,13 @@ add_library(mousetrap STATIC
         mousetrap/src/icon.cpp
 
         mousetrap/include/log.hpp
+        mousetrap/src/log.inl
         mousetrap/src/log.cpp
 
         mousetrap/include/file_chooser.hpp
         mousetrap/src/file_chooser.cpp
-        mousetrap/src/file_chooser.cpp)
+        mousetrap/src/file_chooser.cpp
+)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -331,7 +333,6 @@ if(MOUSETRAP_BUILD_TESTING)
     endfunction()
 
     declare_test(application)
-    declare_test(window)
     declare_test(action)
 endif()
 

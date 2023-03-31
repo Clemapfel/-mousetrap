@@ -89,7 +89,7 @@ namespace mousetrap
 
     bool FileChooser::get_is_shown() const
     {
-        gtk_native_dialog_get_visible(GTK_NATIVE_DIALOG(get_native()));
+        return gtk_native_dialog_get_visible(GTK_NATIVE_DIALOG(get_native()));
     }
 
     void FileChooser::set_is_modal(bool b)

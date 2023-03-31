@@ -3,6 +3,7 @@
 //
 
 #include <include/fixed.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -12,6 +13,8 @@ namespace mousetrap
 
     void Fixed::add_child(Widget* widget, Vector2f pos)
     {
+        WARN_IF_SELF_INSERTION(Fixed::add_child, this, widget);
+
         gtk_fixed_put(get_native(), widget->operator GtkWidget *(), pos.x, pos.y);
     }
 

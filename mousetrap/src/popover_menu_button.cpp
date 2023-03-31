@@ -41,6 +41,8 @@ namespace mousetrap
 
     void PopoverMenuButton::set_child(Widget* child)
     {
+        WARN_IF_SELF_INSERTION(PopoverMenuButton::set_child, this, child);
+
         _child = child;
         gtk_menu_button_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
 

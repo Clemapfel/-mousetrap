@@ -42,6 +42,12 @@ namespace mousetrap
 
     Stack::ID Stack::add_child(Widget* widget, const std::string& title)
     {
+        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        {
+            log::critical("In Stack::add_child: Attempting to insert Stack into itself. This would cause an infinite loop");
+            widget = nullptr;
+        }
+
         gtk_stack_add_titled(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*(), title.c_str(), title.c_str());
         _children.insert({title, widget});
         return title;

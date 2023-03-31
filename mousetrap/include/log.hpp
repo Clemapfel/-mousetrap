@@ -115,3 +115,5 @@ namespace mousetrap
             static inline GFileOutputStream* _log_file_stream = nullptr;
     };
 }
+
+#include <src/log.inl>

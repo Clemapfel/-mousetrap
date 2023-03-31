@@ -5,6 +5,7 @@
 
 #include <include/column_view.hpp>
 #include <iostream>
+#include <include/log.hpp>
 
 namespace mousetrap::detail
 {
@@ -117,6 +118,8 @@ namespace mousetrap
 
     void ColumnView::Column::set_widget_at(size_t row_i, Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Column::set_widget_at, this->_owner, widget);
+
         while (_widgets.size() <= row_i)
             _widgets.emplace_back(nullptr);
 

@@ -4,6 +4,7 @@
 //
 
 #include <include/check_button.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -15,6 +16,8 @@ namespace mousetrap
 
     void CheckButton::set_child(Widget* child)
     {
+        WARN_IF_SELF_INSERTION(CheckButton::set_child, this, child);
+
         _child = child;
         gtk_check_button_set_child(get_native(), child->operator GtkWidget*());
     }

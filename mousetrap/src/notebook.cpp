@@ -21,6 +21,13 @@ namespace mousetrap
 
     size_t Notebook::push_front(Widget* child_widget, Widget* label_widget)
     {
+        if ((child_widget != nullptr and child_widget->operator GtkWidget*() == this->operator GtkWidget*()) or
+            (label_widget != nullptr and label_widget->operator GtkWidget*() == this->operator GtkWidget*()))
+        {
+            log::critical("In Notebook::push_front: Attempting to insert Notebook into itself. This would cause an infinite loop");
+            return 0;
+        }
+
         auto out = gtk_notebook_prepend_page(
             get_native(),
             child_widget != nullptr ? child_widget->operator GtkWidget *() : nullptr,
@@ -43,6 +50,13 @@ namespace mousetrap
 
     size_t Notebook::push_back(Widget* child_widget, Widget* label_widget)
     {
+        if ((child_widget != nullptr and child_widget->operator GtkWidget*() == this->operator GtkWidget*()) or
+        (label_widget != nullptr and label_widget->operator GtkWidget*() == this->operator GtkWidget*()))
+        {
+            log::critical("In Notebook::push_back: Attempting to insert Notebook into itself. This would cause an infinite loop");
+            return 0;
+        }
+
         auto out = gtk_notebook_append_page(
             get_native(),
             child_widget != nullptr ? child_widget->operator GtkWidget *() : nullptr,
@@ -62,6 +76,13 @@ namespace mousetrap
 
     size_t Notebook::insert(size_t new_position, Widget* child_widget, Widget* label_widget)
     {
+        if ((child_widget != nullptr and child_widget->operator GtkWidget*() == this->operator GtkWidget*()) or
+        (label_widget != nullptr and label_widget->operator GtkWidget*() == this->operator GtkWidget*()))
+        {
+            log::critical("In Notebook::insert: Attempting to insert Notebook into itself. This would cause an infinite loop");
+            return 0;
+        }
+
         int pos = new_position >= get_n_pages() ? -1 : new_position;
 
         auto out = gtk_notebook_insert_page(

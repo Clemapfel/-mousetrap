@@ -5,6 +5,7 @@
 
 #include <include/toggle_button.hpp>
 #include <include/action.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -31,6 +32,8 @@ namespace mousetrap
 
     void ToggleButton::set_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(ToggleButton::set_child, this, widget);
+
         _child = widget;
         gtk_button_set_child(GTK_BUTTON(get_native()), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }

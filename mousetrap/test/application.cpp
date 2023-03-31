@@ -46,6 +46,8 @@ int main()
         Test::assert_that(GTK_IS_WINDOW(state->window.operator GtkWidget*()));
         END_TEST
 
+        state->window.set_child(&state->window);
+
         state->window.show();
         state->window.present();
         state->window.close();

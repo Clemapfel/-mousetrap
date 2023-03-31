@@ -105,18 +105,24 @@ namespace mousetrap
 
     void GridView::push_back(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(GridView::push_back, this, widget);
+
         auto* item = detail::grid_view_item_new(widget);
         g_list_store_append(G_LIST_STORE(_list_store), item);
     }
 
     void GridView::push_front(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(GridView::push_front, this, widget);
+
         auto* item = detail::grid_view_item_new(widget);
         g_list_store_insert(G_LIST_STORE(_list_store), 0, item);
     }
 
     void GridView::insert(Widget* widget, size_t i)
     {
+        WARN_IF_SELF_INSERTION(GridView::insert, this, widget);
+
         auto* item = detail::grid_view_item_new(widget);
         g_list_store_insert(G_LIST_STORE(_list_store), i, item);
     }

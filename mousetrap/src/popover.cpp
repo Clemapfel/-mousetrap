@@ -4,6 +4,7 @@
 //
 
 #include <include/popover.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -28,6 +29,8 @@ namespace mousetrap
 
     void Popover::set_child(Widget* child)
     {
+        WARN_IF_SELF_INSERTION(Popover::set_child, this, child);
+
         _child = child;
         gtk_popover_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }

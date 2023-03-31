@@ -4,13 +4,14 @@
 //
 
 #include <include/button.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
     Button::Button()
-    : WidgetImplementation<GtkButton>(GTK_BUTTON(gtk_button_new())),
-      CTOR_SIGNAL(Button, activate),
-      CTOR_SIGNAL(Button, clicked)
+        : WidgetImplementation<GtkButton>(GTK_BUTTON(gtk_button_new())),
+          CTOR_SIGNAL(Button, activate),
+          CTOR_SIGNAL(Button, clicked)
     {}
 
     void Button::set_has_frame(bool b)
@@ -25,6 +26,8 @@ namespace mousetrap
 
     void Button::set_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Button::push_back, this, widget);
+
         _child = widget;
         gtk_button_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }

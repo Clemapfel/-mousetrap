@@ -3,6 +3,7 @@
 //
 
 #include <include/viewport.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -15,6 +16,8 @@ namespace mousetrap
 
     void Viewport::set_child(Widget* child)
     {
+        WARN_IF_SELF_INSERTION(Viewport::set_child, this, child);
+
         _child = child;
         gtk_viewport_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }

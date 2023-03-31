@@ -2,6 +2,8 @@
 // Copyright (c) Clemens Cords (mail@clemens-cords.com), created 1/18/23
 //
 
+#include <include/log.hpp>
+
 namespace mousetrap
 {
     namespace detail
@@ -13,6 +15,8 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     DropDown::ItemID DropDown::push_back(Widget* list_widget, Widget* label_widget, Function_t f_in, Data_t data_in)
     {
+        assert_label_is_not_self("push_back", list_widget, label_widget);
+
         auto id = _current_id++;
         auto* item = detail::drop_down_item_new(
         id,
@@ -30,6 +34,8 @@ namespace mousetrap
     template<typename Function_t>
     DropDown::ItemID DropDown::push_back(Widget* list_widget, Widget* label_widget, Function_t f_in)
     {
+        assert_label_is_not_self("push_back", list_widget, label_widget);
+
         auto id = _current_id++;
         auto* item = detail::drop_down_item_new(
         id,
@@ -47,6 +53,8 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     DropDown::ItemID DropDown::push_front(Widget* list_widget, Widget* label_widget, Function_t f_in, Data_t data_in)
     {
+        assert_label_is_not_self("push_front", list_widget, label_widget);
+
         auto id = _current_id++;
         auto* item = detail::drop_down_item_new(
         id,
@@ -64,6 +72,8 @@ namespace mousetrap
     template<typename Function_t>
     DropDown::ItemID DropDown::push_front(Widget* list_widget, Widget* label_widget, Function_t f_in)
     {
+        assert_label_is_not_self("push_front", list_widget, label_widget);
+
         auto id = _current_id++;
         auto* item = detail::drop_down_item_new(
         id,
@@ -81,6 +91,8 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     DropDown::ItemID DropDown::insert(size_t i, Widget* list_widget, Widget* label_widget, Function_t f_in, Data_t data_in)
     {
+        assert_label_is_not_self("insert", list_widget, label_widget);
+
         if (i >= g_list_model_get_n_items(G_LIST_MODEL(_model)))
             return push_back(list_widget, label_widget, f_in, data_in);
 
@@ -101,6 +113,8 @@ namespace mousetrap
     template<typename Function_t>
     DropDown::ItemID DropDown::insert(size_t i, Widget* list_widget, Widget* label_widget, Function_t f_in)
     {
+        assert_label_is_not_self("insert", list_widget, label_widget);
+
         if (i >= g_list_model_get_n_items(G_LIST_MODEL(_model)))
             return push_back(list_widget, label_widget, f_in);
 

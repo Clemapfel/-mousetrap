@@ -193,4 +193,23 @@ namespace mousetrap
         else
             return DropDown::ItemID{detail::G_DROP_DOWN_ITEM(item)->id};
     }
+
+    void DropDown::assert_label_is_not_self(const std::string& scope, Widget* label01, Widget* label02)
+    {
+        bool log_warning = false;
+        if (label01 != nullptr and (label01->operator GtkWidget*() == this->operator GtkWidget*()))
+        {
+            label01 = nullptr;
+            log_warning = true;
+        }
+
+        if (label02 != nullptr and (label02->operator GtkWidget*() == this->operator GtkWidget*()))
+        {
+            label02 = nullptr;
+            log_warning = true;
+        }
+
+        if (log_warning)
+            log::critical("In DropDown::" + scope + ": Attempting to add DropDown parent as its own child, this would cause an infinite loop.");
+    }
 }

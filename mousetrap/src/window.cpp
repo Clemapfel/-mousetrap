@@ -5,6 +5,7 @@
 
 #include <include/window.hpp>
 #include <include/application.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -63,6 +64,8 @@ namespace mousetrap
 
     void Window::set_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Window::set_child, this, widget);
+
         _child = widget;
         gtk_window_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
     }
@@ -71,7 +74,6 @@ namespace mousetrap
     {
         return _child;
     }
-
 
     void Window::set_hide_on_close(bool b)
     {

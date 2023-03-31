@@ -4,6 +4,7 @@
 //
 
 #include <include/scrolled_window.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -129,6 +130,8 @@ namespace mousetrap
 
     void ScrolledWindow::set_child(Widget* child)
     {
+        WARN_IF_SELF_INSERTION(ScrolledWindow::set_child, this, child);
+
         _child = child;
         gtk_scrolled_window_set_child(get_native(), _child != nullptr ? _child->operator GtkWidget*() : nullptr);
     }

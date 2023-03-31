@@ -16,18 +16,24 @@ namespace mousetrap
 
     void Box::push_back(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Box::push_back, this, widget);
+
         if (widget != nullptr)
             gtk_box_append(get_native(), widget->operator GtkWidget*());
     }
 
     void Box::push_front(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Box::push_back, this, widget);
+
         if (widget != nullptr)
             gtk_box_prepend(get_native(), widget->operator GtkWidget*());
     }
 
     void Box::insert_after(Widget* to_append, Widget* after)
     {
+        WARN_IF_SELF_INSERTION(Box::push_back, this, to_append);
+
         if (to_append == nullptr)
             return;
 

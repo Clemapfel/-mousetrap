@@ -4,6 +4,7 @@
 //
 
 #include <include/paned.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -27,6 +28,8 @@ namespace mousetrap
 
     void Paned::set_start_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Paned::set_start_child, this, widget);
+
         _start_child = widget;
         gtk_paned_set_start_child(get_native(), _start_child == nullptr ? nullptr : _start_child->operator GtkWidget*());
     }
@@ -58,6 +61,8 @@ namespace mousetrap
 
     void Paned::set_end_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Paned::set_end_child, this, widget);
+
         _end_child = widget;
         gtk_paned_set_end_child(get_native(), _end_child == nullptr ? nullptr : _end_child->operator GtkWidget*());
     }

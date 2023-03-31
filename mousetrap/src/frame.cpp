@@ -4,6 +4,7 @@
 //
 
 #include <include/frame.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -15,6 +16,8 @@ namespace mousetrap
 
     void Frame::set_child(Widget* in)
     {
+        WARN_IF_SELF_INSERTION(Frame::set_child, this, in);
+
         _child = in;
         gtk_frame_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget *());
     }
@@ -26,6 +29,8 @@ namespace mousetrap
 
     void Frame::set_label_widget(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Frame::set_label_widget, this, widget);
+
         _label_widget = widget;
         gtk_frame_set_label_widget(get_native(), _label_widget == nullptr ? nullptr : _label_widget->operator GtkWidget*());
     }

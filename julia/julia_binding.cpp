@@ -7,22 +7,6 @@
 
 using namespace mousetrap;
 
-template<typename A, typename B>
-struct TemplateType
-{
-    typedef typename A::val_type first_val_type;
-    typedef typename B::val_type second_val_type;
-
-    first_val_type get_first()
-    {
-        return A::value();
-    }
-
-    second_val_type get_second()
-    {
-        return B::value();
-    }
-};
 
 JLCXX_MODULE define_types_module(jlcxx::Module& types)
 {

@@ -4,6 +4,7 @@
 //
 
 #include <include/list_view.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap::detail
 {
@@ -158,6 +159,12 @@ namespace mousetrap
 
     ListView::Iterator ListView::push_back(Widget* widget, Iterator it)
     {
+        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        {
+            log::critical("In ListView::push_back: Attempting to insert ListView into itself, this would cause an infinite loop");
+            return nullptr;
+        }
+
         GListModel* to_append_to;
         if (it == nullptr)
             to_append_to = G_LIST_MODEL(_root);
@@ -173,11 +180,23 @@ namespace mousetrap
 
     ListView::Iterator ListView::push_front(Widget* widget, Iterator it)
     {
+        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        {
+            log::critical("In ListView::push_front: Attempting to insert ListView into itself, this would cause an infinite loop");
+            return nullptr;
+        }
+
         return insert(0, widget, it);
     }
 
     ListView::Iterator ListView::insert(size_t i, Widget* widget, Iterator it)
     {
+        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        {
+            log::critical("In ListView::insert: Attempting to insert ListView into itself, this would cause an infinite loop");
+            return nullptr;
+        }
+
         GListModel* to_append_to;
         if (it == nullptr)
             to_append_to = G_LIST_MODEL(_root);
@@ -233,6 +252,12 @@ namespace mousetrap
 
     void ListView::set_widget_at(size_t i, Widget* widget, Iterator it)
     {
+        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        {
+            log::critical("In ListView::push_back: Attempting to insert ListView into itself, this would cause an infinite loop");
+            return;
+        }
+
         GListModel* list;
         if (it == nullptr)
             list = G_LIST_MODEL(_root);

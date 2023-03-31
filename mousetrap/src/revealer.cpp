@@ -4,6 +4,7 @@
 //
 
 #include <include/revealer.hpp>
+#include <include/log.hpp>
 
 namespace mousetrap
 {
@@ -16,6 +17,8 @@ namespace mousetrap
 
     void Revealer::set_child(Widget* widget)
     {
+        WARN_IF_SELF_INSERTION(Revealer::set_child, this, widget);
+
         gtk_revealer_set_child(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*());
     }
 
