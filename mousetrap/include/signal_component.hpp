@@ -10,11 +10,14 @@ namespace mousetrap
 {
     #define SPLAT(...) __VA_ARGS__
 
+    #define CTOR_SIGNAL(T, signal_name) \
+        has_##signal_name##_signal<T>(this)
+
     #define HAS_SIGNAL(T, signal_name) \
         public has_##signal_name##_signal<T>
 
-    #define CTOR_SIGNAL(T, signal_name) \
-        has_##signal_name##_signal<T>(this)
+    /// @brief signal component
+    struct SignalComponent {};
 
     /// @brief declare a signal with the signature (T* instance, auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
@@ -22,7 +25,7 @@ namespace mousetrap
     /// @param return_t return type of the signal wrapper function
     #define DECLARE_SIGNAL(signal_name, g_signal_id, return_t)                                     \
         template<typename T>                                                                          \
-        class has_##signal_name##_signal                                                              \
+        class has_##signal_name##_signal : public SignalComponent                                                             \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
@@ -39,7 +42,7 @@ namespace mousetrap
                     : _instance(instance)                                                             \
                 {}                                                                                    \
                                                                                                       \
-            public:                                                                                   \
+            public:                                                                                \
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                       \
                 template<typename Function_t, typename Data_t>                                        \
@@ -52,7 +55,7 @@ namespace mousetrap
                                                                                                       \
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
-                                                                                                      \
+                                                                                                   \
                 template<typename Function_t>                                                         \
                 void connect_signal_##signal_name(Function_t function)                                \
                 {                                                                                     \
@@ -96,7 +99,7 @@ namespace mousetrap
     /// @param arg_name_list list of arguments **without** the type, for example `x, y`
     #define DECLARE_SIGNAL_MANUAL(signal_name, g_signal_id, return_t, arg_list, arg_name_list)        \
         template<typename T>                                                                          \
-        class has_##signal_name##_signal                                                              \
+        class has_##signal_name##_signal  : public SignalComponent                                                            \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
