@@ -308,11 +308,6 @@ namespace mousetrap
         protected:
             WidgetImplementation(GtkWidget_t*);
             GtkWidget_t* get_native() const;
-
-            static void on_destroy(GtkWidget* widget, WidgetImplementation<GtkWidget_t>*)
-            {
-                printf("destroyed %p", widget);
-            }
     };
 };
 

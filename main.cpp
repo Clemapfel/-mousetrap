@@ -45,7 +45,7 @@ extern "C" {
 
 using namespace mousetrap;
 
-inline Window* window = nullptr;
+inline Window* app_window = nullptr;
 inline Application* app = nullptr;
 
 inline Action* action;
@@ -63,57 +63,83 @@ static GLogWriterOutput log_writer(GLogLevelFlags log_level, const GLogField* fi
 
 static void startup(GApplication*)
 {
-    window = new Window(*app);
-    window->set_show_menubar(true);
+    app_window = new Window(*app);
+    app_window->set_show_menubar(true);
 
-    static auto button = Button();
-    button.connect_signal_clicked([](Button* button){
-        static auto clipboard = Clipboard(window);
-        clipboard.get_string([](Clipboard*, const std::string& str){
-            std::cout << FileDescriptor(str).get_uri() << std::endl;
-        });
-    });
+    static GtkWidget *window = NULL;
+    GtkWidget *vbox;
+    GtkWidget *hbox;
+    GtkWidget *box;
+    GtkWidget *label;
+    GtkWidget *entry;
+    GtkWidget *searchbar;
+    GtkWidget *button;
+    GtkWidget *header;
 
+    window = app_window->operator GtkWidget*();
+    gtk_window_set_title (GTK_WINDOW (window), "Type to Search");
+    gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
+    gtk_widget_set_size_request (window, 200, -1);
+    g_object_add_weak_pointer (G_OBJECT (window), (gpointer *)&window);
 
-    GtkFileChooserNative* native = gtk_file_chooser_native_new (
-        "test",
-        window->operator GtkWindow*(),
-        GTK_FILE_CHOOSER_ACTION_OPEN,
-        "accept",
-        "cancel"
-    );
+    header = gtk_header_bar_new ();
+    gtk_window_set_titlebar (GTK_WINDOW (window), header);
 
-    auto* test = gtk_file_chooser_widget_new(GTK_FILE_CHOOSER_ACTION_OPEN);
-    gtk_window_set_child(window->operator GtkWindow*(), test);
-    //gtk_widget_set_margin_start(GTK_WIDGET(native), 20);
-    //gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    gtk_window_set_child (GTK_WINDOW (window), vbox);
 
-    window->show();
-    window->present();
-    window->set_is_focusable(true);
-    window->grab_focus();
+    entry = gtk_search_entry_new ();
+    gtk_widget_set_halign (entry, GTK_ALIGN_CENTER);
+    searchbar = gtk_search_bar_new ();
+    gtk_search_bar_connect_entry (GTK_SEARCH_BAR (searchbar), GTK_EDITABLE (entry));
+    gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (searchbar), FALSE);
+    gtk_search_bar_set_child (GTK_SEARCH_BAR (searchbar), entry);
+    gtk_box_append (GTK_BOX (vbox), searchbar);
+
+    /* Hook the search bar to key presses */
+    gtk_search_bar_set_key_capture_widget (GTK_SEARCH_BAR (searchbar), window);
+
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
+    gtk_widget_set_margin_start (box, 18);
+    gtk_widget_set_margin_end (box, 18);
+    gtk_widget_set_margin_top (box, 18);
+    gtk_widget_set_margin_bottom (box, 18);
+    gtk_box_append (GTK_BOX (vbox), box);
+
+    /* Toggle button */
+    button = gtk_toggle_button_new ();
+    gtk_button_set_icon_name (GTK_BUTTON (button), "system-search-symbolic");
+    g_object_bind_property (button, "active",
+                            searchbar, "search-mode-enabled",
+                            G_BINDING_BIDIRECTIONAL);
+    gtk_header_bar_pack_end (GTK_HEADER_BAR (header), button);
+
+    /* Result */
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_append (GTK_BOX (box), hbox);
+
+    label = gtk_label_new ("Searching for:");
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_box_append (GTK_BOX (hbox), label);
+
+    label = gtk_label_new ("");
+    gtk_box_append (GTK_BOX (hbox), label);
+
+    app_window->show();
+    app_window->present();
+    app_window->set_is_focusable(true);
+    app_window->grab_focus();
 }
 
 int main()
 {
-    sol::state lua;
-    lua.open_libraries(sol::lib::base);
-
-    lua.script("print('bark bark bark!')");
-
     app = new Application("app.mousetrap");
-
-    app->connect_signal_activate([](Application* app)
-    {
-        // TODO menubar doesn't show up
-    });
-
-    app->connect_signal("startup", startup);
+    app->connect_signal("activate", startup);
 
     auto out = app->run();
 
     delete app;
-    delete window;
+    delete app_window;
 
     return out;
 }

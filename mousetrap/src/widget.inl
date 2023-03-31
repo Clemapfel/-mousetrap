@@ -13,8 +13,6 @@ namespace mousetrap
     {
         if (not GTK_IS_WIDGET(in))
             throw std::invalid_argument("[FATAL] In WidgetImplementation::WidgetImplementation(T*): Object is not a widget.");
-
-        g_signal_connect(in, "destroy", G_CALLBACK(on_destroy), this);
     }
 
     template<typename T>

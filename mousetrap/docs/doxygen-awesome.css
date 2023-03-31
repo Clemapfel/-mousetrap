@@ -29,9 +29,9 @@ SOFTWARE.
 
 html {
     /* primary theme color. This will affect the entire websites color scheme: links, arrows, labels, ... */
-    --primary-color: #55e0a1;
-    --primary-dark-color: #55e0a1;
-    --primary-light-color: #70b1e9;
+    --primary-color: #12FF8D;
+    --primary-dark-color: #12FF8D;
+    --primary-light-color: #12FF8D;
     --icon-background-color: #1c9961;
     --icon-foreground-color: #19191c;
 
@@ -185,9 +185,9 @@ html {
     html:not(.light-mode) {
         color-scheme: dark;
 
-        --primary-color: #55e0a1;
-        --primary-dark-color: #55e0a1;
-        --primary-light-color: #4779ac;
+        --primary-color: #12FF8D;
+        --primary-dark-color: #12FF8D;
+        --primary-light-color: #12FF8D;
 
         --box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
 
@@ -246,18 +246,18 @@ html {
 html.dark-mode {
     color-scheme: dark;
 
-    --primary-color: #1982d2;
-    --primary-dark-color: #86a9c4;
-    --primary-light-color: #4779ac;
+    --primary-color: #12FF8D;
+    --primary-dark-color: #12FF8D;
+    --primary-light-color: #12FF8D;
 
-    --box-shadow: 0 2px 8px 0 rgba(0,0,0,.30);
+    --box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
 
     --odd-color: rgba(100,100,100,.06);
 
     --menu-selected-background: rgba(0,0,0,.4);
 
-    --page-background-color: #1C1D1F;
-    --page-foreground-color: #d2dbde;
+    --page-background-color: #1f1f23;
+    --page-foreground-color: #d0dbd7;
     --page-secondary-foreground-color: #dbe4eb;
     --separator-color: #38393b;
     --side-nav-background: #252628;
@@ -288,18 +288,18 @@ html.dark-mode {
     --invariant-color-dark: #76ce96;
     --invariant-color-darker: #cceed5;
 
-    --fragment-background: #282c34;
-    --fragment-foreground: #dbe4eb;
-    --fragment-keyword: #cc99cd;
-    --fragment-keywordtype: #ab99cd;
-    --fragment-keywordflow: #e08000;
-    --fragment-token: #7ec699;
-    --fragment-comment: #999999;
-    --fragment-link: #98c0e3;
-    --fragment-preprocessor: #65cabe;
-    --fragment-linenumber-color: #cccccc;
-    --fragment-linenumber-background: #35393c;
-    --fragment-linenumber-border: #1f1f1f;
+    --fragment-background: #19191c;
+    --fragment-foreground: #C9C9C9;
+    --fragment-keyword: #FF0065;
+    --fragment-keywordtype: #FF0065;
+    --fragment-keywordflow: #FF0065;
+    --fragment-token: #E633FF;
+    --fragment-comment: #12FF8D;
+    --fragment-link: #00D6FE;
+    --fragment-preprocessor: #FF7B00;
+    --fragment-linenumber-color: #606366;
+    --fragment-linenumber-background: #19191c;
+    --fragment-linenumber-border: #2b2d30;
 }
 
 body {
