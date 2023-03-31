@@ -34,6 +34,12 @@ namespace mousetrap
         create_from_image(image);
     }
 
+    ImageDisplay::ImageDisplay(const Icon& icon)
+        : ImageDisplay()
+    {
+        create_from_icon(icon);
+    }
+
     Vector2ui ImageDisplay::get_size() const
     {
         return _size;
@@ -66,6 +72,25 @@ namespace mousetrap
     {
         _size = icon.get_size() * Vector2ui(icon.get_scale());
         gtk_image_set_from_paintable(get_native(), GDK_PAINTABLE(icon.operator GtkIconPaintable*()));
+    }
+
+    void ImageDisplay::create_as_file_preview(const FileDescriptor& file)
+    {
+        GError* error = nullptr;
+        auto* pixbuf_maybe = gdk_pixbuf_new_from_file(file.get_path().c_str(), &error);
+        g_error_free(error);
+
+        if (pixbuf_maybe != nullptr)
+        {
+            gtk_image_set_from_pixbuf(get_native(), pixbuf_maybe);
+            g_object_unref(pixbuf_maybe);
+        }
+        else
+        {
+            auto* icon = g_content_type_get_icon(file.query_info(G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE).c_str());
+            gtk_image_set_from_gicon(get_native(), G_ICON(icon));
+            g_object_unref(icon);
+        }
     }
 
     void ImageDisplay::clear()

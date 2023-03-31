@@ -391,4 +391,7 @@ namespace mousetrap
 
     /// @see https://docs.gtk.org/gtk4/signal.SpinButton.wrapped.html
     DECLARE_SIGNAL(wrapped, "wrapped", void);
+
+    // @see https://docs.gtk.org/gtk4/signal.NativeDialog.response.html
+    DECLARE_SIGNAL_MANUAL(response, "response", void, int response, response);
 }

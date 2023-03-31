@@ -8,6 +8,7 @@
 #include <include/image.hpp>
 #include <include/widget.hpp>
 #include <include/icon.hpp>
+#include <include/file_descriptor.hpp>
 
 namespace mousetrap
 {
@@ -30,6 +31,10 @@ namespace mousetrap
             /// @param image
             ImageDisplay(const Image&);
 
+            /// @brief construct from icon
+            /// @param image
+            ImageDisplay(const Icon&);
+
             /// @brief get resolution of image buffer
             /// @return resolution
             Vector2ui get_size() const;
@@ -45,6 +50,10 @@ namespace mousetrap
             /// @brief load from icon
             /// @param icon
             void create_from_icon(const Icon&);
+
+            /// @brief create as preview of a file, if the file can be opened as an image, will display image, otherwise will display icon of filetype
+            /// @param file
+            void create_as_file_preview(const FileDescriptor&);
 
             /// @brief create from empty image
             void clear();

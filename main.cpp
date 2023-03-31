@@ -75,6 +75,19 @@ static void startup(GApplication*)
     });
 
 
+    GtkFileChooserNative* native = gtk_file_chooser_native_new (
+        "test",
+        window->operator GtkWindow*(),
+        GTK_FILE_CHOOSER_ACTION_OPEN,
+        "accept",
+        "cancel"
+    );
+
+    auto* test = gtk_file_chooser_widget_new(GTK_FILE_CHOOSER_ACTION_OPEN);
+    gtk_window_set_child(window->operator GtkWindow*(), test);
+    //gtk_widget_set_margin_start(GTK_WIDGET(native), 20);
+    //gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
+
     window->show();
     window->present();
     window->set_is_focusable(true);

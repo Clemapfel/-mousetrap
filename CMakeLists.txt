@@ -270,6 +270,7 @@ add_library(mousetrap STATIC
         mousetrap/src/file_system.cpp
 
         mousetrap/include/file_descriptor.hpp
+        mousetrap/src/file_descriptor.cpp
 
         mousetrap/include/file_monitor.hpp
         mousetrap/src/file_monitor.inl
@@ -291,7 +292,10 @@ add_library(mousetrap STATIC
 
         mousetrap/include/log.hpp
         mousetrap/src/log.cpp
-        mousetrap/src/file_descriptor.cpp)
+
+        mousetrap/include/file_chooser.hpp
+        mousetrap/src/file_chooser.cpp
+        mousetrap/src/file_chooser.cpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
