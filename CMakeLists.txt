@@ -306,7 +306,7 @@ target_link_libraries(mousetrap PUBLIC
     ${OpenGL}
     ${GLEW}
     ${GTK_LIBRARIES}
-    sfml-audio
+    ${sfml-audio}
 )
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)
@@ -322,9 +322,9 @@ if(MOUSETRAP_BUILD_TESTING)
     set(TEST_PREFIX "test_")
     function(declare_test name)
         add_executable(
-                "${TEST_PREFIX}${name}"
-                "mousetrap/test/${name}.cpp"
-                mousetrap/test/test.hpp
+            "${TEST_PREFIX}${name}"
+            "mousetrap/test/${name}.cpp"
+            "mousetrap/test/test.hpp"
         )
         target_link_libraries("${TEST_PREFIX}${name}" PRIVATE mousetrap)
         add_test(NAME "${TEST_PREFIX}${name}" COMMAND "${TEST_PREFIX}${name}")
@@ -334,6 +334,27 @@ if(MOUSETRAP_BUILD_TESTING)
     declare_test(window)
     declare_test(action)
 endif()
+
+## JULIA BINDING
+
+find_package(JlCxx REQUIRED)
+get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
+get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
+
+add_library(mousetrap_julia_binding SHARED
+    julia/julia_binding.hpp
+    julia/julia_binding.cpp
+)
+
+target_link_libraries(mousetrap_julia_binding PUBLIC
+    ${mousetrap}
+    JlCxx::cxxwrap_julia
+)
+
+set_target_properties(mousetrap_julia_binding PROPERTIES
+    LINKER_LANGUAGE CXX
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/julia
+)
 
 ## RAT_GAME
 
