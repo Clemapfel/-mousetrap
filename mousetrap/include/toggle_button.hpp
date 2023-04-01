@@ -5,8 +5,12 @@
 
 #pragma once
 
-#include "widget.hpp"
-#include "action.hpp"
+#include <include/widget.hpp>
+#include <include/action.hpp>
+
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
 
 namespace mousetrap
 {

@@ -12,6 +12,10 @@
 #include <include/orientable.hpp>
 #include <include/selectable.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     namespace detail { struct _ListViewItem; }

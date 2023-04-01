@@ -7,6 +7,10 @@
 #include <include/widget.hpp>
 #include <include/justify_mode.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief multi-line text entry

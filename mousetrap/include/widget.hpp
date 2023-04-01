@@ -17,6 +17,10 @@
 #include <string>
 #include <exception>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     template<typename GtkWidget_t>

@@ -10,6 +10,10 @@
 #include <include/relative_position.hpp>
 #include <include/popover.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief displays a menu inside a popover that is attached to a popover menu button. If the button is pressed, the popover is shown automatically

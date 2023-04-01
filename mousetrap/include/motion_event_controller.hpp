@@ -6,6 +6,10 @@
 
 #include <include/event_controller.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief handles cursor motion events

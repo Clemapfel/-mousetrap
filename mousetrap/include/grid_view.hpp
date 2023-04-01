@@ -9,6 +9,10 @@
 #include <include/selectable.hpp>
 #include <include/orientable.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief container, arranges widget in a grid

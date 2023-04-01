@@ -8,6 +8,10 @@
 #include <include/widget.hpp>
 #include <include/signal_component.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief switch, can be click dragged or clicked to change a binary state

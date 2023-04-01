@@ -8,6 +8,10 @@
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief selection mode of a container widget that has selectable children

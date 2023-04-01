@@ -9,6 +9,10 @@
 #include <include/signal_component.hpp>
 #include <include/file_descriptor.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief type of action for file chooser dialog, determines layout and choice type

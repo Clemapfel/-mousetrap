@@ -7,6 +7,10 @@
 
 #include <include/widget.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief state of a check button

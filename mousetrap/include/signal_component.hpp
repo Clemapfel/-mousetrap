@@ -8,16 +8,20 @@
 
 namespace mousetrap
 {
-    #define SPLAT(...) __VA_ARGS__
-
-    #define CTOR_SIGNAL(T, signal_name) \
-        has_##signal_name##_signal<T>(this)
-
-    #define HAS_SIGNAL(T, signal_name) \
-        public has_##signal_name##_signal<T>
-
     /// @brief signal component
     struct SignalComponent {};
+
+    #define SPLAT(...) __VA_ARGS__
+
+    #define SIGNAL_CLASS_NAME(signal_name) has_signal_##signal_name
+
+    #define CTOR_SIGNAL(T, signal_name) \
+            SIGNAL_CLASS_NAME(signal_name)<T>(this)
+
+    #define HAS_SIGNAL(T, signal_name) \
+            public SIGNAL_CLASS_NAME(signal_name)<T>
+
+    #define SIGNAL_EMITTER() public SignalEmitter
 
     /// @brief declare a signal with the signature (T* instance, auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
@@ -25,20 +29,20 @@ namespace mousetrap
     /// @param return_t return type of the signal wrapper function
     #define DECLARE_SIGNAL(signal_name, g_signal_id, return_t)                                     \
         template<typename T>                                                                          \
-        class has_##signal_name##_signal : public SignalComponent                                                             \
+        class SIGNAL_CLASS_NAME(signal_name) : public SignalComponent                                                             \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
                 std::function<return_t(T*)> _function;                                             \
                 bool _blocked = false;                                                                \
                                                                                                       \
-                static return_t wrapper(void*, has_##signal_name##_signal<T>* instance)            \
+                static return_t wrapper(void*, SIGNAL_CLASS_NAME(signal_name)<T>* instance)            \
                 {                                                                                     \
                     return instance->emit_signal_##signal_name();                                          \
                 }                                                                                     \
                                                                                                       \
             protected:                                                                                \
-                explicit has_##signal_name##_signal(T* instance)                                      \
+                explicit SIGNAL_CLASS_NAME(signal_name)(T* instance)                                      \
                     : _instance(instance)                                                             \
                 {}                                                                                    \
                                                                                                       \
@@ -99,20 +103,20 @@ namespace mousetrap
     /// @param arg_name_list list of arguments **without** the type, for example `x, y`
     #define DECLARE_SIGNAL_MANUAL(signal_name, g_signal_id, return_t, arg_list, arg_name_list)        \
         template<typename T>                                                                          \
-        class has_##signal_name##_signal  : public SignalComponent                                                            \
+        class SIGNAL_CLASS_NAME(signal_name)  : public SignalComponent                                                             \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
                 std::function<return_t(T* instance, arg_list)> _function;                             \
                 bool _blocked = false;                                                                \
                                                                                                       \
-                static return_t wrapper(void*, arg_list, has_##signal_name##_signal<T>* self)         \
+                static return_t wrapper(void*, arg_list, SIGNAL_CLASS_NAME(signal_name)<T>* self)         \
                 {                                                                                     \
                     return self->emit_signal_##signal_name(arg_name_list);                                        \
                 }                                                                                     \
                                                                                                       \
             protected:                                                                                \
-                explicit has_##signal_name##_signal(T* instance)                                      \
+                explicit SIGNAL_CLASS_NAME(signal_name)(T* instance)                                      \
                     : _instance(instance)                                                             \
                 {}                                                                                    \
                                                                                                       \
@@ -162,7 +166,9 @@ namespace mousetrap
                     _instance->disconnect_signal(signal_id);                                      \
                 }                                                                                  \
         }
-    
+
+    /// @brief activate signal
+    /// @tparam T instance type
     /// @see https://docs.gtk.org/gio/signal.Application.activate.html
     DECLARE_SIGNAL(activate, "activate", void);
 

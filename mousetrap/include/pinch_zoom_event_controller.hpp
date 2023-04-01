@@ -6,6 +6,10 @@
 
 #include <include/event_controller.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief event controller, handles the two-finger pinch-zoom gestures

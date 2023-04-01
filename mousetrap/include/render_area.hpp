@@ -8,6 +8,10 @@
 #include <include/shape.hpp>
 #include <include/render_task.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief area that allows OpenGL primitives to be rendered

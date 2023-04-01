@@ -7,6 +7,10 @@
 
 #include <include/widget.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief collapsible list widget, hides the child until clicked, usually display and arrow next to the label

@@ -10,6 +10,10 @@
 
 #include <functional>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief hints type of mutation done to file
@@ -40,10 +44,111 @@ namespace mousetrap
         MOVED_OUT = G_FILE_MONITOR_EVENT_MOVED_OUT
     };
 
-    #include <src/file_monitor.inl>
+    template<typename T>
+    class SIGNAL_CLASS_NAME(file_changed) : public SignalComponent
+    {
+        private:
+            T* _instance = nullptr;
+            std::function<void(T*, FileMonitorEvent, const FileDescriptor& self, const FileDescriptor& other)> _function;
+            bool _blocked = false;
+
+            static void wrapper(void*, GFile* self, GFile* other, FileMonitorEvent event, SIGNAL_CLASS_NAME(file_changed)<T>* instance)
+            {
+                auto self_descriptor = FileDescriptor(self);
+                auto other_descriptor = FileDescriptor(other);
+                instance->emit_signal_file_changed((FileMonitorEvent) event, self_descriptor, other_descriptor);
+            }
+
+        protected:
+            explicit SIGNAL_CLASS_NAME(file_changed)(T* instance)
+                : _instance(instance)
+            {}
+
+        public:
+            static inline constexpr const char* signal_id = "changed";
+
+            template<typename Function_t, typename Data_t>
+            void connect_signal_file_changed(Function_t function, Data_t data)
+            {
+                _function = [f = function, d = data](T* instance, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other) -> void
+                {
+                    return f(instance, event, file, other, d);
+                };
+
+                static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this);
+            }
+
+            template<typename Function_t>
+            void connect_signal_file_changed(Function_t function)
+            {
+                _function = [f = function](T* instance, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other) -> void
+                {
+                    return f(instance, event, file, other);
+                };
+
+                static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this);
+            }
+
+            void set_signal_file_changed_blocked(bool b)
+            {
+                _blocked = b;
+            }
+
+            bool get_signal_file_changed_blocked() const
+            {
+                return _blocked;
+            }
+
+            void emit_signal_file_changed(FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other)
+            {
+                if (not _blocked)
+                    return _function(_instance, event, file, other);
+            }
+
+            void disconnect_signal_file_changed()
+            {
+                _instance->disconnect_signal(signal_id);
+            }
+    };
+
+    /// @class has_signal_file_changed
+    /// @brief Signal emitted when a files contents or a property of it changes
+    /// @tparam T instance type
+    /// @note See mousetrap::has_signal_file_changed::emit_signal_file_changed for more information on the signal handlers signature
+
+    /// @fn void mousetrap::has_signal_file_changed::connect_signal_file_changed(Function_t function, Data_t data)
+    /// @brief connect handler, will be invoked if signal is emitted
+    /// @tparam Function_t function or lambda with signature `(T*, FileMonitorEvent, const FileDescriptor& self, const FileDescriptor& other, Data_t data) -> void`
+    /// @tparam Data_t type of arbitrary data, will be passed to function
+    /// @param function function or lambda with above mentioned signature
+    /// @param data arbitrary data
+    /// @note See has_signal_file_changed::emit_signal_file_changed for more information on the signal handlers signature
+
+    /// @fn void has_signal_file_changed::connect_signal_file_changed(Function_t function)
+    /// @brief connect handler, will be invoked if signal is emitted
+    /// @tparam Function_t function or lambda with signature `(T*, FileMonitorEvent, const FileDescriptor& self, const FileDescriptor& other) -> void`
+    /// @param function function or lambda with above mentioned signature
+
+    /// @fn void has_signal_file_changed::set_signal_file_changed_blocked(bool b)
+    /// @brief set whether signal emission should trigger the signal handler
+    /// @param b true if handler should be blocked, false otherwise
+
+    /// @fn bool has_signal_file_changed::get_signal_file_changed_blocked() const
+    /// @brief set whether signal emission should trigger the signal handler
+    /// @return true if handler should be blocked, false otherwise
+
+    /// @fn void has_signal_file_changed::emit_signal_file_changed(FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other)
+    /// @brief invoke signal handler manually
+    /// @param event FileMonitorEvent that describes in what way the file changed
+    /// @param file file that changed, this is the file that is being monitored
+    /// @param other other file, empty unless event is FileMonitorEvent::MOVED_IN or FileMonitorEvent::MOVED_OUT, in which case it decribes the other file that was moved in or out of the monitored directory
+
+    /// @fn void has_signal_file_changed::disconnect_signal_file_changed
+    /// @brief disconnect the signal handler
 
     /// @brief monitors changes to a file that may or may not yet exist
-    class FileMonitor : public SignalEmitter, HAS_SIGNAL(FileMonitor, file_changed)
+    class FileMonitor :  public SignalEmitter,
+        HAS_SIGNAL(FileMonitor, file_changed)
     {
         friend class FileDescriptor;
 
@@ -54,7 +159,7 @@ namespace mousetrap
             /// @brief default dtor, this removes any connected signals
             ~FileMonitor();
 
-            /// @brief copy ctor deleted, use mousetrap::FileDescriptor::create_monitor to create an additional monitor to the same file
+            /// @brief copy ctor deleted, use FileDescriptor::create_monitor to create an additional monitor to the same file
             FileMonitor(const FileMonitor&) = delete;
 
             /// @brief copy assignment deleted
@@ -76,6 +181,7 @@ namespace mousetrap
             void cancel();
 
             /// @brief check if file monitor was cancelled
+            /// @return true if cancelled, false otherwise
             bool is_cancelled() const;
 
         protected:

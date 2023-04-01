@@ -9,6 +9,10 @@
 #include <include/signal_component.hpp>
 #include <include/action.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief button, triggers action or signal when clicked

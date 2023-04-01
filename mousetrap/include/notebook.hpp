@@ -8,6 +8,10 @@
 #include <include/relative_position.hpp>
 #include <include/selection_model.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief container widget that displays multiple pages the cuser can switch between. Each page as a "tab" with a label

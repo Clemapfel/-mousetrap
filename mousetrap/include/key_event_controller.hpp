@@ -7,6 +7,10 @@
 #include <include/event_controller.hpp>
 #include <include/action.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief event controller that handles keystrokes

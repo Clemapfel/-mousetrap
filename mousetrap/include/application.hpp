@@ -6,14 +6,16 @@
 #pragma once
 
 #include <include/gtk_common.hpp>
-
 #include <include/signal_emitter.hpp>
 #include <include/window.hpp>
 #include <include/action.hpp>
-
 #include <include/menu_model.hpp>
 
 #include <string>
+
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
 
 namespace mousetrap
 {

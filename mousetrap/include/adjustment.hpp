@@ -6,8 +6,12 @@
 #pragma once
 
 #include <include/gtk_common.hpp>
-#include "signal_emitter.hpp"
-#include "signal_component.hpp"
+#include <include/signal_emitter.hpp>
+#include <include/signal_component.hpp>
+
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
 
 namespace mousetrap
 {

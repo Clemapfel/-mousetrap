@@ -7,6 +7,10 @@
 #include <include/event_controller.hpp>
 #include <include/angle.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief event controller handling touch rotation, or "turn" events

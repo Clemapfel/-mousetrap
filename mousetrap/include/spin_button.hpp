@@ -8,6 +8,10 @@
 #include <include/widget.hpp>
 #include <include/adjustment.hpp>
 
+#ifdef DOXYGEN
+    #include "../docs/doxygen.inl"
+#endif
+
 namespace mousetrap
 {
     /// @brief entry with and "increase" and "decrease" button, allows user to pick a value by entering the exact numebr
