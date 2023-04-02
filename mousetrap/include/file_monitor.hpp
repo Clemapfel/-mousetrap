@@ -45,7 +45,7 @@ namespace mousetrap
     };
 
     template<typename T>
-    class SIGNAL_CLASS_NAME(file_changed) : public SignalComponent
+    class SIGNAL_CLASS_NAME(file_changed) : protected SignalComponent
     {
         private:
             T* _instance = nullptr;
@@ -67,8 +67,11 @@ namespace mousetrap
         public:
             static inline constexpr const char* signal_id = "changed";
 
-            template<typename Function_t, typename Data_t>
-            void connect_signal_file_changed(Function_t function, Data_t data)
+            template<typename Data_t>
+            using signal_handler_with_data_f = std::function<void(T* instance, FileMonitorEvent event, const FileDescriptor& self, const FileDescriptor& other, Data_t data)>;
+
+            template<typename Data_t>
+            void connect_signal_file_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
             {
                 _function = [f = function, d = data](T* instance, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other) -> void
                 {
@@ -78,8 +81,9 @@ namespace mousetrap
                 static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this);
             }
 
-            template<typename Function_t>
-            void connect_signal_file_changed(Function_t function)
+            using signal_handler_without_data_f = std::function<void(T* instance, FileMonitorEvent event, const FileDescriptor& self, const FileDescriptor& other)>;
+
+            void connect_signal_file_changed(const signal_handler_without_data_f& function)
             {
                 _function = [f = function](T* instance, FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other) -> void
                 {
@@ -112,39 +116,43 @@ namespace mousetrap
     };
 
     /// @class has_signal_file_changed
-    /// @brief Signal emitted when a files contents or a property of it changes
+    /// @brief signal emitted when a file on disk changes
     /// @tparam T instance type
-    /// @note See mousetrap::has_signal_file_changed::emit_signal_file_changed for more information on the signal handlers signature
-
-    /// @fn void mousetrap::has_signal_file_changed::connect_signal_file_changed(Function_t function, Data_t data)
-    /// @brief connect handler, will be invoked if signal is emitted
-    /// @tparam Function_t function or lambda with signature `(T*, FileMonitorEvent, const FileDescriptor& self, const FileDescriptor& other, Data_t data) -> void`
-    /// @tparam Data_t type of arbitrary data, will be passed to function
-    /// @param function function or lambda with above mentioned signature
-    /// @param data arbitrary data
-    /// @note See has_signal_file_changed::emit_signal_file_changed for more information on the signal handlers signature
-
-    /// @fn void has_signal_file_changed::connect_signal_file_changed(Function_t function)
-    /// @brief connect handler, will be invoked if signal is emitted
-    /// @tparam Function_t function or lambda with signature `(T*, FileMonitorEvent, const FileDescriptor& self, const FileDescriptor& other) -> void`
-    /// @param function function or lambda with above mentioned signature
-
-    /// @fn void has_signal_file_changed::set_signal_file_changed_blocked(bool b)
-    /// @brief set whether signal emission should trigger the signal handler
-    /// @param b true if handler should be blocked, false otherwise
-
-    /// @fn bool has_signal_file_changed::get_signal_file_changed_blocked() const
-    /// @brief set whether signal emission should trigger the signal handler
-    /// @return true if handler should be blocked, false otherwise
-
+    ///
     /// @fn void has_signal_file_changed::emit_signal_file_changed(FileMonitorEvent event, const FileDescriptor& file, const FileDescriptor& other)
-    /// @brief invoke signal handler manually
+    /// \signal_emit_brief
     /// @param event FileMonitorEvent that describes in what way the file changed
     /// @param file file that changed, this is the file that is being monitored
     /// @param other other file, empty unless event is FileMonitorEvent::MOVED_IN or FileMonitorEvent::MOVED_OUT, in which case it decribes the other file that was moved in or out of the monitored directory
-
-    /// @fn void has_signal_file_changed::disconnect_signal_file_changed
-    /// @brief disconnect the signal handler
+    ///
+    /// @var has_signal_file_changed::signal_id
+    /// \signal_id{https://docs.gtk.org/gio/signal.FileMonitor.changed.html}
+    ///
+    /// @var has_signal_file_changed::signal_handler_with_data_f
+    /// \signal_with_data_f{file_changed}
+    /// \signal_see_emit_for_parameters{file_changed}
+    ///
+    /// @var has_signal_file_changed::signal_handler_without_data_f
+    /// \signal_without_data_f{file_changed}
+    /// \signal_see_emit_for_parameters{file_changed}
+    ///
+    /// @fn void has_signal_file_changed::connect_signal_file_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    ///
+    /// @fn void has_signal_file_changed::connect_signal_file_changed(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    ///
+    /// @fn void has_signal_file_changed::set_signal_file_changed_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_file_changed::get_signal_file_changed_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_file_changed::disconnect_signal_file_changed()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_file_changed::has_signal_file_changed
+    /// \signal_ctor
 
     /// @brief monitors changes to a file that may or may not yet exist
     class FileMonitor :  public SignalEmitter,

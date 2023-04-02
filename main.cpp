@@ -66,30 +66,11 @@ static void startup(GApplication*)
     app_window = new Window(*app);
     app_window->set_show_menubar(true);
 
-    static GtkWidget *window = NULL;
-    GtkWidget *vbox;
-    GtkWidget *hbox;
-    GtkWidget *box;
-    GtkWidget *label;
-    GtkWidget *entry;
-    GtkWidget *searchbar;
-    GtkWidget *button;
-    GtkWidget *header;
-
-    window = app_window->operator GtkWidget*();
-    entry = gtk_search_entry_new ();
-    searchbar = gtk_search_bar_new ();
-    gtk_search_bar_connect_entry (GTK_SEARCH_BAR (searchbar), GTK_EDITABLE (entry));
-    gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (searchbar), FALSE);
-    gtk_search_bar_set_child (GTK_SEARCH_BAR (searchbar), entry);
-
-    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_box_append (GTK_BOX (vbox), searchbar);
-
-    /* Hook the search bar to key presses */
-    gtk_search_bar_set_key_capture_widget (GTK_SEARCH_BAR (searchbar), window);
-
-    gtk_window_set_child(GTK_WINDOW(window), vbox);
+    auto file = FileDescriptor("/home/clem/Workspace/rat_game/main.cpp");
+    auto monitor = file.create_monitor();
+    monitor.connect_signal_file_changed([](FileMonitor*, FileMonitorEvent event, const FileDescriptor&, const FileDescriptor&){
+        std::cout << "test" << std::endl;
+    });
 
     app_window->show();
     app_window->present();

@@ -949,11 +949,10 @@ INPUT_FILE_ENCODING    =
 # comment), *.py, *.pyw, *.f90, *.f95, *.f03, *.f08, *.f18, *.f, *.for, *.vhd,
 # *.vhdl, *.ucf, *.qsf and *.ice.
 
-FILE_PATTERNS          = file_monitor.hpp
-                         #*.hpp \
-                         #*.cpp \
-                         #*.inl \
-                         #*.md
+FILE_PATTERNS          = *.hpp \
+                         *.cpp \
+                         *.inl \
+                         *.md
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.

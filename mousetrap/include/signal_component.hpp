@@ -29,7 +29,7 @@ namespace mousetrap
     /// @param return_t return type of the signal wrapper function
     #define DECLARE_SIGNAL(signal_name, g_signal_id, return_t)                                     \
         template<typename T>                                                                          \
-        class SIGNAL_CLASS_NAME(signal_name) : public SignalComponent                                                             \
+        class SIGNAL_CLASS_NAME(signal_name) : protected SignalComponent                                                             \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
@@ -48,9 +48,12 @@ namespace mousetrap
                                                                                                       \
             public:                                                                                \
                 static inline constexpr const char* signal_id = g_signal_id;                          \
-                                                                                                      \
-                template<typename Function_t, typename Data_t>                                        \
-                void connect_signal_##signal_name(Function_t function, Data_t data)                   \
+                                                                                                   \
+                template<typename Data_t> \
+                using signal_handler_with_data_f = std::function<void(T* instance, Data_t data)>; \
+    \
+                template<typename Data_t>                                        \
+                void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance) -> return_t                  \
                     {                                                                                 \
@@ -60,8 +63,10 @@ namespace mousetrap
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
                                                                                                    \
+                using signal_handler_without_data_f = std::function<void(T* instance)>; \
+                                                                             \
                 template<typename Function_t>                                                         \
-                void connect_signal_##signal_name(Function_t function)                                \
+                void connect_signal_##signal_name(const signal_handler_without_data_f& function)                                \
                 {                                                                                     \
                     _function = [f = function](T* instance) -> return_t                            \
                     {                                                                                 \
@@ -103,7 +108,7 @@ namespace mousetrap
     /// @param arg_name_list list of arguments **without** the type, for example `x, y`
     #define DECLARE_SIGNAL_MANUAL(signal_name, g_signal_id, return_t, arg_list, arg_name_list)        \
         template<typename T>                                                                          \
-        class SIGNAL_CLASS_NAME(signal_name)  : public SignalComponent                                                             \
+        class SIGNAL_CLASS_NAME(signal_name) : protected SignalComponent                                                             \
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
@@ -123,8 +128,11 @@ namespace mousetrap
             public:                                                                                   \
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                       \
-                template<typename Function_t, typename Data_t>                                        \
-                void connect_signal_##signal_name(Function_t function, Data_t data)                   \
+                template<typename Data_t> \
+                using signal_handler_with_data_f = std::function<void(T* instance, arg_list, Data_t data)>; \
+                                                                                                      \
+                template<typename Data_t>                                        \
+                void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance, arg_list)                       \
                     {                                                                                 \
@@ -132,9 +140,10 @@ namespace mousetrap
                     };                                                                                \
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
+                                                                                              \
+                using signal_handler_without_data_f = std::function<void(T* instance, arg_list)>;                                                                                      \
                                                                                                       \
-                template<typename Function_t>                                                         \
-                void connect_signal_##signal_name(Function_t function)                                \
+                void connect_signal_##signal_name(const signal_handler_without_data_f& function)                                \
                 {                                                                                     \
                     _function = [f = function](T* instance, arg_list)                                 \
                     {                                                                                 \
@@ -167,10 +176,41 @@ namespace mousetrap
                 }                                                                                  \
         }
 
-    /// @brief activate signal
-    /// @tparam T instance type
-    /// @see https://docs.gtk.org/gio/signal.Application.activate.html
+    /// @see
     DECLARE_SIGNAL(activate, "activate", void);
+    /// @class has_signal_activate
+    /// @brief signal emitted when activate
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_activate::emit_signal_activate()
+    /// \signal_emit_brief
+    ///
+    /// @var has_signal_activate::signal_id
+    /// \signal_id{activate}
+    ///
+    /// @var has_signal_activate::signal_handler_with_data_f
+    /// \signal_with_data_f{activate}
+    ///
+    /// @var has_signal_activate::signal_handler_without_data_f
+    /// \signal_without_data_f{activate}
+    ///
+    /// @fn void has_signal_activate::connect_signal_activate(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    ///
+    /// @fn void has_signal_activate::connect_signal_activate(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    ///
+    /// @fn void has_signal_activate::set_signal_activate_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_activate::get_signal_activate_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_activate::disconnect_signal_activate()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_activate::has_signal_activate
+    /// \signal_ctor
 
     /// @see https://docs.gtk.org/gio/signal.Application.startup.html
     DECLARE_SIGNAL(startup, "startup", void);
