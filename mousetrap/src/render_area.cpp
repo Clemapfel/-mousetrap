@@ -15,8 +15,8 @@ namespace mousetrap
         gtk_gl_area_set_auto_render(get_native(), TRUE);
         gtk_widget_set_size_request(GTK_WIDGET(get_native()), 1, 1);
 
-        connect_signal_render(on_render, this);
-        connect_signal_resize(on_resize, this);
+        connect_signal_render(on_render);
+        connect_signal_resize(on_resize);
     }
 
     void RenderArea::add_render_task(Shape* shape, Shader* shader, GLTransform* transform, BlendMode blend_mode)
@@ -37,12 +37,12 @@ namespace mousetrap
         _render_tasks.clear();
     }
 
-    void RenderArea::on_resize(RenderArea* area, gint width, gint height, void*)
+    void RenderArea::on_resize(RenderArea* area, gint width, gint height)
     {
         area->make_current();
     }
 
-    gboolean RenderArea::on_render(RenderArea* area, GdkGLContext* context, void*)
+    gboolean RenderArea::on_render(RenderArea* area, GdkGLContext* context)
     {
         area->make_current();
 

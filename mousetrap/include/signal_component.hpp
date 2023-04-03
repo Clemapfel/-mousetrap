@@ -49,7 +49,7 @@ namespace mousetrap
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                    \
                 template<typename Data_t> \
-                using signal_handler_with_data_f = std::function<void(T* instance, Data_t data)>; \
+                using signal_handler_with_data_f = std::function<return_t(T* instance, Data_t data)>; \
     \
                 template<typename Data_t>                                        \
                 void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
@@ -62,9 +62,8 @@ namespace mousetrap
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
                                                                                                    \
-                using signal_handler_without_data_f = std::function<void(T* instance)>; \
+                using signal_handler_without_data_f = std::function<return_t(T* instance)>; \
                                                                              \
-                template<typename Function_t>                                                         \
                 void connect_signal_##signal_name(const signal_handler_without_data_f& function)                                \
                 {                                                                                     \
                     _function = [f = function](T* instance) -> return_t                            \
@@ -128,7 +127,7 @@ namespace mousetrap
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                       \
                 template<typename Data_t> \
-                using signal_handler_with_data_f = std::function<void(T* instance, arg_list, Data_t data)>; \
+                using signal_handler_with_data_f = std::function<return_t(T* instance, arg_list, Data_t data)>; \
                                                                                                       \
                 template<typename Data_t>                                        \
                 void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
@@ -140,7 +139,7 @@ namespace mousetrap
                     static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
                                                                                               \
-                using signal_handler_without_data_f = std::function<void(T* instance, arg_list)>;                                                                                      \
+                using signal_handler_without_data_f = std::function<return_t(T* instance, arg_list)>;                                                                                      \
                                                                                                       \
                 void connect_signal_##signal_name(const signal_handler_without_data_f& function)                                \
                 {                                                                                     \

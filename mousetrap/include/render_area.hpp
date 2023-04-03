@@ -44,8 +44,8 @@ namespace mousetrap
             void make_current();
 
         private:
-            static void on_resize(RenderArea* area, gint width, gint height, void*);
-            static gboolean on_render(RenderArea*, GdkGLContext*, void*);
+            static void on_resize(RenderArea* area, gint width, gint height);
+            static gboolean on_render(RenderArea*, GdkGLContext*);
             std::vector<RenderTask> _render_tasks;
     };
 }
