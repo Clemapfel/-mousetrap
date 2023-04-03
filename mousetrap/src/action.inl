@@ -3,15 +3,21 @@
 //
 
 #include <iostream>
+#include <include/g_object_attachment.hpp>
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        using ActionFunction = std::function<void()>;
+    }
+
     template<typename Function_t>
     void Action::set_function(Function_t function)
     {
-        _stateless_f = [f = std::function<void()>(function)](){
+        _stateless_f = new detail::ActionFunction([f = std::function<void()>(function)](){
             f();
-        };
+        });
 
         _stateful_f = nullptr;
         _g_action = g_object_ref(g_simple_action_new(_id.c_str(), nullptr));
@@ -22,9 +28,9 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     void Action::set_function(Function_t function, Data_t data)
     {
-        _stateless_f = [f = std::function<void(Data_t)>(function), d = data](){
+        _stateless_f = new detail::ActionFunction([f = std::function<void(Data_t)>(function), d = data](){
             f(d);
-        };
+        });
 
         _stateful_f = nullptr;
         _g_action = g_object_ref(g_simple_action_new(_id.c_str(), nullptr));

@@ -17,10 +17,10 @@ namespace mousetrap
     void Action::on_action_activate(GSimpleAction*, GVariant* variant, Action* instance)
     {
         if (instance->_stateless_f)
-            instance->_stateless_f();
+            (*instance->_stateless_f)();
 
         if (instance->_stateful_f)
-            instance->_stateful_f();
+            (*instance->_stateful_f)();
     }
 
     Action::~Action()
@@ -32,18 +32,18 @@ namespace mousetrap
     void Action::on_action_change_state(GSimpleAction*, GVariant* variant, Action* instance)
     {
         if (instance->_stateless_f)
-            instance->_stateless_f();
+            (*instance->_stateless_f)();
 
         if (instance->_stateful_f)
-            instance->_stateful_f();
+            (*instance->_stateful_f)();
     }
 
     void Action::activate() const
     {
         if (_stateless_f)
-            _stateless_f();
+            (*_stateless_f)();
         else if (_stateful_f)
-            _stateful_f();
+            (*_stateful_f)();
 
         if (not _stateful_f and not _stateless_f)
             log::warning("In Action::activate: Activating action with id " + get_id() + ", but set_function or set_stateful_function has not been called yet", MOUSETRAP_DOMAIN);

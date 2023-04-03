@@ -119,8 +119,8 @@ namespace mousetrap
             GSimpleAction* _g_action = nullptr;
             GVariant* _g_state = nullptr;
 
-            std::function<void()> _stateless_f = nullptr;
-            std::function<void()> _stateful_f = nullptr;
+            std::function<void()>* _stateless_f = nullptr;
+            std::function<void()>* _stateful_f = nullptr;
 
             bool _enabled = true;
     };

@@ -7,22 +7,17 @@
 #include <gtk/gtk.h>
 #include <iostream>
 #include <sstream>
+#include <memory>
+
+#include <include/log.hpp>
 
 namespace mousetrap::detail
 {
-    struct Test
-    {
-        size_t _i = -1;
 
-        Test(size_t i)
-            : _i(i)
-        {}
+    #define G_WRAPPER_TYPE_RIGHT(t_snake) (t_snake##_wrapper_get_type())
 
-        ~Test()
-        {
-            std::cout << "destroyed " << _i << std::endl;
-        }
-    };
+    #define G_WRAPPER_FORWARD_DECLARE(T) \
+    static GObject* wrap(T* in);
 
     /// @brief generate a new gobject wrapper
     /// @param T CamelCase identifier of the value to be wrapped, this has to be an already valid class name
@@ -30,7 +25,8 @@ namespace mousetrap::detail
     /// @param T_CAPS CAPS_CASE identifier of the vaue to be wrapped
     /// @example
     /// \code
-    ///     #define G_TYPE_TEST_WRAPPER (test_wrapper_get_type())
+    ///     using Test = /* ... */
+    ///     #define G_TYPE_TEST_WRAPPER G_WRAPPER_TYPE_RIGHT(test)
     ///     G_NEW_WRAPPER(Test, test, TEST)
     /// \endcode
     #define G_NEW_WRAPPER(T, t, T_CAPS) \
@@ -40,7 +36,7 @@ namespace mousetrap::detail
         struct _##T##Wrapper \
         { \
             GObject parent_instance; \
-            T* data; \
+            std::shared_ptr<T>* data; \
         }; \
         \
         struct _##T##Wrapper##Class \
@@ -51,7 +47,7 @@ namespace mousetrap::detail
         G_DEFINE_TYPE (T##Wrapper, t##_wrapper, G_TYPE_OBJECT) \
         \
         static void t##_wrapper_finalize (GObject *object) \
-        { \
+        {                               \
             auto* self = G_##T_CAPS##_WRAPPER(object);                              \
                                         \
             if (not log::get_surpress_debug(MOUSETRAP_DOMAIN))                      \
@@ -78,12 +74,13 @@ namespace mousetrap::detail
         { \
             auto* item = (T##Wrapper*) g_object_new(G_TYPE_##T_CAPS##_WRAPPER, nullptr); \
             t##_wrapper_init(item); \
-            item->data = in; \
+            item->data = new std::shared_ptr<T>(in); \
             return item; \
         }                               \
                                         \
         static GObject* wrap(T* in)         \
         {       \
+                                        \
             return G_OBJECT(t##_wrapper_new(in));                                \
         }                                \
 
@@ -95,7 +92,7 @@ namespace mousetrap::detail
         /// @param gboolean true if triggered while parent has exactly 1 reference left
         static void toggle_notify(gpointer attachment, GObject* object, gboolean last_ref)
         {
-            if (last_ref and G_IS_OBJECT(attachment))
+            if (last_ref)
             {
                 g_object_unref(attachment);
                 g_object_remove_toggle_ref(object, toggle_notify, attachment);
