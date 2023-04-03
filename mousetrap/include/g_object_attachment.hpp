@@ -23,6 +23,8 @@ namespace mousetrap::detail
         }
     };
 
+    // WRAPPER IMPLEMENTATION
+
     #define G_TYPE_WRAPPER (wrapper_get_type())
 
     G_DECLARE_FINAL_TYPE(Wrapper, wrapper, G, WRAPPER, GObject)
@@ -64,5 +66,26 @@ namespace mousetrap::detail
         wrapper_init(item);
         item->data = in;
         return item;
+    }
+
+    /// @brief function that releases attached gobject ref when objects reference count reaches 0
+    /// @param data attached object
+    /// @param object parent object
+    /// @param gboolean true if triggered while parent has exactly 1 reference left
+    static void toggle_notify(gpointer data, GObject* object, gboolean last_ref)
+    {
+        if (last_ref)
+        {
+            g_object_unref(data);
+            g_object_remove_toggle_ref(object, toggle_notify, data);
+        }
+    }
+
+    /// @brief attach a gobject wrapper to an arbitrary GObject parent. If parents reference count reaches 0, the attachment is freed.
+    /// @param parent parent object, if this object goes out of scope, attachment is deleted too
+    /// @param attachment if this object goes out of scope, parent is unaffected
+    static void attach_ref_to_object(GObject* parent, GObject* attachment)
+    {
+        g_object_add_toggle_ref(parent, toggle_notify, attachment);
     }
 }
