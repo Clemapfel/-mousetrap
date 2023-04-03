@@ -50,6 +50,8 @@ int main()
 
     app.connect_signal_activate([](Application* app) -> void
     {
+        log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
+
         state = new State {
     Window(*app)
         };

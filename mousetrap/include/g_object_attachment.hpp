@@ -6,6 +6,7 @@
 
 #include <gtk/gtk.h>
 #include <iostream>
+#include <sstream>
 
 namespace mousetrap::detail
 {
@@ -22,8 +23,6 @@ namespace mousetrap::detail
             std::cout << "destroyed " << _i << std::endl;
         }
     };
-
-    // WRAPPER IMPLEMENTATION
 
     /// @brief generate a new gobject wrapper
     /// @param T CamelCase identifier of the value to be wrapped, this has to be an already valid class name
@@ -53,8 +52,13 @@ namespace mousetrap::detail
         \
         static void t##_wrapper_finalize (GObject *object) \
         { \
-            auto* self = G_##T_CAPS##_WRAPPER(object); \
-            printf("destroy %p", self->data);\
+            auto* self = G_##T_CAPS##_WRAPPER(object);                              \
+                                        \
+            if (not log::get_surpress_debug(MOUSETRAP_DOMAIN))                      \
+            {\
+                std::stringstream str; str << "In " << #t << "_wrapper_finalize: Deallocating object of type " << #T << " at " << self->data; \
+                log::debug(str.str(), MOUSETRAP_DOMAIN);                            \
+            }\
             delete self->data;          \
             G_OBJECT_CLASS(t##_wrapper_parent_class)->finalize(object); \
         } \

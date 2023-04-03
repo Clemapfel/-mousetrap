@@ -86,6 +86,16 @@ namespace mousetrap
             /// @param b true if info messages should be surpressed, false otherwise
             static void set_surpress_info(LogDomain, bool);
 
+            /// @brief get whether debug level log messages are printed for given domain
+            /// @param domain logging domain
+            /// @return true if debug messages should be surpressed, false otherwise
+            static bool get_surpress_debug(LogDomain);
+
+            /// @brief get whether info level log messages are printed for given domain
+            /// @param domain logging domain
+            /// @return true if info messages should be surpressed, false otherwise
+            static bool get_surpress_info(LogDomain);
+
             /// @brief specify a log file, any message regardless of priority will be appended to it. File will not be overwritten, if it does not exist, it will be created
             /// @param path absolute path
             static void set_log_file(const std::string& path);

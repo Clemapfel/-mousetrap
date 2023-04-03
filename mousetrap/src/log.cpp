@@ -50,6 +50,18 @@ namespace mousetrap
         };
     }
 
+    bool log::get_surpress_debug(LogDomain domain)
+    {
+        auto debug_it = _allow_debug.find(domain);
+        return debug_it == _allow_debug.end() or debug_it->second == false;
+    }
+
+    bool log::get_surpress_info(LogDomain domain)
+    {
+        auto info_it = _allow_debug.find(domain);
+        return info_it == _allow_debug.end() or info_it->second == false;
+    }
+
     GLogWriterOutput log::log_writer(GLogLevelFlags log_level, const GLogField* fields, gsize n_fields, gpointer)
     {
         // see https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html
@@ -118,16 +130,13 @@ namespace mousetrap
                 return G_LOG_WRITER_HANDLED;
 
         // reject debug unless enabled
-        auto debug_it = _allow_debug.find(domain);
-        if (level_read and std::string(level) == std::string("DEBUG"))
-            if (debug_it == _allow_debug.end() or debug_it->second == false)
+        if (level_read and std::string(level) == std::string("DEBUG") and log::get_surpress_debug(domain))
                 return G_LOG_WRITER_HANDLED;
 
         // reject info unless enabled
         auto info_it = _allow_debug.find(domain);
-        if (level_read and std::string(level) == std::string("INFO"))
-            if (info_it == _allow_debug.end() or info_it->second == false)
-                return G_LOG_WRITER_HANDLED;
+        if (level_read and std::string(level) == std::string("INFO") and log::get_surpress_info(domain))
+            return G_LOG_WRITER_HANDLED;
 
         return g_log_writer_standard_streams(log_level, fields, n_fields, nullptr);
     }
