@@ -273,7 +273,6 @@ add_library(mousetrap STATIC
         mousetrap/src/file_descriptor.cpp
 
         mousetrap/include/file_monitor.hpp
-        mousetrap/src/file_monitor.inl
         mousetrap/src/file_monitor.cpp
 
         mousetrap/include/orientable.hpp
@@ -297,7 +296,8 @@ add_library(mousetrap STATIC
         mousetrap/include/file_chooser.hpp
         mousetrap/src/file_chooser.cpp
         mousetrap/src/file_chooser.cpp
-)
+
+        mousetrap/include/g_object_attachment.hpp)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"

@@ -51,6 +51,8 @@ namespace mousetrap
 
         if (instance->get_string_f != nullptr)
             instance->get_string_f(instance, str);
+        else
+            log::critical("In Clipboard::get_string_callback_wrapper: String succesfully read but no valid handler function is available", MOUSETRAP_DOMAIN);
     }
 
     bool Clipboard::contains_image() const
@@ -116,5 +118,7 @@ namespace mousetrap
 
         if (instance->get_image_f != nullptr)
             instance->get_image_f(instance, image);
+        else
+            log::critical("In Clipboard::get_image_callback_wrapper: Image succesfully read but no valid handler function is available", MOUSETRAP_DOMAIN);
     }
 }

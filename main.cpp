@@ -5,37 +5,18 @@
 
 using namespace mousetrap;
 
-class CompoundWidget : public Widget
-{
-    private:
-        Box _box = Box(Orientation::HORIZONTAL);
-        Button _button_01, _button_02, _button_03;
-
-        static void clicked(Button* button, Box* box)
-        {
-            std::cout << "clicked" << std::endl;
-            std::cout << box.get().get_spacing() << std::endl;
-        }
-
-    public:
-        CompoundWidget()
-        {
-            _button_02.set_child(&_button_03);
-            _button_01.set_child(&_button_02);
-            _box.push_back(&_button_01);
-            _button_01.connect_signal_clicked(clicked, std::ref(_box));
-        }
-
-        operator NativeWidget() const override
-        {
-            return _box;
-        }
-};
-
 inline struct State {
     Window window;
-    CompoundWidget widget;
+    Button button;
 }* state = nullptr;
+
+#include <include/g_object_attachment.hpp>
+
+static void toggle_notify(gpointer data, GObject* object, gboolean last_ref)
+{
+    if (last_ref)
+        g_object_unref(data);
+}
 
 int main()
 {
@@ -47,10 +28,18 @@ int main()
     Window(*app)
         };
 
-        auto* widget = new CompoundWidget();
-        state->widget = std::move(*widget);
+        using namespace detail;
+        static auto* list = g_object_ref(g_list_store_new(G_TYPE_OBJECT));
+        static auto* test_item = detail::wrapper_new(new detail::Test(13));
+        g_object_add_toggle_ref(G_OBJECT(list), toggle_notify, test_item);
+        g_object_unref(list);
 
-        state->window.set_child(&state->widget);
+        state->button.connect_signal_clicked([&](Button*){
+            g_object_unref(list);
+        });
+        state->button.set_expand(true);
+
+        state->window.set_child(&state->button);
         state->window.present();
     });
 

@@ -58,6 +58,7 @@ namespace mousetrap
                 SIGNAL_CLASS_NAME(signal_name)(SIGNAL_CLASS_NAME(signal_name)<T>&& other)          \
                 {         \
                     _function = other._function;                                                   \
+                    other._function = nullptr;                                                                               \
                     _blocked = other._blocked; \
                 }                                                                                  \
                 SIGNAL_CLASS_NAME(signal_name)<T>& operator=(SIGNAL_CLASS_NAME(signal_name)<T>&& other)\
@@ -151,6 +152,7 @@ namespace mousetrap
                 SIGNAL_CLASS_NAME(signal_name)(SIGNAL_CLASS_NAME(signal_name)<T>&& other)          \
                 {         \
                     _function = other._function;                                                   \
+                    other._function = nullptr;                                                                                  \
                     _blocked = other._blocked; \
                 }                                                                                  \
                 SIGNAL_CLASS_NAME(signal_name)<T>& operator=(SIGNAL_CLASS_NAME(signal_name)<T>&& other)\

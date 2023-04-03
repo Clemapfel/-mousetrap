@@ -379,7 +379,7 @@ namespace mousetrap
 
     gboolean Widget::tick_callback_wrapper(GtkWidget*, GdkFrameClock* clock, Widget* instance)
     {
-        if (instance->_tick_callback_f)
+        if (instance->_tick_callback_f != nullptr)
             return instance->_tick_callback_f(clock);
         else
             return true;

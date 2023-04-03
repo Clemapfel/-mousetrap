@@ -36,7 +36,7 @@ namespace mousetrap::detail
         g_object_unref(self->children);
         g_object_unref(self->widget_ref);
 
-        G_OBJECT_CLASS (tree_list_view_item_parent_class)->finalize (object);
+        G_OBJECT_CLASS(tree_list_view_item_parent_class)->finalize (object);
     }
 
     static void tree_list_view_item_init(ListViewItem* item)
