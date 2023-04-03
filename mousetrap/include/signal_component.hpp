@@ -7,6 +7,10 @@
 #include <functional>
 #include <gtk/gtk.h>
 
+// TODO
+#include <iostream>
+// TODO
+
 namespace mousetrap
 {
     /// @brief Parent class of all has_signal_<signal_id> components
@@ -17,10 +21,10 @@ namespace mousetrap
     #define SIGNAL_CLASS_NAME(signal_name) has_signal_##signal_name
 
     #define CTOR_SIGNAL(T, signal_name) \
-            SIGNAL_CLASS_NAME(signal_name)<T>(this)
+        SIGNAL_CLASS_NAME(signal_name)<T>(this)
 
     #define HAS_SIGNAL(T, signal_name) \
-            public SIGNAL_CLASS_NAME(signal_name)<T>
+        public SIGNAL_CLASS_NAME(signal_name)<T>
 
     /// @brief declare a signal with the signature (T* instance, auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
@@ -32,7 +36,7 @@ namespace mousetrap
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
-                std::function<return_t(T*)> _function;                                             \
+                std::function<return_t(T*)> _function = nullptr;                                             \
                 bool _blocked = false;                                                                \
                                                                                                       \
                 static return_t wrapper(void*, SIGNAL_CLASS_NAME(signal_name)<T>* instance)            \
@@ -48,11 +52,26 @@ namespace mousetrap
             public:                                                                                \
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                    \
+                SIGNAL_CLASS_NAME(signal_name)(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;                                                                                   \
+                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;                                                                                   \
+                                                                                                   \
+                SIGNAL_CLASS_NAME(signal_name)(SIGNAL_CLASS_NAME(signal_name)<T>&& other)          \
+                {         \
+                    _function = other._function;                                                   \
+                    _blocked = other._blocked; \
+                }                                                                                  \
+                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(SIGNAL_CLASS_NAME(signal_name)<T>&& other)\
+                {                                                                                  \
+                    _function = other._function; \
+                    _blocked = other._blocked;                                          \
+                    return *this;                                                                               \
+                }\
+\
                 template<typename Data_t> \
                 using signal_handler_with_data_f = std::function<return_t(T* instance, Data_t data)>; \
     \
-                template<typename Data_t>                                        \
-                void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
+                template<typename Function_t, typename Data_t>                                        \
+                void connect_signal_##signal_name(Function_t function, Data_t data)                   \
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance) -> return_t                  \
                     {                                                                                 \
@@ -86,7 +105,7 @@ namespace mousetrap
                                                                                                       \
                 return_t emit_signal_##signal_name()                                                    \
                 {                                                                                     \
-                    if (not _blocked)                                                                 \
+                    if (not _blocked and _function != nullptr)                                                                 \
                         return _function(_instance);                                                  \
                     else                                                                              \
                         return return_t();                                                         \
@@ -110,7 +129,7 @@ namespace mousetrap
         {                                                                                             \
             private:                                                                                  \
                 T* _instance = nullptr;                                                               \
-                std::function<return_t(T* instance, arg_list)> _function;                             \
+                std::function<return_t(T* instance, arg_list)> _function = nullptr;                             \
                 bool _blocked = false;                                                                \
                                                                                                       \
                 static return_t wrapper(void*, arg_list, SIGNAL_CLASS_NAME(signal_name)<T>* self)         \
@@ -126,11 +145,26 @@ namespace mousetrap
             public:                                                                                   \
                 static inline constexpr const char* signal_id = g_signal_id;                          \
                                                                                                       \
+                SIGNAL_CLASS_NAME(signal_name)(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;      \
+                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;  \
+                                                                                                   \
+                SIGNAL_CLASS_NAME(signal_name)(SIGNAL_CLASS_NAME(signal_name)<T>&& other)          \
+                {         \
+                    _function = other._function;                                                   \
+                    _blocked = other._blocked; \
+                }                                                                                  \
+                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(SIGNAL_CLASS_NAME(signal_name)<T>&& other)\
+                {                                                                                  \
+                    _function = other._function; \
+                    _blocked = other._blocked;                                          \
+                    return *this;                                                                               \
+                }                                                                                      \
+                                                                                                      \
                 template<typename Data_t> \
                 using signal_handler_with_data_f = std::function<return_t(T* instance, arg_list, Data_t data)>; \
                                                                                                       \
-                template<typename Data_t>                                        \
-                void connect_signal_##signal_name(const signal_handler_with_data_f<Data_t>& function, Data_t data)                   \
+                template<typename Function_t, typename Data_t>                                        \
+                void connect_signal_##signal_name(Function_t function, Data_t data)                   \
                 {                                                                                     \
                     _function = [f = function, d = data](T* instance, arg_list)                       \
                     {                                                                                 \
@@ -162,7 +196,7 @@ namespace mousetrap
                                                                                                       \
                 return_t emit_signal_##signal_name(arg_list)                                                    \
                 {                                                                                     \
-                    if (not _blocked)                                                                 \
+                    if (not _blocked and _function != nullptr)                                                                 \
                         return _function(_instance, arg_name_list);                                                  \
                     else                                                                              \
                         return return_t();                                                         \

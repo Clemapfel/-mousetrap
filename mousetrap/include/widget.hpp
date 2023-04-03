@@ -53,6 +53,19 @@ namespace mousetrap
         friend struct WidgetImplementation;
 
         public:
+            /// @brief copy ctor deleted
+            Widget(const Widget&) = delete;
+
+            /// @brief copy assignment deleted
+            Widget& operator=(const Widget&) const = delete;
+
+            /// @brief move ctor, safely transfers widget-level properties
+            /// @param other
+            Widget(Widget&&);
+
+            /// @brief move assignment, safely transfers widget-level properties
+            Widget& operator=(Widget&&);
+
             /// @brief expose as GtkWidget, this is the only virtual function a class has to override to inherit all widget functionality
             virtual operator NativeWidget() const = 0;
 
@@ -261,13 +274,16 @@ namespace mousetrap
             /// @param function
             /// @param data
             template<typename Function_t, typename Data_t>
-            void add_tick_callback(Function_t, Data_t);
+            void set_tick_callback(Function_t, Data_t);
 
             /// @brief add a callback that is invoked every frame
             /// @tparam Function_t static function or lambda with signature <tt>(FrameClock) -> TickCallbackResult</tt>
             /// @param function
             template<typename Function_t>
-            void add_tick_callback(Function_t);
+            void set_tick_callback(Function_t);
+
+            /// @brief remove callback that si invoked every frame
+            void remove_tick_callback();
 
         protected:
             /// @brief default ctor, protected. Only inheriting classes should call this
@@ -278,8 +294,8 @@ namespace mousetrap
 
         private:
             std::function<bool(GdkFrameClock*)> _tick_callback_f;
-            std::function<void(void*)> _destroy_notify_f;
 
+            guint _tick_callback_id = -1;
             static gboolean tick_callback_wrapper(GtkWidget*, GdkFrameClock*, Widget* instance);
 
             Widget* _tooltip_widget = nullptr;
@@ -303,7 +319,7 @@ namespace mousetrap
 
             /// @brief move assignment, safely transfers ownership
             /// @param other
-            WidgetImplementation<GtkWidget_t>& operator=(WidgetImplementation<GtkWidget_t>&&) const;
+            WidgetImplementation<GtkWidget_t>& operator=(WidgetImplementation<GtkWidget_t>&&);
 
             /// @brief expose as native GTK4 widget \internal
             operator GtkWidget_t*() const;

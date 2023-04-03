@@ -21,6 +21,7 @@ meaning there is no limiation put upon the actual graphical user interface.
 
 # TODO
 + Search Bar
++ Allow multiple tick callbacks for widget
 + Make ListView, GridView, ColumnView filterable
 + Add DropDown search bar
 + Expose TextView widget insertion

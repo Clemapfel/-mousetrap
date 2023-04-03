@@ -12,12 +12,12 @@ namespace mousetrap
 {
     Widget::Widget()
         : CTOR_SIGNAL(Widget, realize),
-            CTOR_SIGNAL(Widget, unrealize),
-            CTOR_SIGNAL(Widget, destroy),
-            CTOR_SIGNAL(Widget, hide),
-            CTOR_SIGNAL(Widget, show),
-            CTOR_SIGNAL(Widget, map),
-            CTOR_SIGNAL(Widget, unmap)
+          CTOR_SIGNAL(Widget, unrealize),
+          CTOR_SIGNAL(Widget, destroy),
+          CTOR_SIGNAL(Widget, hide),
+          CTOR_SIGNAL(Widget, show),
+          CTOR_SIGNAL(Widget, map),
+          CTOR_SIGNAL(Widget, unmap)
     {}
 
     Widget::~Widget()
@@ -383,5 +383,42 @@ namespace mousetrap
             return instance->_tick_callback_f(clock);
         else
             return true;
+    }
+
+    void Widget::remove_tick_callback()
+    {
+        if (_tick_callback_id != guint(-1))
+            gtk_widget_remove_tick_callback(operator GtkWidget*(), _tick_callback_id);
+    }
+
+    Widget::Widget(Widget&& other)
+        : Widget()
+    {
+        other.remove_tick_callback();
+
+        _tick_callback_f = other._tick_callback_f;
+        other._tick_callback_f = nullptr;
+
+        _tick_callback_id = other._tick_callback_id;
+        other._tick_callback_id = guint(-1);
+
+        _tooltip_widget = other._tooltip_widget;
+        other._tooltip_widget = nullptr;
+    }
+
+    Widget& Widget::operator=(Widget&& other)
+    {
+        other.remove_tick_callback();
+
+        _tick_callback_f = other._tick_callback_f;
+        other._tick_callback_f = nullptr;
+
+        _tick_callback_id = other._tick_callback_id;
+        other._tick_callback_id = guint(-1);
+
+        _tooltip_widget = other._tooltip_widget;
+        other._tooltip_widget = nullptr;
+
+        return *this;
     }
 }
