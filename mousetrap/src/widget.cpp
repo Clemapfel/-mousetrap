@@ -10,72 +10,22 @@
 
 namespace mousetrap
 {
-    Widget::Widget(GtkWidget* widget)
+    Widget::Widget()
         : CTOR_SIGNAL(Widget, realize),
-          CTOR_SIGNAL(Widget, unrealize),
-          CTOR_SIGNAL(Widget, destroy),
-          CTOR_SIGNAL(Widget, hide),
-          CTOR_SIGNAL(Widget, show),
-          CTOR_SIGNAL(Widget, map),
-          CTOR_SIGNAL(Widget, unmap)
-    {
-        _native = g_object_ref(GTK_WIDGET(widget));
-    }
-
-    Widget::Widget(Widget&& other) noexcept
-        : CTOR_SIGNAL(Widget, realize),
-          CTOR_SIGNAL(Widget, unrealize),
-          CTOR_SIGNAL(Widget, destroy),
-          CTOR_SIGNAL(Widget, hide),
-          CTOR_SIGNAL(Widget, show),
-          CTOR_SIGNAL(Widget, map),
-          CTOR_SIGNAL(Widget, unmap)
-    {
-        _native = other._native;
-        other._native = nullptr;
-
-        _tick_callback_f = other._tick_callback_f;
-        other._tick_callback_f = nullptr;
-
-        _destroy_notify_f = other._destroy_notify_f;
-        other._destroy_notify_f = nullptr;
-    }
-
-    Widget& Widget::operator=(Widget&& other) noexcept
-    {
-        _native = other._native;
-        other._native = nullptr;
-
-        _tick_callback_f = other._tick_callback_f;
-        other._tick_callback_f = nullptr;
-
-        _destroy_notify_f = other._destroy_notify_f;
-        other._destroy_notify_f = nullptr;
-
-        return *this;
-    }
+            CTOR_SIGNAL(Widget, unrealize),
+            CTOR_SIGNAL(Widget, destroy),
+            CTOR_SIGNAL(Widget, hide),
+            CTOR_SIGNAL(Widget, show),
+            CTOR_SIGNAL(Widget, map),
+            CTOR_SIGNAL(Widget, unmap)
+    {}
 
     Widget::~Widget()
-    {
-        if (gtk_widget_get_parent(_native) == nullptr and _native != nullptr)
-            g_object_unref(_native);
-    }
+    {}
 
     Widget::operator GObject*()
     {
         return G_OBJECT(operator GtkWidget*());
-    }
-
-    Widget::operator GtkWidget*() const
-    {
-        return GTK_WIDGET(_native);
-    }
-
-    void Widget::override_native(GtkWidget* new_native)
-    {
-        auto* old_native = _native;
-        _native = g_object_ref(new_native);
-        g_object_unref(old_native);
     }
 
     Vector2f Widget::get_size_request()
@@ -214,7 +164,7 @@ namespace mousetrap
 
     bool Widget::operator==(const Widget& other) const
     {
-        return this->_native == other._native;
+        return this->operator GtkWidget*() == other.operator GtkWidget*();
     }
 
     bool Widget::operator!=(const Widget& other) const

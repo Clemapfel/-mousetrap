@@ -37,6 +37,7 @@ namespace mousetrap
         DISCONTINUE = false
     };
 
+    using NativeWidget = GtkWidget*;
 
     /// @brief Widget, super class of all renderable entities
     class Widget : public SignalEmitter,
@@ -52,23 +53,8 @@ namespace mousetrap
         friend struct WidgetImplementation;
 
         public:
-            /// @brief copy ctor deleted
-            Widget(const Widget&) = delete;
-
-            /// @brief move ctor, safely transfers ownership
-            /// @param other
-            Widget(Widget&&) noexcept;
-
-            /// @brief copy assigment deleted
-            Widget& operator=(const Widget&) = delete;
-
-            /// @brief move assignment, safely transfers ownership
-            /// @param other
-            /// @return reference to self after assignment
-            Widget& operator=(Widget&&) noexcept;
-
-            /// @brief expose as GtkWidget, for interal use only
-            virtual operator GtkWidget*() const;
+            /// @brief expose as GtkWidget, this is the only virtual function a class has to override to inherit all widget functionality
+            virtual operator NativeWidget() const = 0;
 
             /// @brief expose as GObject \internal
             operator GObject*() override;
@@ -284,16 +270,13 @@ namespace mousetrap
             void add_tick_callback(Function_t);
 
         protected:
-            Widget() = delete;
-            void override_native(GtkWidget*);
+            /// @brief default ctor, protected. Only inheriting classes should call this
+            Widget();
+
+            /// @brief default dtor, protected. Only inheriting classes should calls this
+            ~Widget();
 
         private:
-            Widget(GtkWidget*);
-
-            virtual ~Widget();
-
-            GtkWidget* _native;
-
             std::function<bool(GdkFrameClock*)> _tick_callback_f;
             std::function<void(void*)> _destroy_notify_f;
 
@@ -303,15 +286,48 @@ namespace mousetrap
             static gboolean on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, Widget* instance);
     };
 
+    /// @brief wrapper around native GTK4 widgets \internal
     template<typename GtkWidget_t>
     class WidgetImplementation : public Widget
     {
         public:
+            /// @brief copy ctor deleted
+            WidgetImplementation(const WidgetImplementation<GtkWidget_t>&) = delete;
+
+            /// @brief copy assignment deleted
+            WidgetImplementation<GtkWidget_t>& operator=(const WidgetImplementation<GtkWidget_t>&) const = delete;
+
+            /// @brief move ctor, safely transfers ownership
+            /// @param other
+            WidgetImplementation(WidgetImplementation<GtkWidget_t>&&);
+
+            /// @brief move assignment, safely transfers ownership
+            /// @param other
+            WidgetImplementation<GtkWidget_t>& operator=(WidgetImplementation<GtkWidget_t>&&) const;
+
+            /// @brief expose as native GTK4 widget \internal
             operator GtkWidget_t*() const;
 
+            /// @copydoc Widget::operator NativeWidget() const
+            operator NativeWidget() const override;
+
         protected:
+            /// @brief construct from native widget \internal
+            /// @throw fatal error if supplied pointer does not point to a valid GTK4 GtkWidget
             WidgetImplementation(GtkWidget_t*);
+
+            /// @brief dtor protected \internal
+            ~WidgetImplementation();
+
+            /// @brief get pointer to native widget \internal
+            /// @return pointer
             GtkWidget_t* get_native() const;
+
+            /// @brief override native pointer safely \internal
+            /// @param new_pointer
+            void override_native(GtkWidget*);
+
+            GtkWidget* _native;
     };
 };
 

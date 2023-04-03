@@ -13,11 +13,15 @@ class CompoundWidget : public Widget
 
     public:
         CompoundWidget()
-            : Widget(_box.operator GtkWidget*())
         {
             _button_02.set_child(&_button_03);
             _button_01.set_child(&_button_02);
             _box.push_back(&_button_01);
+        }
+
+        operator NativeWidget() const override
+        {
+            return _box;
         }
 };
 
