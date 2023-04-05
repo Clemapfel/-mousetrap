@@ -14,7 +14,7 @@
 namespace mousetrap::detail
 {
 
-    #define G_WRAPPER_TYPE_RIGHT(t_snake) (t_snake##_wrapper_get_type())
+    #define G_TYPE_RIGHT(t_snake) (t_snake##_get_type())
 
     #define G_WRAPPER_FORWARD_DECLARE(T) \
     static GObject* wrap(T* in);
@@ -26,62 +26,66 @@ namespace mousetrap::detail
     /// @example
     /// \code
     ///     using Test = /* ... */
-    ///     #define G_TYPE_TEST_WRAPPER G_WRAPPER_TYPE_RIGHT(test)
-    ///     G_NEW_WRAPPER(Test, test, TEST)
+    ///     #define G_TYPE_TEST G_WRAPPER_TYPE_RIGHT(test)
+    ///     G_NEW_TYPE(Test, test, TEST)
     /// \endcode
-    #define G_NEW_WRAPPER(T, t, T_CAPS) \
-        G_DECLARE_FINAL_TYPE(T##Wrapper, t##_wrapper, G, T_CAPS##_WRAPPER, GObject) \
+    #define G_NEW_TYPE(T, t, T_CAPS, wrapped_type) \
+        G_DECLARE_FINAL_TYPE(T, t, G, T_CAPS, GObject) \
                                         \
         \
-        struct _##T##Wrapper \
+        struct _##T \
         { \
             GObject parent_instance; \
-            std::shared_ptr<T>* data; \
+            wrapped_type data; \
         }; \
         \
-        struct _##T##Wrapper##Class \
+        struct _##T##Class \
         { \
             GObjectClass parent_class; \
         }; \
         \
-        G_DEFINE_TYPE (T##Wrapper, t##_wrapper, G_TYPE_OBJECT) \
+        G_DEFINE_TYPE (T, t, G_TYPE_OBJECT) \
         \
-        static void t##_wrapper_finalize (GObject *object) \
+        static void t##_finalize (GObject *object) \
         {                               \
-            auto* self = G_##T_CAPS##_WRAPPER(object);                              \
+            auto* self = G_##T_CAPS(object);                              \
                                         \
             if (not log::get_surpress_debug(MOUSETRAP_DOMAIN))                      \
             {\
-                std::stringstream str; str << "In " << #t << "_wrapper_finalize: Deallocating object of type " << #T << " at " << self->data; \
+                std::stringstream str; str << "In " << #t << "_finalize: Deallocating object of type " << #wrapped_type << " at " << self->data; \
                 log::debug(str.str(), MOUSETRAP_DOMAIN);                            \
             }\
             delete self->data;          \
-            G_OBJECT_CLASS(t##_wrapper_parent_class)->finalize(object); \
+            G_OBJECT_CLASS(t##_parent_class)->finalize(object); \
         } \
         \
-        static void t##_wrapper_init(T##Wrapper * item) \
+        static void t##_init(T * item) \
         { \
             item->data = nullptr; \
         } \
         \
-        static void t##_wrapper_class_init(T##Wrapper##Class* c) \
+        static void t##_class_init(T##Class* c) \
         { \
             GObjectClass *gobject_class = G_OBJECT_CLASS (c); \
-             gobject_class->finalize = t##_wrapper_finalize; \
+             gobject_class->finalize = t##_finalize; \
         } \
         \
-        static T##Wrapper* t##_wrapper_new(T* in) \
+        static T* t##_new(wrapped_type in) \
         { \
-            auto* item = (T##Wrapper*) g_object_new(G_TYPE_##T_CAPS##_WRAPPER, nullptr); \
-            t##_wrapper_init(item); \
-            item->data = new std::shared_ptr<T>(in); \
+            auto* item = (T*) g_object_new(G_TYPE_##T_CAPS, nullptr); \
+            t##_init(item); \
+            item->data = in;                       \
+            if (not log::get_surpress_debug(MOUSETRAP_DOMAIN))                      \
+            {\
+                std::stringstream str; str << "In " << #t << "_new: Taking ownership over object of type " << #wrapped_type <<  " at " << item->data; \
+                log::debug(str.str(), MOUSETRAP_DOMAIN);                            \
+            }\
             return item; \
         }                               \
                                         \
-        static GObject* wrap(T* in)         \
+        static T* wrap(wrapped_type in)         \
         {       \
-                                        \
-            return G_OBJECT(t##_wrapper_new(in));                                \
+            return t##_new(in);                                \
         }                                \
 
     namespace internal
@@ -103,9 +107,11 @@ namespace mousetrap::detail
     /// @brief attach a gobject wrapper to an arbitrary GObject parent. If parents reference count reaches 0, the attachment is freed.
     /// @param parent parent object, if this object goes out of scope, attachment is deleted too
     /// @param attachment object to be deleted when parent goes out of scope
-    static void attach_ref_to_object(GObject* parent, GObject* attachment)
+    template<typename T>
+    static auto attach_ref_to_object(GObject* parent, T attachment)
     {
-        g_object_add_toggle_ref(parent, internal::toggle_notify, attachment);
+        g_object_add_toggle_ref(parent, internal::toggle_notify, G_OBJECT(attachment));
+        return attachment->data;
     }
 
     /// @brief detach a gobject wrapper from an arbitrary GObject parent

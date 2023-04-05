@@ -99,13 +99,13 @@ namespace mousetrap
     class StackSidebar : public WidgetImplementation<GtkStackSidebar>
     {
         public:
-            StackSidebar(Stack*);
+            StackSidebar(const Stack&);
     };
 
     class StackSwitcher : public WidgetImplementation<GtkStackSwitcher>
     {
         public:
-            StackSwitcher(Stack*);
+            StackSwitcher(const Stack&);
     };
 }
 

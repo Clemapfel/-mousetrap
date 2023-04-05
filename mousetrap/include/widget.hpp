@@ -53,6 +53,9 @@ namespace mousetrap
         friend struct WidgetImplementation;
 
         public:
+            /// @brief default dtor
+            virtual ~Widget();
+
             /// @brief copy ctor deleted
             Widget(const Widget&) = delete;
 
@@ -288,9 +291,6 @@ namespace mousetrap
         protected:
             /// @brief default ctor, protected. Only inheriting classes should call this
             Widget();
-
-            /// @brief default dtor, protected. Only inheriting classes should calls this
-            ~Widget();
 
         private:
             std::function<bool(GdkFrameClock*)> _tick_callback_f;

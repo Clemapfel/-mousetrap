@@ -115,7 +115,7 @@ namespace mousetrap
                 void disconnect_signal_##signal_name()                                                \
                 {                                                                                     \
                     _instance->disconnect_signal(signal_id);                                      \
-                }\
+                }                                                                                  \
         }
 
     /// @brief declare a signal with the signature (T* instance, arg_list..., auto data) -> return_t

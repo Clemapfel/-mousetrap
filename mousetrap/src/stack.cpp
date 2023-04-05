@@ -10,16 +10,16 @@
 
 namespace mousetrap
 {
-    StackSidebar::StackSidebar(Stack* stack)
+    StackSidebar::StackSidebar(const Stack& stack)
         : WidgetImplementation<GtkStackSidebar>(GTK_STACK_SIDEBAR(gtk_stack_sidebar_new()))
     {
-        gtk_stack_sidebar_set_stack(get_native(), stack->operator GtkStack*());
+        gtk_stack_sidebar_set_stack(get_native(), stack.operator GtkStack*());
     }
 
-    StackSwitcher::StackSwitcher(Stack* stack)
+    StackSwitcher::StackSwitcher(const Stack& stack)
         : WidgetImplementation<GtkStackSwitcher>(GTK_STACK_SWITCHER(gtk_stack_switcher_new()))
     {
-        gtk_stack_switcher_set_stack(get_native(), GTK_STACK(stack->operator GtkStack*()));
+        gtk_stack_switcher_set_stack(get_native(), GTK_STACK(stack.operator GtkStack*()));
     }
 
     Stack::Stack()
@@ -126,5 +126,7 @@ namespace mousetrap
     {
         return gtk_stack_get_interpolate_size(get_native());
     }
+
+
 }
 

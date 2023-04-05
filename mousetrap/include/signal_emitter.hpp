@@ -36,6 +36,10 @@ namespace mousetrap
             /// @param signal_id
             void disconnect_signal(const std::string& signal_id);
 
+            /// @brief add a new simple signal
+            /// @param signal_id
+            void new_signal(const std::string& signal_id);
+
             /// @brief expose as GObject \internal
             virtual operator GObject*() = 0;
 

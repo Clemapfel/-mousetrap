@@ -1,3 +1,5 @@
 /*.so
 /*.a
-/mousetrap/docs/doxygen/
+/mousetrap/docs/doxygen
+/.idea
+/cmake-build-debug

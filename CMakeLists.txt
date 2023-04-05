@@ -334,6 +334,9 @@ if(MOUSETRAP_BUILD_TESTING)
 
     declare_test(application)
     declare_test(action)
+
+    add_executable(docs_screenshots mousetrap/docs/widgets/widgets.cpp)
+    target_link_libraries(docs_screenshots PRIVATE mousetrap)
 endif()
 
 ## JULIA BINDING

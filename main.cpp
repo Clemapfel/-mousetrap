@@ -14,29 +14,25 @@ inline struct State {
 
 struct Test
 {
-    Test()
-        : internal(new TestInternal{14})
+    size_t _state;
+
+    Test(size_t x)
+        : _state(x)
     {}
-
-    struct TestInternal
-    {
-        size_t state;
-        ~TestInternal()
-        {
-            std::cout << "internal deleted" << std::endl;
-        }
-
-    }* internal = nullptr;
 
     ~Test()
     {
-        std::cout << "outer deleted" << std::endl;
+        std::cout << "delete " << _state << std::endl;
     }
 };
 
-using Internal = Test::TestInternal;
-#define G_TYPE_INTERNAL_WRAPPER G_WRAPPER_TYPE_RIGHT(internal)
-G_NEW_WRAPPER(Internal, internal, INTERNAL);
+#define G_TYPE_WIDGET_WRAPPER G_TYPE_RIGHT(widget_wrapper)
+G_NEW_TYPE(WidgetWrapper, widget_wrapper, WIDGET_WRAPPER, Widget*);
+
+#define G_TYPE_BUTTON_WRAPPER G_TYPE_RIGHT(button_wrapper)
+G_NEW_TYPE(ButtonWrapper, button_wrapper, BUTTON_WRAPPER, Button*);
+
+#define NEW(init, owner) detail::attach_ref_to_object(owner.operator GObject*(), wrap(new init))
 
 int main()
 {
@@ -51,16 +47,8 @@ int main()
     Window(*app)
         };
 
-        auto test = Test();
-
-        static auto button = Button();
-        button.connect_signal_clicked([](Button*, Test::TestInternal* test_internal){
-            std::cout << test_internal->state << std::endl;
-        }, test.internal);
-
-        detail::attach_ref_to_object(button.operator GObject *(), wrap(test.internal));
-
-        state->window.set_child(&button);
+        auto* button = detail::attach_ref_to_object(state->window.operator GObject*(), wrap(new Button()));
+        state->window.set_child(button);
         state->window.present();
     });
 
