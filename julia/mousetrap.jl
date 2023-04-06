@@ -8,6 +8,9 @@ module mousetrap
     end
 end
 
+println(mousetrap.Widget <: mousetrap.SignalEmitter)
+
+exit(0)
 for n in names(mousetrap; all = true)
     println(n, " ", typeof(getproperty(mousetrap, n)))
 end

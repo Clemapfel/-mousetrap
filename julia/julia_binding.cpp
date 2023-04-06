@@ -7,7 +7,8 @@
 
 using namespace mousetrap;
 
-#define add_method(type, id) method(#id, &type::id)
+#define add_method(Type, id) method(#id, &Type::id)
+#define declare_is_supertype(Super, Sub) template<> struct jlcxx::SuperType<Sub> { typedef Super type; };
 
 // SignalEmitter
 template<typename T, typename Arg_t>
@@ -21,6 +22,8 @@ void make_signal_emitter(Arg_t& type)
         .add_method(T, new_signal)
     ;
 }
+
+declare_is_supertype(SignalEmitter, Widget)
 
 // Widget
 template<typename T, typename Arg_t>

@@ -297,7 +297,8 @@ add_library(mousetrap SHARED
         mousetrap/src/file_chooser.cpp
         mousetrap/src/file_chooser.cpp
 
-        mousetrap/include/g_object_attachment.hpp)
+        mousetrap/include/g_object_attachment.hpp
+)
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
@@ -345,13 +346,8 @@ find_package(JlCxx REQUIRED)
 get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
 get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
-add_library(mousetrap_julia_binding SHARED
+add_library(mousetrap_julia_binding STATIC
     julia/julia_binding.cpp
-
-    mousetrap/src/signal_emitter.cpp
-    mousetrap/src/application.cpp
-    mousetrap/src/widget.cpp
-    mousetrap/src/window.cpp
 )
 
 target_link_libraries(mousetrap_julia_binding PUBLIC
@@ -368,6 +364,8 @@ set_target_properties(mousetrap_julia_binding PROPERTIES
     LINKER_LANGUAGE CXX
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/julia
 )
+
+add_compile_definitions(mousetrap_julia_binding JULIA_BINDING)
 
 ## RAT_GAME
 
