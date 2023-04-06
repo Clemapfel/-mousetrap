@@ -39,8 +39,11 @@ namespace mousetrap
 
     using NativeWidget = GtkWidget*;
 
+    /// @brief \only_used_in_julia_binding
+    struct AbstractWidget {};
+
     /// @brief Widget, super class of all renderable entities
-    class Widget : public SignalEmitter,
+    class Widget : public SignalEmitter, public AbstractWidget,
         HAS_SIGNAL(Widget, realize),
         HAS_SIGNAL(Widget, unrealize),
         HAS_SIGNAL(Widget, destroy),

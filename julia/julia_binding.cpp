@@ -8,9 +8,12 @@
 using namespace mousetrap;
 
 #define add_method(Type, id) method(#id, &Type::id)
-#define declare_is_subtype_of(Sub, Super) template<> struct jlcxx::SuperType<Sub> { typedef Super type; };
+#define declare_is_subtype_of(Super, Sub) template<> struct jlcxx::SuperType<Super> { typedef Sub type; };
+#define make_not_mirrored(Name) template<> struct jlcxx::IsMirroredType<Name> : std::false_type {};
 
 // SignalEmitter
+make_not_mirrored(AbstractSignalEmitter)
+
 template<typename T, typename Arg_t>
 void make_signal_emitter(Arg_t& type)
 {
@@ -24,6 +27,8 @@ void make_signal_emitter(Arg_t& type)
 }
 
 // Widget
+make_not_mirrored(AbstractWidget)
+
 template<typename T, typename Arg_t>
 void make_widget(Arg_t& type)
 {
@@ -43,12 +48,10 @@ void make_widget(Arg_t& type)
     ;
 }
 
-declare_is_subtype_of(Widget, SignalEmitter)
-
 // Application
 void add_application(jlcxx::Module& module)
 {
-    auto application = module.add_type<Application>("Application")
+    auto application = module.add_type<Application>("Application", jlcxx::julia_base_type<SignalEmitter>())
         .constructor<const std::string&>()
         .add_method(Application, run)
         .add_method(Application, quit)
@@ -66,12 +69,12 @@ void add_application(jlcxx::Module& module)
     make_signal_emitter<Application>(application);
 }
 
-declare_is_subtype_of(Application, SignalEmitter)
+declare_is_subtype_of(Application, AbstractSignalEmitter)
 
 // Window
 void add_window(jlcxx::Module& module)
 {
-    auto window = module.add_type<Window>("Window")
+    auto window = module.add_type<Window>("Window", jlcxx::julia_base_type<AbstractWidget>())
         .constructor<>()
         .constructor<Application&>()
         .add_method(Window, set_application)
@@ -105,66 +108,14 @@ void add_window(jlcxx::Module& module)
     make_signal_emitter<Window>(window);
 }
 
-declare_is_subtype_of(Window, Widget)
-
-// Vector
-/*
-template<typename T> struct number_to_string {};
-template<> struct number_to_string<float> { static inline const std::string name = "f"; };
-template<> struct number_to_string<int64_t> { static inline const std::string name = "i"; };
-template<> struct number_to_string<uint64_t> { static inline const std::string name = "ui"; };
-
-template<> struct jlcxx::IsMirroredType<Vector2f> : std::false_type { };
-
-template<typename T>
-void add_vector2(jlcxx::Module& module)
-{
-    std::stringstream name;
-    name << "Vector2" << number_to_string<T>::name;
-    module.add_type<glm::vec<2, T>>(name.str())
-        .method("x", [](Vector2<T> in) -> T {return in.x;})
-        .method("y", [](Vector2<T> in) -> T {return in.y;})
-    ;
-}
-
-/*
-template<typename T>
-void add_vector3(jlcxx::Module& module)
-{
-    std::stringstream name;
-    name << "Vector2" << number_to_string<T>::name;
-    module.add_type<glm::vec<3, T>>(name.str())
-        .method("x", &glm::vec<3, T>::x)
-        .method("y", &glm::vec<3, T>::y)
-        .method("z", &glm::vec<3, T>::z)
-        .method("r", &glm::vec<3, T>::r)
-        .method("g", &glm::vec<3, T>::g)
-        .method("b", &glm::vec<3, T>::b)
-    ;
-}
-
-template<typename T>
-void add_vector4(jlcxx::Module& module)
-{
-    std::stringstream name;
-    name << "Vector2" << number_to_string<T>::name;
-    module.add_type<glm::vec<4, T>>(name.str())
-        .method("x", &glm::vec<4, T>::x)
-        .method("y", &glm::vec<4, T>::y)
-        .method("z", &glm::vec<4, T>::z)
-        .method("w", &glm::vec<4, T>::w)
-        .method("r", &glm::vec<4, T>::r)
-        .method("g", &glm::vec<4, T>::g)
-        .method("b", &glm::vec<4, T>::b)
-        .method("a", &glm::vec<4, T>::a)
-    ;
-}
- */
+declare_is_subtype_of(Window, AbstractWidget)
 
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
     module.add_type<Widget>("Widget");
     module.add_type<SignalEmitter>("SignalEmitter");
+    module.add_type<AbstractWidget>("AbstractWidget");
+    module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
 
     module.add_type<ApplicationID>("ApplicationID").constructor<std::string>();
 

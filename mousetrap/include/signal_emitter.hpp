@@ -13,8 +13,11 @@
 
 namespace mousetrap
 {
+    /// @brief \only_used_in_julia_binding
+    struct AbstractSignalEmitter {};
+
     /// @brief object that can emit GLib signals \internal
-    class SignalEmitter
+    class SignalEmitter : public AbstractSignalEmitter
     {
         public:
             /// @brief block a signal by id
