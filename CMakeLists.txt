@@ -264,6 +264,7 @@ get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
 add_library(mousetrap_julia_binding SHARED
     julia/julia_binding.cpp
+    julia/julia_interface.cpp
     ${MOUSETRAP_SOURCE_FILES}
 )
 

@@ -15,6 +15,8 @@ namespace mousetrap
     template<typename Function_t>
     void Action::set_function(Function_t function)
     {
+        delete _stateless_f;
+        delete _stateful_f;
         _stateless_f = new detail::ActionFunction([f = std::function<void()>(function)](){
             f();
         });
@@ -28,6 +30,8 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     void Action::set_function(Function_t function, Data_t data)
     {
+        delete _stateless_f;
+        delete _stateful_f;
         _stateless_f = new detail::ActionFunction([f = std::function<void(Data_t)>(function), d = data](){
             f(d);
         });
@@ -41,11 +45,13 @@ namespace mousetrap
     template<typename Function_t>
     void Action::set_stateful_function(Function_t function, bool initial_state)
     {
-        _stateful_f = [this, f = std::function<bool(bool)>(function)]() -> void
+        delete _stateless_f;
+        delete _stateful_f;
+        _stateful_f = new detail::ActionFunction([this, f = std::function<bool(bool)>(function)]() -> void
         {
             auto result = f(g_variant_get_boolean(g_action_get_state(G_ACTION(_g_action))));
             g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(result));
-        };
+        });
 
         _stateless_f = nullptr;
 
@@ -58,11 +64,13 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     void Action::set_stateful_function(Function_t function, Data_t data, bool initial_state)
     {
-        _stateful_f = [this, f = std::function<bool(bool)>(function), d = data]() -> void
+        delete _stateless_f;
+        delete _stateful_f;
+        _stateful_f = new detail::ActionFunction([this, f = std::function<bool(bool)>(function), d = data]() -> void
         {
             auto result = f(g_variant_get_boolean(g_action_get_state(G_ACTION(_g_action))), d);
             g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(result));
-        };
+        });
 
         _stateless_f = nullptr;
 

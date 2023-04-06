@@ -60,14 +60,14 @@ namespace mousetrap
             void set_function(Function_t f, Data_t data);
 
             /// @brief create action as stateful, given function is executed when action is triggered
-            /// @tparam Function_t lambda or static function with signature `() -> void`
+            /// @tparam Function_t lambda or static function with signature `(bool) -> bool`
             /// @param f function
             /// @param initial_state state of the action on initialization
             template<typename Function_t>
             void set_stateful_function(Function_t f, bool initial_state = false);
 
             /// @brief create action as stateful, given function is executed when action is triggered
-            /// @tparam Function_t lambda or static function with signature `(Data_t) -> void`
+            /// @tparam Function_t lambda or static function with signature `(bool, Data_t) -> bool`
             /// @param f function
             /// @param data data
             /// @param initial_state state of the action on initialization

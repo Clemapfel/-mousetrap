@@ -3,6 +3,7 @@
 //
 
 #include <mousetrap.hpp>
+#include "julia_interface.cpp"
 #include <jlcxx/jlcxx.hpp>
 
 using namespace mousetrap;
@@ -45,6 +46,8 @@ void make_widget(Arg_t& type)
         .add_method(T, set_margin_horizontal)
         .add_method(T, set_margin_vertical)
         .add_method(T, set_margin)
+        .method("set_size_request", [](jl_value_t* vec2) {
+        })
     ;
 }
 
@@ -110,15 +113,60 @@ void add_window(jlcxx::Module& module)
 
 declare_is_subtype_of(Window, AbstractWidget)
 
+// Action
+void add_action(jlcxx::Module& module)
+{
+    auto action = module.add_type<Action>("Action")
+        .constructor<std::string>(true)
+        .add_method(Action, get_id)
+        .add_method(Action, set_state)
+        .add_method(Action, get_state)
+        .add_method(Action, activate)
+        .add_method(Action, set_enabled)
+        .add_method(Action, get_enabled)
+        .add_method(Action, get_is_stateful);
+
+    module.method("set_function", [](Action& action, jl_function_t* julia_function){
+
+        if (not jl_isa(julia_function, (jl_value_t*) jl_function_type))
+            log::critical("In Action::set_function: Argument #2 is not a function", MOUSETRAP_DOMAIN);
+
+        action.set_function([f = julia_function, id = action.get_id()](){
+            auto* out = jl_call0(f);
+            if (out == nullptr)
+                log_critical("In Action::activate: Action with id `", id, "`: Unable to invoke Julia object `", jl_to_string(f), "` as function with signature `() -> Cvoid`");
+        });
+    });
+
+    module.method("set_stateful_function", [](Action& action, jl_function_t* julia_function, bool initial_state)
+    {
+        if (not jl_isa(julia_function, (jl_value_t*) jl_function_type))
+            log::critical("In Action::set_stateful_function: Argument #2 is not a function", MOUSETRAP_DOMAIN);
+
+        action.set_stateful_function([f = julia_function, id = action.get_id()](bool in) -> bool {
+
+            auto* out = jl_call1(f, jl_box_bool(in));
+
+            if (out == nullptr or not jl_isa(out, (jl_value_t*) jl_bool_type))
+            {
+                log_critical("In Action::activate: Action with id `", id, "`: Unable to invoke Julia object `", jl_to_string(f), "` as function with signature `(Bool) -> Bool`");
+                return false;
+            }
+
+            return jl_unbox_bool(out);
+        });
+    });
+}
+
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
-    module.add_type<Widget>("Widget");
-    module.add_type<SignalEmitter>("SignalEmitter");
     module.add_type<AbstractWidget>("AbstractWidget");
-    module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
+    module.add_type<Widget>("Widget");
 
-    module.add_type<ApplicationID>("ApplicationID").constructor<std::string>();
+    module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
+    module.add_type<SignalEmitter>("SignalEmitter");
 
     add_application(module);
     add_window(module);
+    add_action(module);
 }
