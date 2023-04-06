@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <chrono>
+#include <string>
 
 namespace mousetrap
 {

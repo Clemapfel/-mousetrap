@@ -43,6 +43,9 @@ namespace mousetrap
             /// @brief expose as GObject \internal
             virtual operator GObject*() = 0;
 
+        protected:
+            virtual ~SignalEmitter() = default;
+
         private:
             struct SignalHandler
             {

@@ -8,9 +8,10 @@ module mousetrap
     end
 end
 
-println(mousetrap.Widget <: mousetrap.SignalEmitter)
+for n in names(mousetrap; all = true)
+    printstyled(n; bold=true)
+end
+
+#println(methods(mousetrap.Vector2fAllocated))
 
 exit(0)
-for n in names(mousetrap; all = true)
-    println(n, " ", typeof(getproperty(mousetrap, n)))
-end

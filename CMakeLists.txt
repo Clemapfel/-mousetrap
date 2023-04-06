@@ -22,287 +22,203 @@ endif()
 
 ## LIBRARY
 
+set(MOUSETRAP_HEADER_FILES
+    mousetrap/include/shape.hpp
+    mousetrap/include/gl_common.hpp
+    mousetrap/include/vector.hpp
+    mousetrap/include/shader.hpp
+    mousetrap/include/color.hpp
+    mousetrap/include/gl_transform.hpp
+    mousetrap/include/angle.hpp
+    mousetrap/include/texture.hpp
+    mousetrap/include/image.hpp
+    mousetrap/include/geometry.hpp
+    mousetrap/include/render_texture.hpp
+    mousetrap/include/render_task.hpp
+    mousetrap/include/blend_mode.hpp
+    mousetrap/include/texture_object.hpp
+    mousetrap/include/scale_mode.hpp
+    mousetrap/include/wrap_mode.hpp
+    mousetrap/include/msaa_render_texture.hpp
+    mousetrap/include/alignment.hpp
+    mousetrap/include/orientation.hpp
+    mousetrap/include/sound_buffer.hpp
+    mousetrap/include/sound.hpp
+    mousetrap/include/time.hpp
+    mousetrap/include/music.hpp
+    mousetrap/include/signal_emitter.hpp
+    mousetrap/src/signal_emitter.inl
+    mousetrap/include/signal_component.hpp
+    mousetrap/include/application.hpp
+    mousetrap/include/window.hpp
+    mousetrap/include/widget.hpp
+    mousetrap/src/widget.inl
+    mousetrap/include/cursor_type.hpp
+    mousetrap/include/action.hpp
+    mousetrap/src/action.inl
+    mousetrap/include/frame_clock.hpp
+    mousetrap/include/event_controller.hpp
+    mousetrap/include/key_event_controller.hpp
+    mousetrap/include/motion_event_controller.hpp
+    mousetrap/include/aspect_frame.hpp
+    mousetrap/include/box.hpp
+    mousetrap/include/button.hpp
+    mousetrap/include/check_button.hpp
+    mousetrap/include/toggle_button.hpp
+    mousetrap/include/entry.hpp
+    mousetrap/include/expander.hpp
+    mousetrap/include/revealer.hpp
+    mousetrap/include/frame.hpp
+    mousetrap/include/image_display.hpp
+    mousetrap/include/key_file.hpp
+    mousetrap/include/label.hpp
+    mousetrap/include/justify_mode.hpp
+    mousetrap/include/text_view.hpp
+    mousetrap/include/list_view.hpp
+    mousetrap/include/selection_model.hpp
+    mousetrap/include/render_area.hpp
+    mousetrap/include/click_event_controller.hpp
+    mousetrap/include/scroll_event_controller.hpp
+    mousetrap/include/focus_event_controller.hpp
+    mousetrap/include/drag_event_controller.hpp
+    mousetrap/include/pinch_zoom_event_controller.hpp
+    mousetrap/include/rotate_event_controller.hpp
+    mousetrap/include/adjustment.hpp
+    mousetrap/include/scrollbar.hpp
+    mousetrap/include/viewport.hpp
+    mousetrap/include/scrolled_window.hpp
+    mousetrap/include/grid_view.hpp
+    mousetrap/include/menu_model.hpp
+    mousetrap/include/popover_menu_button.hpp
+    mousetrap/include/popover.hpp
+    mousetrap/include/relative_position.hpp
+    mousetrap/include/center_box.hpp
+    mousetrap/include/clipboard.hpp
+    mousetrap/src/clipboard.inl
+    mousetrap/include/stack.hpp
+    mousetrap/include/transition_type.hpp
+    mousetrap/include/notebook.hpp
+    mousetrap/include/column_view.hpp
+    mousetrap/include/spin_button.hpp
+    mousetrap/include/drop_down.hpp
+    mousetrap/src/drop_down.inl
+    mousetrap/include/fixed.hpp
+    mousetrap/include/level_bar.hpp
+    mousetrap/include/spinner.hpp
+    mousetrap/include/progress_bar.hpp
+    mousetrap/include/paned.hpp
+    mousetrap/include/scale.hpp
+    mousetrap/src/scale.inl
+    mousetrap/include/overlay.hpp
+    mousetrap/include/separator.hpp
+    mousetrap/include/switch.hpp
+    mousetrap/include/file_system.hpp
+    mousetrap/include/file_descriptor.hpp
+    mousetrap/include/file_monitor.hpp
+    mousetrap/include/orientable.hpp
+    mousetrap/include/grid.hpp
+    mousetrap/include/selectable.hpp
+    mousetrap/src/spin_button.inl
+    mousetrap/include/music.hpp
+    mousetrap/include/icon.hpp
+    mousetrap/include/log.hpp
+    mousetrap/src/log.inl
+    mousetrap/include/file_chooser.hpp
+    mousetrap/include/g_object_attachment.hpp
+)
+
+set(MOUSETRAP_SOURCE_FILES
+    mousetrap/src/shape.cpp
+    mousetrap/src/gl_common.cpp
+    mousetrap/src/shader.cpp
+    mousetrap/src/color.cpp
+    mousetrap/src/gl_transform.cpp
+    mousetrap/src/angle.cpp
+    mousetrap/src/texture.cpp
+    mousetrap/src/image.cpp
+    mousetrap/src/geometry.cpp
+    mousetrap/src/render_texture.cpp
+    mousetrap/src/render_task.cpp
+    mousetrap/src/blend_mode.cpp
+    mousetrap/src/msaa_render_texture.cpp
+    mousetrap/src/sound_buffer.cpp
+    mousetrap/src/sound.cpp
+    mousetrap/src/time.cpp
+    mousetrap/src/music.cpp
+    mousetrap/src/signal_emitter.cpp
+    mousetrap/src/application.cpp
+    mousetrap/src/window.cpp
+    mousetrap/src/widget.cpp
+    mousetrap/src/action.cpp
+    mousetrap/src/frame_clock.cpp
+    mousetrap/src/event_controller.cpp
+    mousetrap/src/key_event_controller.cpp
+    mousetrap/src/motion_event_controller.cpp
+    mousetrap/src/aspect_frame.cpp
+    mousetrap/src/box.cpp
+    mousetrap/src/button.cpp
+    mousetrap/src/check_button.cpp
+    mousetrap/src/toggle_button.cpp
+    mousetrap/src/entry.cpp
+    mousetrap/src/expander.cpp
+    mousetrap/src/revealer.cpp
+    mousetrap/src/frame.cpp
+    mousetrap/src/image_display.cpp
+    mousetrap/src/key_file.cpp
+    mousetrap/src/label.cpp
+    mousetrap/src/text_view.cpp
+    mousetrap/src/list_view.cpp
+    mousetrap/src/selection_model.cpp
+    mousetrap/src/click_event_controller.cpp
+    mousetrap/src/scroll_event_controller.cpp
+    mousetrap/src/focus_event_controller.cpp
+    mousetrap/src/drag_event_controller.cpp
+    mousetrap/src/pinch_zoom_event_controller.cpp
+    mousetrap/src/rotate_event_controller.cpp
+    mousetrap/src/adjustment.cpp
+    mousetrap/src/scrollbar.cpp
+    mousetrap/src/viewport.cpp
+    mousetrap/src/scrolled_window.cpp
+    mousetrap/src/grid_view.cpp
+    mousetrap/src/menu_model.cpp
+    mousetrap/src/popover_menu_button.cpp
+    mousetrap/src/popover.cpp
+    mousetrap/src/render_area.cpp
+    mousetrap/src/center_box.cpp
+    mousetrap/src/clipboard.cpp
+    mousetrap/src/stack.cpp
+    mousetrap/src/notebook.cpp
+    mousetrap/src/column_view.cpp
+    mousetrap/src/spin_button.cpp
+    mousetrap/src/drop_down.cpp
+    mousetrap/src/fixed.cpp
+    mousetrap/src/level_bar.cpp
+    mousetrap/src/spinner.cpp
+    mousetrap/src/progress_bar.cpp
+    mousetrap/src/paned.cpp
+    mousetrap/src/scale.cpp
+    mousetrap/src/overlay.cpp
+    mousetrap/src/separator.cpp
+    mousetrap/src/switch.cpp
+    mousetrap/src/file_system.cpp
+    mousetrap/src/file_descriptor.cpp
+    mousetrap/src/file_monitor.cpp
+    mousetrap/src/grid.cpp
+    mousetrap/src/music.cpp
+    mousetrap/src/icon.cpp
+    mousetrap/src/log.cpp
+    mousetrap/src/file_chooser.cpp
+    mousetrap/src/file_chooser.cpp
+)
+
 add_library(mousetrap SHARED
-        mousetrap/include/shape.hpp
-        mousetrap/src/shape.cpp
-
-        mousetrap/include/gl_common.hpp
-        mousetrap/src/gl_common.cpp
-
-        mousetrap/include/vector.hpp
-
-        mousetrap/include/shader.hpp
-        mousetrap/src/shader.cpp
-
-        mousetrap/include/color.hpp
-        mousetrap/src/color.cpp
-
-        mousetrap/include/gl_transform.hpp
-        mousetrap/src/gl_transform.cpp
-
-        mousetrap/include/angle.hpp
-        mousetrap/src/angle.cpp
-
-        mousetrap/include/texture.hpp
-        mousetrap/src/texture.cpp
-
-        mousetrap/include/image.hpp
-        mousetrap/src/image.cpp
-
-        mousetrap/include/geometry.hpp
-        mousetrap/src/geometry.cpp
-
-        mousetrap/include/render_texture.hpp
-        mousetrap/src/render_texture.cpp
-
-        mousetrap/include/render_task.hpp
-        mousetrap/src/render_task.cpp
-
-        mousetrap/include/blend_mode.hpp
-        mousetrap/src/blend_mode.cpp
-
-        mousetrap/include/texture_object.hpp
-
-        mousetrap/include/scale_mode.hpp
-        mousetrap/include/wrap_mode.hpp
-
-        mousetrap/include/msaa_render_texture.hpp
-        mousetrap/src/msaa_render_texture.cpp
-
-        mousetrap/include/alignment.hpp
-        mousetrap/include/orientation.hpp
-
-        mousetrap/include/sound_buffer.hpp
-        mousetrap/src/sound_buffer.cpp
-
-        mousetrap/include/sound.hpp
-        mousetrap/src/sound.cpp
-
-        mousetrap/include/time.hpp
-        mousetrap/src/time.cpp
-
-        mousetrap/include/music.hpp
-        mousetrap/src/music.cpp
-
-        mousetrap/include/signal_emitter.hpp
-        mousetrap/src/signal_emitter.inl
-        mousetrap/src/signal_emitter.cpp
-
-        mousetrap/include/signal_component.hpp
-
-        mousetrap/include/application.hpp
-        mousetrap/src/application.cpp
-
-        mousetrap/include/window.hpp
-        mousetrap/src/window.cpp
-
-        mousetrap/include/widget.hpp
-        mousetrap/src/widget.inl
-        mousetrap/src/widget.cpp
-
-        mousetrap/include/cursor_type.hpp
-
-        mousetrap/include/action.hpp
-        mousetrap/src/action.cpp
-        mousetrap/src/action.inl
-
-        mousetrap/include/frame_clock.hpp
-        mousetrap/src/frame_clock.cpp
-
-        mousetrap/include/event_controller.hpp
-        mousetrap/src/event_controller.cpp
-
-        mousetrap/include/key_event_controller.hpp
-        mousetrap/src/key_event_controller.cpp
-
-        mousetrap/include/motion_event_controller.hpp
-        mousetrap/src/motion_event_controller.cpp
-
-        mousetrap/include/aspect_frame.hpp
-        mousetrap/src/aspect_frame.cpp
-
-        mousetrap/include/box.hpp
-        mousetrap/src/box.cpp
-
-        mousetrap/include/button.hpp
-        mousetrap/src/button.cpp
-
-        mousetrap/include/check_button.hpp
-        mousetrap/src/check_button.cpp
-
-        mousetrap/include/toggle_button.hpp
-        mousetrap/src/toggle_button.cpp
-
-        mousetrap/include/entry.hpp
-        mousetrap/src/entry.cpp
-
-        mousetrap/include/expander.hpp
-        mousetrap/src/expander.cpp
-
-        mousetrap/include/revealer.hpp
-        mousetrap/src/revealer.cpp
-
-        mousetrap/include/frame.hpp
-        mousetrap/src/frame.cpp
-
-        mousetrap/include/image_display.hpp
-        mousetrap/src/image_display.cpp
-
-        mousetrap/include/key_file.hpp
-        mousetrap/src/key_file.cpp
-
-        mousetrap/include/label.hpp
-        mousetrap/src/label.cpp
-
-        mousetrap/include/justify_mode.hpp
-
-        mousetrap/include/text_view.hpp
-        mousetrap/src/text_view.cpp
-
-        mousetrap/include/list_view.hpp
-        mousetrap/src/list_view.cpp
-
-        mousetrap/include/selection_model.hpp
-        mousetrap/src/selection_model.cpp
-
-        mousetrap/include/render_area.hpp
-
-        mousetrap/include/click_event_controller.hpp
-        mousetrap/src/click_event_controller.cpp
-
-        mousetrap/include/scroll_event_controller.hpp
-        mousetrap/src/scroll_event_controller.cpp
-
-        mousetrap/include/focus_event_controller.hpp
-        mousetrap/src/focus_event_controller.cpp
-
-        mousetrap/include/drag_event_controller.hpp
-        mousetrap/src/drag_event_controller.cpp
-
-        mousetrap/include/pinch_zoom_event_controller.hpp
-        mousetrap/src/pinch_zoom_event_controller.cpp
-
-        mousetrap/include/rotate_event_controller.hpp
-        mousetrap/src/rotate_event_controller.cpp
-
-        mousetrap/include/adjustment.hpp
-        mousetrap/src/adjustment.cpp
-
-        mousetrap/include/scrollbar.hpp
-        mousetrap/src/scrollbar.cpp
-
-        mousetrap/include/viewport.hpp
-        mousetrap/src/viewport.cpp
-
-        mousetrap/include/scrolled_window.hpp
-        mousetrap/src/scrolled_window.cpp
-
-        mousetrap/include/grid_view.hpp
-        mousetrap/src/grid_view.cpp
-
-        mousetrap/include/menu_model.hpp
-        mousetrap/src/menu_model.cpp
-
-        mousetrap/include/popover_menu_button.hpp
-        mousetrap/src/popover_menu_button.cpp
-
-        mousetrap/include/popover.hpp
-        mousetrap/src/popover.cpp
-
-        mousetrap/include/relative_position.hpp
-
-        mousetrap/src/render_area.cpp
-
-        mousetrap/include/center_box.hpp
-        mousetrap/src/center_box.cpp
-
-        mousetrap/include/clipboard.hpp
-        mousetrap/src/clipboard.cpp
-        mousetrap/src/clipboard.inl
-
-        mousetrap/include/stack.hpp
-        mousetrap/src/stack.cpp
-
-        mousetrap/include/transition_type.hpp
-
-        mousetrap/include/notebook.hpp
-        mousetrap/src/notebook.cpp
-
-        mousetrap/include/column_view.hpp
-        mousetrap/src/column_view.cpp
-
-        mousetrap/include/spin_button.hpp
-        mousetrap/src/spin_button.cpp
-
-        mousetrap/include/drop_down.hpp
-        mousetrap/src/drop_down.cpp
-        mousetrap/src/drop_down.inl
-
-        mousetrap/include/fixed.hpp
-        mousetrap/src/fixed.cpp
-
-        mousetrap/include/level_bar.hpp
-        mousetrap/src/level_bar.cpp
-
-        mousetrap/include/spinner.hpp
-        mousetrap/src/spinner.cpp
-
-        mousetrap/include/progress_bar.hpp
-        mousetrap/src/progress_bar.cpp
-
-        mousetrap/include/paned.hpp
-        mousetrap/src/paned.cpp
-
-        mousetrap/include/scale.hpp
-        mousetrap/src/scale.inl
-        mousetrap/src/scale.cpp
-
-        mousetrap/include/overlay.hpp
-        mousetrap/src/overlay.cpp
-
-        mousetrap/include/separator.hpp
-        mousetrap/src/separator.cpp
-
-        mousetrap/include/switch.hpp
-        mousetrap/src/switch.cpp
-
-        mousetrap/include/file_system.hpp
-        mousetrap/src/file_system.cpp
-
-        mousetrap/include/file_descriptor.hpp
-        mousetrap/src/file_descriptor.cpp
-
-        mousetrap/include/file_monitor.hpp
-        mousetrap/src/file_monitor.cpp
-
-        mousetrap/include/orientable.hpp
-
-        mousetrap/include/grid.hpp
-        mousetrap/src/grid.cpp
-
-        mousetrap/include/selectable.hpp
-        mousetrap/src/spin_button.inl
-
-        mousetrap/include/music.hpp
-        mousetrap/src/music.cpp
-
-        mousetrap/include/icon.hpp
-        mousetrap/src/icon.cpp
-
-        mousetrap/include/log.hpp
-        mousetrap/src/log.inl
-        mousetrap/src/log.cpp
-
-        mousetrap/include/file_chooser.hpp
-        mousetrap/src/file_chooser.cpp
-        mousetrap/src/file_chooser.cpp
-
-        mousetrap/include/g_object_attachment.hpp
+   ${MOUSETRAP_HEADER_FILES}
+   ${MOUSETRAP_SOURCE_FILES}
 )
 
 target_include_directories(mousetrap PUBLIC
     "${CMAKE_SOURCE_DIR}/mousetrap"
-    "${GTK_INCLUDE_DIRS}"
+    ${GTK_INCLUDE_DIRS}
 )
 
 target_link_libraries(mousetrap PUBLIC
@@ -346,13 +262,18 @@ find_package(JlCxx REQUIRED)
 get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
 get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
-add_library(mousetrap_julia_binding STATIC
+add_library(mousetrap_julia_binding SHARED
     julia/julia_binding.cpp
+    ${MOUSETRAP_SOURCE_FILES}
 )
 
 target_link_libraries(mousetrap_julia_binding PUBLIC
     ${mousetrap}
     JlCxx::cxxwrap_julia
+    ${OpenGL}
+    ${GLEW}
+    ${GTK_LIBRARIES}
+    ${sfml-audio}
 )
 
 target_include_directories(mousetrap_julia_binding PUBLIC
@@ -363,9 +284,10 @@ target_include_directories(mousetrap_julia_binding PUBLIC
 set_target_properties(mousetrap_julia_binding PROPERTIES
     LINKER_LANGUAGE CXX
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/julia
+    POSITION_INDEPENDENT_CODE 1
 )
 
-add_compile_definitions(mousetrap_julia_binding JULIA_BINDING)
+add_compile_definitions(mousetrap_julia_binding MOUSETRAP_JULIA_BINDING)
 
 ## RAT_GAME
 
