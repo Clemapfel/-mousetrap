@@ -53,7 +53,6 @@ namespace mousetrap
 
     void SignalEmitter::new_signal(const std::string& signal_id)
     {
-        // TODO
         auto handler = g_signal_newv(signal_id.c_str(),
                                      G_TYPE_FROM_INSTANCE(operator GObject*()),
                       (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS),
@@ -65,8 +64,10 @@ namespace mousetrap
                        0,
                        NULL);
 
+        /*
         g_signal_connect(operator GObject*(), signal_id.c_str(), G_CALLBACK(test), nullptr);
         g_signal_emit(operator GObject*(), handler, 0);
+         */
     }
 
     std::vector<std::string> SignalEmitter::get_all_signal_names()

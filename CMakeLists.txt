@@ -22,7 +22,7 @@ endif()
 
 ## LIBRARY
 
-add_library(mousetrap STATIC
+add_library(mousetrap SHARED
         mousetrap/include/shape.hpp
         mousetrap/src/shape.cpp
 
@@ -347,6 +347,11 @@ get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
 add_library(mousetrap_julia_binding SHARED
     julia/julia_binding.cpp
+
+    mousetrap/src/signal_emitter.cpp
+    mousetrap/src/application.cpp
+    mousetrap/src/widget.cpp
+    mousetrap/src/window.cpp
 )
 
 target_link_libraries(mousetrap_julia_binding PUBLIC
