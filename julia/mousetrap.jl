@@ -28,23 +28,33 @@ module mousetrap
     const Vector4i = Vector4{Int64}
     const Vector4ui = Vector4{UInt64}
 
-    @wrapmodule("./libmousetrap_julia_binding.so")
+    const ActionID = String
+    const ApplicationID = String
+    const LogDomain = String
+    const ShortcutTriggerID = String
 
     function __init__()
-    @initcxx
+        @initcxx
     end
+
+    @wrapmodule("./libmousetrap_julia_binding.so")
 end
+
+struct State
+    window::mousetrap.Window
+end
+const state = Ref{Union{State, Nothing}}(nothing)
 
 app = mousetrap.Application("test.app")
-window = Ref{mousetrap.Window}()
-mousetrap.connect_signal_activate(app, function(app::mousetrap.Application)
-end)
 
-println(mousetrap.run(app))
-
-exit(0)
-
-for n in names(mousetrap; all = true)
-    #printstyled(n; bold=true); printstyled("\t", typeof(getproperty(mousetrap, n)), "\n")
+function activate(app)
+    state = State(mousetrap.Window(app))
+    mousetrap.set_title(state.window, "Hello Julia")
+    #mousetrap.log_warning("test warning", "Julia")
+    mousetrap.present(state.window)
+    return nothing
 end
 
+mousetrap.connect_signal_activate(app, activate)
+
+@show mousetrap.run(app)

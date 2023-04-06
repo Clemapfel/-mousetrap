@@ -11,6 +11,8 @@ using namespace mousetrap;
 #define add_method(Type, id) method(#id, &Type::id)
 #define declare_is_subtype_of(Super, Sub) template<> struct jlcxx::SuperType<Super> { typedef Sub type; };
 #define make_not_mirrored(Name) template<> struct jlcxx::IsMirroredType<Name> : std::false_type {};
+#define add_enum(Name) add_bits<Name>(#Name, jlcxx::julia_type("CppEnum"))
+#define add_enum_value(EnumName, VALUE_NAME) set_const(#VALUE_NAME,  EnumName::VALUE_NAME)
 
 // SignalEmitter
 make_not_mirrored(AbstractSignalEmitter)
@@ -73,11 +75,11 @@ void add_application(jlcxx::Module& module)
         .add_method(Application, release)
         .add_method(Application, mark_as_busy)
         .add_method(Application, unmark_as_busy)
-        //.add_method(Application, add_action)
-        //.add_method(Application, remove_action)
-        //.add_method(Application, get_action)
-        //.add_method(Application, has_action)
-        //.add_method(Application, set_menubar)
+        .add_method(Application, add_action)
+        .add_method(Application, remove_action)
+        .add_method(Application, get_action)
+        .add_method(Application, has_action)
+        //TODO .add_method(Application, set_menubar)
         .add_method(Application, get_id)
     ;
     make_signal_emitter<Application>(application, module);
@@ -88,18 +90,7 @@ void add_application(jlcxx::Module& module)
             log::critical("In Application::connect_signal_activate: Argument #1 is not a function", MOUSETRAP_DOMAIN);
 
         instance.connect_signal_activate([f = julia_function](Application* instance) {
-
-            auto* app = jlcxx::box<Application&>(*instance).value;
-            std::cout << jl_to_string(app) << std::endl;
-            auto* out = jl_call1(f, app);
-
-            /*
-            if (out == nullptr)
-            {
-                log_critical("In Application::emit_signal_activate: Unable to invoke Julia object `", jl_to_string(f), "` as function with signature `(Application) -> Cvoid`");
-                return false;
-            }
-             */
+            // TODO jl_safe_call(f, jlcxx::box<Application&>(*instance).value);
         });
     });
 }
@@ -156,7 +147,9 @@ void add_action(jlcxx::Module& module)
         .add_method(Action, activate)
         .add_method(Action, set_enabled)
         .add_method(Action, get_enabled)
-        .add_method(Action, get_is_stateful);
+        .add_method(Action, get_is_stateful)
+        .add_method(Action, add_shortcut)
+    ;
 
     module.method("set_function", [](Action& action, jl_function_t* julia_function){
 
@@ -190,17 +183,47 @@ void add_action(jlcxx::Module& module)
     });
 }
 
+// Log
+make_not_mirrored(mousetrap::log)
+void add_log(jlcxx::Module& module)
+{
+    module.set_const("MOUSETRAP_DOMAIN", std::string(MOUSETRAP_DOMAIN));
+
+    module.add_enum(LogLevel);
+    module.add_enum_value(LogLevel, FATAL);
+    module.add_enum_value(LogLevel, CRITICAL);
+    module.add_enum_value(LogLevel, WARNING);
+    module.add_enum_value(LogLevel, INFO);
+    module.add_enum_value(LogLevel, DEBUG);
+
+    module.add_type<mousetrap::log>("log");
+    #define add_log_function(name) module.method(std::string("log_") + #name, &mousetrap::log::name);
+    add_log_function(initialize);
+    add_log_function(debug);
+    add_log_function(info);
+    add_log_function(warning);
+    add_log_function(critical);
+    add_log_function(fatal);
+    add_log_function(set_surpress_debug);
+    add_log_function(set_surpress_info);
+    add_log_function(get_surpress_info);
+    add_log_function(get_surpress_debug);
+    add_log_function(set_file);
+    add_log_function(reset_file_formatting_function);
+}
+
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
-
+    module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
+    module.add_type<SignalEmitter>("SignalEmitter");
 
     module.add_type<AbstractWidget>("AbstractWidget");
     module.add_type<Widget>("Widget");
 
-    module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
-    module.add_type<SignalEmitter>("SignalEmitter");
+    // order matters
 
+    //add_log(module);
+    add_action(module);
     add_application(module);
     add_window(module);
-    add_action(module);
 }

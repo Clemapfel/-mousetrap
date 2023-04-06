@@ -32,18 +32,18 @@ namespace mousetrap
         
         g_log_set_writer_func(log_writer, nullptr, nullptr);
         _initialized = true;
-        reset_log_file_formatting_function();
+        reset_file_formatting_function();
     }
 
     template <typename Function_t>
-    void log::set_log_file_formatting_function(Function_t function)
+    void log::set_file_formatting_function(Function_t function)
     {
         _log_format_function = [f = function](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
             f(message, values);
         };
     }
 
-    void log::reset_log_file_formatting_function()
+    void log::reset_file_formatting_function()
     {
         _log_format_function = [](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
             return log::default_file_formatting_function(message, values);
@@ -119,7 +119,7 @@ namespace mousetrap
 
             if (error != nullptr)
             {
-                std::cerr << "[FATAL] In log::log_writer: " << error->message << std::endl;
+                g_error("[FATAL] In log::log_writer: %s", error->message);
                 g_error_free(error);
             }
         }
@@ -191,7 +191,7 @@ namespace mousetrap
         _allow_info.insert_or_assign(domain, not b);
     }
 
-    void log::set_log_file(const std::string& path)
+    bool log::set_file(const std::string& path)
     {
         GError* error = nullptr;
         _log_file = g_file_new_for_path(path.c_str());
@@ -199,8 +199,11 @@ namespace mousetrap
 
         if (error != nullptr)
         {
-            log::critical("In log::set_log_file: " + std::string(error->message), MOUSETRAP_DOMAIN);
+            log::critical("In log::set_file: " + std::string(error->message), MOUSETRAP_DOMAIN);
             g_error_free(error);
+            return false;
         }
+
+        return true;
     }
 }
