@@ -16,7 +16,7 @@ using namespace mousetrap;
 make_not_mirrored(AbstractSignalEmitter)
 
 template<typename T, typename Arg_t>
-void make_signal_emitter(Arg_t& type)
+void make_signal_emitter(Arg_t& type, jlcxx::Module& module)
 {
     type
         .add_method(T, set_signal_blocked)
@@ -31,11 +31,9 @@ void make_signal_emitter(Arg_t& type)
 make_not_mirrored(AbstractWidget)
 
 template<typename T, typename Arg_t>
-void make_widget(Arg_t& type)
+void make_widget(Arg_t& type, jlcxx::Module& module)
 {
     type
-        //.add_method(T, get_size_request)
-        //.add_method(T, set_size_request)
         .add_method(T, set_margin_top)
         .add_method(T, get_margin_top)
         .add_method(T, set_margin_bottom)
@@ -46,9 +44,22 @@ void make_widget(Arg_t& type)
         .add_method(T, set_margin_horizontal)
         .add_method(T, set_margin_vertical)
         .add_method(T, set_margin)
-        .method("set_size_request", [](jl_value_t* vec2) {
-        })
     ;
+
+    module.method("set_size_request", [](T& in, float width, float height) -> void {
+       in.Widget::set_size_request({width, height});
+    });
+
+    module.method("get_size_request", [](T& in) -> jl_value_t* {
+        auto size = in.Widget::get_size_request();
+        auto* new_vector2f = jl_get_function((jl_module_t*) jl_get_global(jl_main_module, jl_symbol("mousetrap")), "Vector2f");
+
+        if (new_vector2f == nullptr)
+            log::fatal("In Widget::get_size_request: Unable to retrieve Julia function pointer to Vector2f(x, y)");
+
+        auto* out = jl_call2(new_vector2f, jl_box_float64(size.x), jl_box_float64(size.y));
+        return out == nullptr ? jl_nothing : out;
+    });
 }
 
 // Application
@@ -69,7 +80,28 @@ void add_application(jlcxx::Module& module)
         //.add_method(Application, set_menubar)
         .add_method(Application, get_id)
     ;
-    make_signal_emitter<Application>(application);
+    make_signal_emitter<Application>(application, module);
+
+    module.method("connect_signal_activate", [](Application& instance, jl_function_t* julia_function){
+
+        if (not jl_isa(julia_function, (jl_value_t*) jl_function_type))
+            log::critical("In Application::connect_signal_activate: Argument #1 is not a function", MOUSETRAP_DOMAIN);
+
+        instance.connect_signal_activate([f = julia_function](Application* instance) {
+
+            auto* app = jlcxx::box<Application&>(*instance).value;
+            std::cout << jl_to_string(app) << std::endl;
+            auto* out = jl_call1(f, app);
+
+            /*
+            if (out == nullptr)
+            {
+                log_critical("In Application::emit_signal_activate: Unable to invoke Julia object `", jl_to_string(f), "` as function with signature `(Application) -> Cvoid`");
+                return false;
+            }
+             */
+        });
+    });
 }
 
 declare_is_subtype_of(Application, AbstractSignalEmitter)
@@ -107,8 +139,8 @@ void add_window(jlcxx::Module& module)
         .add_method(Window, set_focus_visible)
         .add_method(Window, get_focus_visible)
     ;
-    make_widget<Window>(window);
-    make_signal_emitter<Window>(window);
+    make_widget<Window>(window, module);
+    make_signal_emitter<Window>(window, module);
 }
 
 declare_is_subtype_of(Window, AbstractWidget)
@@ -160,6 +192,8 @@ void add_action(jlcxx::Module& module)
 
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
+
+
     module.add_type<AbstractWidget>("AbstractWidget");
     module.add_type<Widget>("Widget");
 
