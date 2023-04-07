@@ -401,10 +401,88 @@ declare_is_subtype_of(CheckButton, AbstractWidget)
 // Colors
 void add_colors(jlcxx::Module& module)
 {
-    module.method("invert_rgba", [](float r, float g, float b, float a){
-        return
-    })
+    // TODO
 }
+
+// Event Controller
+
+#define add_event_controller_base(Name) add_type<Name>(#Name, jlcxx::julia_base_type<EventController>)
+
+void add_event_controllers(jlcxx::Module& module)
+{
+    module.add_enum(PropagationPhase);
+    module.add_enum_value(PropagationPhase, NONE);
+    module.add_enum_value(PropagationPhase, CAPTURE);
+    module.add_enum_value(PropagationPhase, BUBBLE);
+    module.add_enum_value(PropagationPhase, TARGET);
+
+    module.add_type<EventController>("EventController");
+    module.add_event_controller_base(ClickEventController);
+    // TODO click_pressed
+    // TODO click_released
+    // TODO click_stopped
+
+    module.add_event_controller_base(DragEventController)
+        .constructor()
+        .add_type_method(DragEventController, get_start_position)
+        .add_type_method(DragEventController, get_current_offset)
+    ;
+    // TODO drag_begin
+    // TODO drag
+    // TODO drag_end
+
+    module.add_event_controller_base(FocusEventController)
+        .constructor()
+        .add_type_method(FocusEventController, self_or_child_is_focused)
+        .add_type_method(FocusEventController, self_is_focused)
+    ;
+    // TODO focus_gained
+    // TODO focus_lost
+
+    module.add_event_controller_base(KeyEventController)
+        .constructor()
+        .add_type_method(KeyEventController, should_shortcut_trigger_trigger)
+    ;
+    // TODO key_pressed
+    // TODO key_released
+    // TODO modifiers_changed
+
+    module.add_event_controller_base(MotionEventController)
+        .constructor()
+    ;
+    /// TODO motion_enter
+    /// TODO motion
+    /// TODO motion_leave
+
+    module.add_event_controller_base(PinchZoomEventController)
+        .constructor()
+        .add_type_method(PinchZoomEventController, get_scale_delta)
+    ;
+    // TODO scale changed
+
+    module.add_event_controller_base(RotateEventController)
+        .constructor()
+        .add_type_method(RotateEventController, get_angle_delta)
+    ;
+    // TODO rotation_changed
+
+    module.add_event_controller_base(ScrollEventController)
+        .constructor<bool, bool>()
+    ;
+    // TODO scroll_begin
+    // TODO scroll
+    // TODO scroll_end
+    // TODO kinetic_scroll_decelerate
+}
+
+declare_is_subtype_of(ClickEventController, EventController)
+declare_is_subtype_of(DragEventController, EventController)
+declare_is_subtype_of(FocusEventController, EventController)
+declare_is_subtype_of(KeyEventController, EventController)
+declare_is_subtype_of(MotionEventController, EventController)
+declare_is_subtype_of(PinchZoomEventController, EventController)
+declare_is_subtype_of(RotateEventController, EventController)
+declare_is_subtype_of(ScrollEventController, EventController)
 
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
@@ -419,6 +497,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& module)
     add_log(module);
     add_action(module);
     add_application(module);
+    add_event_controllers(module);
     add_window(module);
     add_adjustment(module);
     add_alignment(module);
@@ -429,6 +508,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& module)
     add_box(module);
     add_button(module);
     add_center_box(module);
+    add_colors(module);
 
     // TODO event controllers
     // TODO clipboard
