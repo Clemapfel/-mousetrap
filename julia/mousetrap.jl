@@ -28,6 +28,20 @@ module mousetrap
     const Vector4i = Vector4{Int64}
     const Vector4ui = Vector4{UInt64}
 
+    struct RGBA
+        r::Float32
+        g::Float32
+        b::Float32
+        d::Float32
+    end
+
+    struct HSVA
+        h::Float32
+        s::Float32
+        v::Float32
+        a::Float32
+    end
+
     const ActionID = String
     const ApplicationID = String
     const LogDomain = String
@@ -38,7 +52,16 @@ module mousetrap
     end
 
     @wrapmodule("./libmousetrap_julia_binding.so")
+
 end
+
+
+a = mousetrap.Angle(Float32(0.0))
+b = mousetrap.Angle(Float32(3.0))
+
+println(mousetrap.as_degrees(a + b))
+exit(0)
+
 
 struct State
     window::mousetrap.Window

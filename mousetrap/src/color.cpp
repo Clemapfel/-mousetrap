@@ -425,4 +425,14 @@ namespace mousetrap
     {
         return HSVA(1 - in.h, in.s, 1 - in.v, in.a);
     }
+
+    HSVA rgba_to_hsva(RGBA in)
+    {
+        return in.operator HSVA();
+    }
+
+    RGBA hsva_to_rgba(HSVA in)
+    {
+        return in.operator RGBA();
+    }
 }

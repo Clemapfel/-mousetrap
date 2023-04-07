@@ -64,16 +64,4 @@ namespace mousetrap
             /// @copydoc mousetrap::Orientable::set_orientation
             void set_orientation(Orientation) override;
     };
-
-    template<typename... Widget_ts>
-    Box hbox(float space, Widget_ts... widgets)
-    {
-        auto out = Box(Orientation::HORIZONTAL);
-        out.set_spacing(space);
-
-        for (Widget* widget : {widgets...})
-            out.push_back(widget);
-
-        return out;
-    }
 }

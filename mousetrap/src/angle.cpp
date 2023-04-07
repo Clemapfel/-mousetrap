@@ -31,24 +31,34 @@ namespace mousetrap
         return _rads;
     }
 
-    Angle Angle::operator+(const Angle& other)
+    Angle Angle::operator+(const Angle& other) const
     {
         return Angle(this->_rads + other._rads);
     }
 
-    Angle Angle::operator-(const Angle& other)
+    Angle Angle::operator-(const Angle& other) const
     {
         return Angle(this->_rads - other._rads);
     }
 
-    Angle Angle::operator*(const Angle& other)
+    Angle Angle::operator*(const Angle& other) const
     {
         return Angle(this->_rads * other._rads);
     }
 
-    Angle Angle::operator/(const Angle& other)
+    Angle Angle::operator/(const Angle& other) const
     {
         return Angle(this->_rads / other._rads);
+    }
+
+    bool Angle::operator==(const Angle& other) const
+    {
+        return this->_rads == other._rads;
+    }
+
+    bool Angle::operator!=(const Angle& other) const
+    {
+        return not (*this == other);
     }
 
     Angle& Angle::operator+=(const Angle& other)

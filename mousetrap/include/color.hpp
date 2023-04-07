@@ -120,6 +120,16 @@ namespace mousetrap
         bool operator!=(const HSVA& other);
     };
 
+    /// @brief convert RGBA to HSVA
+    /// @param RGBA
+    /// @return HSVA
+    HSVA rgba_to_hsva(RGBA);
+
+    /// @brief convert HSAV to RGBA
+    /// @param HSVA
+    /// @return RGBA
+    RGBA hsva_to_rgba(HSVA);
+
     /// @brief construct a color form an HTML code of the form #RRGGBB(AA) where AA is optimal, all components in hexadecimal
     /// @param code as string
     /// @return color

@@ -16,7 +16,7 @@ namespace mousetrap
         public:
             /// @brief construct, widgets will be arrange left and right if orientation is horizontal, top and bottom otherwise
             /// @param orientation
-            CenterBox(GtkOrientation);
+            CenterBox(Orientation);
 
             /// @brief if orientation is horizontal, set widget to the left of the center, top of the center otherwise
             /// @param widget
@@ -41,6 +41,12 @@ namespace mousetrap
             /// @brief if orientation is horizontal, get widget to the left of the center, top of the center otherwise
             /// @return widget, may be nullptr
             Widget* get_end_widget() const;
+
+            /// @copydoc Orientable::set_orientation
+            void set_orientation(Orientation);
+
+            /// @copydoc Orientable::get_orientation
+            Orientation get_orientation() const;
 
         private:
             Widget* _start = nullptr;

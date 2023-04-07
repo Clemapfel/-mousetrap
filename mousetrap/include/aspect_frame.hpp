@@ -47,7 +47,14 @@ namespace mousetrap
             /// @param widget, can be nullptr
             void set_child(Widget*);
 
+            /// @brief get child
+            /// @return widget
+            Widget* get_child() const;
+
             /// @brief remove child, equivalent to <tt>set_child(nullptr)</tt>
             void remove_child();
+
+        private:
+            Widget* _child = nullptr;
     };
 }

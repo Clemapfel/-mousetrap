@@ -25,7 +25,13 @@ namespace mousetrap
     {
         WARN_IF_SELF_INSERTION(AspectFrame::set_child, this, child);
 
+        _child = child;
         gtk_aspect_frame_set_child(get_native(), child == nullptr ? nullptr : child->operator GtkWidget*());
+    }
+
+    Widget* AspectFrame::get_child() const
+    {
+        return _child;
     }
 
     void AspectFrame::remove_child()

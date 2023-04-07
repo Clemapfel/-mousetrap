@@ -8,10 +8,10 @@
 
 namespace mousetrap
 {
-    CenterBox::CenterBox(GtkOrientation orientation)
+    CenterBox::CenterBox(Orientation orientation)
         : WidgetImplementation<GtkCenterBox>(GTK_CENTER_BOX(gtk_center_box_new()))
     {
-        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), orientation);
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
     }
 
     void CenterBox::set_start_widget(Widget* widget)
@@ -51,5 +51,15 @@ namespace mousetrap
     Widget* CenterBox::get_end_widget() const
     {
         return _end;
+    }
+
+    void CenterBox::set_orientation(Orientation orientation)
+    {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(get_native()), (GtkOrientation) orientation);
+    }
+
+    Orientation CenterBox::get_orientation() const
+    {
+        return (Orientation) gtk_orientable_get_orientation(GTK_ORIENTABLE(get_native()));
     }
 }
