@@ -52,16 +52,7 @@ module mousetrap
     end
 
     @wrapmodule("./libmousetrap_julia_binding.so")
-
 end
-
-
-a = mousetrap.Angle(Float32(0.0))
-b = mousetrap.Angle(Float32(3.0))
-
-println(mousetrap.as_degrees(a + b))
-exit(0)
-
 
 struct State
     window::mousetrap.Window
@@ -79,5 +70,4 @@ function activate(app)
 end
 
 mousetrap.connect_signal_activate(app, activate)
-
 @show mousetrap.run(app)

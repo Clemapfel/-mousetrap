@@ -13,9 +13,9 @@ using namespace mousetrap;
 #define declare_is_subtype_of(A, B) template<> struct jlcxx::SuperType<A> { typedef B type; };
 #define make_not_mirrored(Name) template<> struct jlcxx::IsMirroredType<Name> : std::false_type {};
 #define add_enum(Name) add_bits<Name>(#Name, jlcxx::julia_type("CppEnum"))
-#define add_enum_value(EnumName, VALUE_NAME) set_const(#VALUE_NAME,  EnumName::VALUE_NAME)
-#define add_widget_base(Name) add_type<Name>(#Name, jlcxx::julia_base_type<AbstractWidget>)
-#define add_signal_emitter_base(Name) add_type<Name>(#Name, jlcxx::julia_base_type<AbstractSignalEmitter>)
+#define add_enum_value(EnumName, PREFIX, VALUE_NAME) set_const(std::string(#PREFIX) + "_" + std::string(#VALUE_NAME),  EnumName::VALUE_NAME)
+#define add_widget_base(Name) add_type<Name>(#Name)
+#define add_signal_emitter_base(Name) add_type<Name>(#Name)
 
 // SignalEmitter
 make_not_mirrored(AbstractSignalEmitter)
@@ -30,6 +30,19 @@ void make_signal_emitter(Arg_t& type, jlcxx::Module& module)
         .add_type_method(T, disconnect_signal)
         .add_type_method(T, new_signal)
     ;
+}
+
+// Vector2f
+
+jl_value_t* wrap_vector2f(Vector2f in)
+{
+    auto* new_vector2f = jl_get_function((jl_module_t*) jl_get_global(jl_main_module, jl_symbol("mousetrap")), "Vector2f");
+
+    if (new_vector2f == nullptr)
+        log::fatal("In get_size_request: Unable to retrieve Julia function pointer to Vector2f(x, y)");
+
+    auto* out = jl_call2(new_vector2f, jl_box_float32(in.x), jl_box_float32(in.y));
+    return out == nullptr ? jl_nothing : out;
 }
 
 // Widget
@@ -56,14 +69,7 @@ void make_widget(Arg_t& type, jlcxx::Module& module)
     });
 
     module.method("get_size_request", [](T& in) -> jl_value_t* {
-        auto size = in.Widget::get_size_request();
-        auto* new_vector2f = jl_get_function((jl_module_t*) jl_get_global(jl_main_module, jl_symbol("mousetrap")), "Vector2f");
-
-        if (new_vector2f == nullptr)
-            log::fatal("In Widget::get_size_request: Unable to retrieve Julia function pointer to Vector2f(x, y)");
-
-        auto* out = jl_call2(new_vector2f, jl_box_float64(size.x), jl_box_float64(size.y));
-        return out == nullptr ? jl_nothing : out;
+        return wrap_vector2f(in.Widget::get_size_request());
     });
 
     module.set_override_module(jl_base_module);
@@ -108,7 +114,7 @@ void add_application(jlcxx::Module& module)
             log::critical("In Application::connect_signal_activate: Argument #1 is not a function", MOUSETRAP_DOMAIN);
 
         instance.connect_signal_activate([f = julia_function](Application* instance) {
-            // TODO jl_safe_call(f, jlcxx::box<Application&>(*instance).value);
+            jl_safe_call(f, jlcxx::box<Application&>(*instance).value);
         });
     });
 
@@ -192,11 +198,11 @@ void add_log(jlcxx::Module& module)
     module.set_const("MOUSETRAP_DOMAIN", std::string(MOUSETRAP_DOMAIN));
 
     module.add_enum(LogLevel);
-    module.add_enum_value(LogLevel, FATAL);
-    module.add_enum_value(LogLevel, CRITICAL);
-    module.add_enum_value(LogLevel, WARNING);
-    module.add_enum_value(LogLevel, INFO);
-    module.add_enum_value(LogLevel, DEBUG);
+    module.add_enum_value(LogLevel, LOG_LEVEL, FATAL);
+    module.add_enum_value(LogLevel, LOG_LEVEL, CRITICAL);
+    module.add_enum_value(LogLevel, LOG_LEVEL, WARNING);
+    module.add_enum_value(LogLevel, LOG_LEVEL, INFO);
+    module.add_enum_value(LogLevel, LOG_LEVEL, DEBUG);
 
     module.add_type<mousetrap::log>("log");
     #define add_log_function(name) module.method(std::string("log_") + #name, &mousetrap::log::name);
@@ -239,9 +245,9 @@ declare_is_subtype_of(Adjustment, AbstractSignalEmitter);
 void add_alignment(jlcxx::Module& module)
 {
     module.add_enum(Alignment);
-    module.add_enum_value(Alignment, START);
-    module.add_enum_value(Alignment, CENTER);
-    module.add_enum_value(Alignment, END);
+    module.add_enum_value(Alignment, ALIGNMENT, START);
+    module.add_enum_value(Alignment, ALIGNMENT, CENTER);
+    module.add_enum_value(Alignment, ALIGNMENT, END);
 }
 
 // Angle
@@ -290,14 +296,14 @@ declare_is_subtype_of(AspectFrame, AbstractWidget)
 void add_blend_mode(jlcxx::Module& module)
 {
     module.add_enum(BlendMode);
-    module.add_enum_value(BlendMode, NONE);
-    module.add_enum_value(BlendMode, NORMAL);
-    module.add_enum_value(BlendMode, ADD);
-    module.add_enum_value(BlendMode, SUBTRACT);
-    module.add_enum_value(BlendMode, REVERSE_SUBTRACT);
-    module.add_enum_value(BlendMode, MULTIPLY);
-    module.add_enum_value(BlendMode, MIN);
-    module.add_enum_value(BlendMode, MAX);
+    module.add_enum_value(BlendMode, BLEND_MODE, NONE);
+    module.add_enum_value(BlendMode, BLEND_MODE, NORMAL);
+    module.add_enum_value(BlendMode, BLEND_MODE, ADD);
+    module.add_enum_value(BlendMode, BLEND_MODE, SUBTRACT);
+    module.add_enum_value(BlendMode, BLEND_MODE, REVERSE_SUBTRACT);
+    module.add_enum_value(BlendMode, BLEND_MODE, MULTIPLY);
+    module.add_enum_value(BlendMode, BLEND_MODE, MIN);
+    module.add_enum_value(BlendMode, BLEND_MODE, MAX);
     
     module.add_global_method(set_current_blend_mode);
     module.add_global_method(blend_mode_to_string);
@@ -308,8 +314,8 @@ void add_blend_mode(jlcxx::Module& module)
 void add_orientation(jlcxx::Module& module)
 {
     module.add_enum(Orientation);
-    module.add_enum_value(Orientation, HORIZONTAL);
-    module.add_enum_value(Orientation, VERTICAL);
+    module.add_enum_value(Orientation, ORIENTATION, HORIZONTAL);
+    module.add_enum_value(Orientation, ORIENTATION, VERTICAL);
 }
 
 // Box
@@ -379,9 +385,9 @@ declare_is_subtype_of(CenterBox, AbstractWidget)
 void add_check_button(jlcxx::Module& module)
 {
     module.add_enum(CheckButtonState);
-    module.add_enum_value(CheckButtonState, ACTIVE);
-    module.add_enum_value(CheckButtonState, INACTIVE);
-    module.add_enum_value(CheckButtonState, INCONSISTENT);
+    module.add_enum_value(CheckButtonState, CHECK_BUTTON_STATE, ACTIVE);
+    module.add_enum_value(CheckButtonState, CHECK_BUTTON_STATE, INACTIVE);
+    module.add_enum_value(CheckButtonState, CHECK_BUTTON_STATE, INCONSISTENT);
 
     auto check_button = module.add_widget_base(CheckButton)
         .constructor<>()
@@ -406,15 +412,15 @@ void add_colors(jlcxx::Module& module)
 
 // Event Controller
 
-#define add_event_controller_base(Name) add_type<Name>(#Name, jlcxx::julia_base_type<EventController>)
+#define add_event_controller_base(Name) add_type<Name>(#Name)
 
 void add_event_controllers(jlcxx::Module& module)
 {
     module.add_enum(PropagationPhase);
-    module.add_enum_value(PropagationPhase, NONE);
-    module.add_enum_value(PropagationPhase, CAPTURE);
-    module.add_enum_value(PropagationPhase, BUBBLE);
-    module.add_enum_value(PropagationPhase, TARGET);
+    module.add_enum_value(PropagationPhase, PROPAGATION_PHASE, NONE);
+    module.add_enum_value(PropagationPhase, PROPAGATION_PHASE, CAPTURE);
+    module.add_enum_value(PropagationPhase, PROPAGATION_PHASE, BUBBLE);
+    module.add_enum_value(PropagationPhase, PROPAGATION_PHASE, TARGET);
 
     module.add_type<EventController>("EventController");
     module.add_event_controller_base(ClickEventController);
@@ -424,9 +430,16 @@ void add_event_controllers(jlcxx::Module& module)
 
     module.add_event_controller_base(DragEventController)
         .constructor()
-        .add_type_method(DragEventController, get_start_position)
-        .add_type_method(DragEventController, get_current_offset)
     ;
+
+    module.method("get_start_position", [](DragEventController& in){
+        return wrap_vector2f(in.get_start_position());
+    });
+
+    module.method("get_current_offset", [](DragEventController& in){
+        return wrap_vector2f(in.get_current_offset());
+    });
+
     // TODO drag_begin
     // TODO drag
     // TODO drag_end
@@ -484,6 +497,9 @@ declare_is_subtype_of(PinchZoomEventController, EventController)
 declare_is_subtype_of(RotateEventController, EventController)
 declare_is_subtype_of(ScrollEventController, EventController)
 
+// SelectionModel
+
+
 JLCXX_MODULE define_julia_module(jlcxx::Module& module)
 {
     module.add_type<AbstractSignalEmitter>("AbstractSignalEmitter");
@@ -492,8 +508,13 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& module)
     module.add_type<AbstractWidget>("AbstractWidget");
     module.add_type<Widget>("Widget");
 
+    module.method("test", [](){
+        return std::vector<size_t>();
+    });
+
     // order matters
 
+    add_angle(module);
     add_log(module);
     add_action(module);
     add_application(module);
@@ -501,7 +522,6 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& module)
     add_window(module);
     add_adjustment(module);
     add_alignment(module);
-    add_angle(module);
     add_aspect_frame(module);
     add_blend_mode(module);
     add_orientation(module);
@@ -510,6 +530,5 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& module)
     add_center_box(module);
     add_colors(module);
 
-    // TODO event controllers
     // TODO clipboard
 }
