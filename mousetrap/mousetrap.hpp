@@ -38,7 +38,7 @@
 #include <include/gl_transform.hpp>
 #include <include/grid.hpp>
 #include <include/grid_view.hpp>
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <include/icon.hpp>
 #include <include/image.hpp>
 #include <include/image_display.hpp>

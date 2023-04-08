@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>
 
@@ -15,8 +15,16 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        struct _AdjustmentInternal
+        {
+            GtkAdjustment* native;
+        };
+    }
+
     /// @brief adjustment, represents a continous range of values
-    class Adjustment : public SignalEmitter,
+    class Adjustment : public Object, public SignalEmitter,
         HAS_SIGNAL(Adjustment, value_changed),
         HAS_SIGNAL(Adjustment, properties_changed)
     {
@@ -92,6 +100,7 @@ namespace mousetrap
             void set_increment(float);
 
         private:
-            GtkAdjustment* _native = nullptr;
+            GObject* get_internal() const override;
+            GtkAdjustment* _native;
     };
 }

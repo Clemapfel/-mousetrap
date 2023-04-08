@@ -43,7 +43,7 @@ namespace mousetrap
         g_object_ref(_internal);
     }
 
-    Action::operator GObject*() const
+    GObject* Action::get_internal() const
     {
         return G_OBJECT(_internal);
     }

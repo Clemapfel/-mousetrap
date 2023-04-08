@@ -6,7 +6,7 @@
 
 #include <include/file_descriptor.hpp>
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <string>
 #include <vector>
 

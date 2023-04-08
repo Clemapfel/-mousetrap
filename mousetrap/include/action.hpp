@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <string>
 #include <functional>
 #include <deque>
@@ -18,6 +18,7 @@ namespace mousetrap
     /// @see https://docs.gtk.org/gdk4/#constants
     using ShortcutTriggerID = std::string;
 
+    #ifndef DOXYGEN
     namespace detail
     {
         struct _ActionInternal
@@ -35,11 +36,13 @@ namespace mousetrap
 
             bool enabled;
         };
+
         using ActionInternal = _ActionInternal;
     }
+    #endif
 
     /// @brief Command with a name, registered to an application. See the manual section on actions for more information
-    class Action
+    class Action : public Object
     {
         friend class Application;
 
@@ -119,10 +122,6 @@ namespace mousetrap
             /// @brief cast to GAction \internal
             explicit operator GAction*() const;
 
-            /// @brief expose gobject \internal
-            /// @return pointer to detail::ActionInternal
-            operator GObject*() const;
-
             /// @brief set whether triggering the action will execute the registered function
             /// @param is_enabled
             void set_enabled(bool);
@@ -141,6 +140,7 @@ namespace mousetrap
             Action(detail::ActionInternal*);
 
         private:
+            GObject* get_internal() const override;
             detail::ActionInternal* _internal = nullptr;
 
             static void on_action_activate(GSimpleAction*, GVariant*, detail::ActionInternal*);

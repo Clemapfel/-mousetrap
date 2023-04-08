@@ -23,12 +23,6 @@ namespace mousetrap
         auto id = action.get_id();
         auto* shortcut_action = gtk_shortcut_action_parse_string(("action(" + ("app." + id) + ")").c_str());
 
-        if (action == nullptr)
-        {
-            std::cerr << "[ERROR] In ShortcutController::add_action: No action with ID `" << id << "` registered." << std::endl;
-            return;
-        }
-
         for (auto& s : action.get_shortcuts())
         {
             auto* trigger = gtk_shortcut_trigger_parse_string(s.c_str());

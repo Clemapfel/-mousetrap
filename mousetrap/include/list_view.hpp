@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <vector>
 
 #include <include/widget.hpp>

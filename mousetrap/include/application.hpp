@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/window.hpp>
 #include <include/action.hpp>
@@ -22,8 +22,25 @@ namespace mousetrap
     /// @brief application id, see https://docs.gtk.org/gio/type_func.Application.id_is_valid.html
     using ApplicationID = std::string;
 
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ApplicationInternal
+        {
+            GObject parent_instance;
+
+            GtkApplication* native;
+            std::unordered_map<ActionID, detail::ActionInternal*>* actions;
+
+            bool holding;
+            bool busy;
+        };
+        using ApplicationInternal = _ApplicationInternal;
+    }
+    #endif
+
     /// @brief object representing an entire application, supplies the main render loop, mapping of actions
-    class Application : public SignalEmitter,
+    class Application : public Object, public SignalEmitter,
         HAS_SIGNAL(Application, activate),
         HAS_SIGNAL(Application, shutdown)
     {
@@ -93,10 +110,7 @@ namespace mousetrap
             void set_menubar(MenuModel*);
 
         private:
-            GtkApplication* _native;
-            std::unordered_map<ActionID, detail::ActionInternal*> _actions;
-
-            bool _holding = false;
-            bool _busy = false;
+            GObject* get_internal() const override;
+            detail::ApplicationInternal* _internal = nullptr;
     };
 }

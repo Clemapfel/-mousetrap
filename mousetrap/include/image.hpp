@@ -9,7 +9,7 @@
 #include <include/vector.hpp>
 #include <include/scale_mode.hpp>
 
-#include <include/gtk_common.hpp>
+#include <include/object.hpp>
 #include <vector>
 
 namespace mousetrap

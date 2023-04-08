@@ -163,4 +163,9 @@ namespace mousetrap
 
         gtk_adjustment_set_step_increment(_native, value);
     }
+
+    GObject* Adjustment::get_internal() const
+    {
+        return G_OBJECT(_native);
+    }
 }
