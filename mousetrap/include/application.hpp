@@ -72,7 +72,7 @@ namespace mousetrap
 
             /// @brief add an action to application, see the manual page on actions for details
             /// @param action pointer to action, the user is responsible for making sure the action stays in scope
-            void add_action(Action*);
+            void add_action(const Action&);
 
             /// @brief remove an action from application
             /// @param id
@@ -80,8 +80,8 @@ namespace mousetrap
 
             /// @brief lookup action based on action id
             /// @param id
-            /// @return pointer to mousetrap::Action if an action with the given id is registered, nullptr otherwise
-            Action* get_action(const ActionID&);
+            /// @return thin wrapper around action, this is a newly created wrapper around the internal action object, not the mousetrap::Action instance initially registered via Application::add_action
+            [[nodiscard]] Action get_action(const ActionID&);
 
             /// @brief check if application has an action with given id registered
             /// @param id
@@ -94,7 +94,7 @@ namespace mousetrap
 
         private:
             GtkApplication* _native;
-            std::unordered_map<ActionID, std::reference_wrapper<Action>> _actions;
+            std::unordered_map<ActionID, detail::ActionInternal*> _actions;
 
             bool _holding = false;
             bool _busy = false;

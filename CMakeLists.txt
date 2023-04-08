@@ -124,8 +124,7 @@ set(MOUSETRAP_HEADER_FILES
     mousetrap/include/log.hpp
     mousetrap/src/log.inl
     mousetrap/include/file_chooser.hpp
-    mousetrap/include/g_object_attachment.hpp
-)
+        mousetrap/include/shortcut_controller.hpp)
 
 set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/shape.cpp
@@ -209,7 +208,7 @@ set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/log.cpp
     mousetrap/src/file_chooser.cpp
     mousetrap/src/file_chooser.cpp
-)
+        mousetrap/src/shortcut_controller.cpp)
 
 add_library(mousetrap SHARED
    ${MOUSETRAP_HEADER_FILES}
@@ -225,7 +224,7 @@ target_link_libraries(mousetrap PUBLIC
     ${OpenGL}
     ${GLEW}
     ${GTK_LIBRARIES}
-    ${sfml-audio}
+    sfml-audio
 )
 
 target_compile_features(mousetrap PUBLIC cxx_std_20)

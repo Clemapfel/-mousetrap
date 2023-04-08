@@ -25,6 +25,9 @@ namespace mousetrap
     Application::~Application()
     {
         g_object_unref(_native);
+
+        for (auto& pair : _actions)
+            g_object_unref(pair.second);
     }
 
     ApplicationID Application::get_id() const
@@ -94,22 +97,22 @@ namespace mousetrap
         return G_ACTION_MAP(_native);
     }
 
-    void Application::add_action(Action* action)
+    void Application::add_action(const Action& action)
     {
         if (action == nullptr)
             return;
 
-        if (action->operator GAction *() == nullptr)
-            log::warning("In Application::add_action: Attempting to add action `" + action->get_id() + "` to application, but the actions behavior was not set yet. Call Action::set_function or Action::set_stateful_function first");
+        if (action.operator GAction *() == nullptr)
+            log::warning("In Application::add_action: Attempting to add action `" + action.get_id() + "` to application, but the actions behavior was not set yet. Call Action::set_function or Action::set_stateful_function first");
 
-        auto inserted = _actions.insert({action->get_id(), std::ref(*action)}).first->second;
-        auto* self = operator GActionMap*();
-        g_action_map_add_action(self, inserted.get().operator GAction *());
+
+        auto inserted = _actions.insert({action.get_id(), (detail::ActionInternal*) action.operator GObject*()}).first->second;
+        g_action_map_add_action(G_ACTION_MAP(_native), G_ACTION(inserted->g_action));
 
         auto* app = operator GtkApplication*();
 
         auto accels = std::vector<const char*>();
-        for (auto& s : inserted.get().get_shortcuts())
+        for (auto& s : inserted->shortcuts)
         {
             if (s != "never")
                 accels.push_back(s.c_str());
@@ -117,7 +120,7 @@ namespace mousetrap
         accels.push_back(NULL);
 
         if (not accels.empty())
-            gtk_application_set_accels_for_action(app, ("app." + inserted.get().get_id()).c_str(), accels.data());
+            gtk_application_set_accels_for_action(app, ("app." + inserted->id).c_str(), accels.data());
     }
 
     void Application::remove_action(const ActionID& id)
@@ -135,13 +138,16 @@ namespace mousetrap
         return _actions.find(id) != _actions.end();
     }
 
-    Action* Application::get_action(const ActionID& id)
+    Action Application::get_action(const ActionID& id)
     {
         auto it = _actions.find(id);
         if (it == _actions.end())
-            return nullptr;
+        {
+            log::critical("In Application::get_action: No action with id `" + id + "` registered");
+            return Action(nullptr);
+        }
         else
-            return &(it->second.get());
+            return Action(it->second);
     }
 
     void Application::set_menubar(MenuModel* model)

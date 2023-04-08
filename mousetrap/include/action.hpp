@@ -18,9 +18,31 @@ namespace mousetrap
     /// @see https://docs.gtk.org/gdk4/#constants
     using ShortcutTriggerID = std::string;
 
+    namespace detail
+    {
+        struct _ActionInternal
+        {
+            GObject parent_instance;
+
+            ActionID id;
+            std::vector<ShortcutTriggerID> shortcuts;
+
+            GSimpleAction* g_action ;
+            GVariant* g_state;
+
+            std::function<void()> stateless_f;
+            std::function<void()> stateful_f;
+
+            bool enabled;
+        };
+        using ActionInternal = _ActionInternal;
+    }
+
     /// @brief Command with a name, registered to an application. See the manual section on actions for more information
     class Action
     {
+        friend class Application;
+
         public:
             /// @brief construct an action with immutable id
             /// @param id string, usually of the form `scope.action_name`
@@ -97,6 +119,10 @@ namespace mousetrap
             /// @brief cast to GAction \internal
             explicit operator GAction*() const;
 
+            /// @brief expose gobject \internal
+            /// @return pointer to detail::ActionInternal
+            operator GObject*() const;
+
             /// @brief set whether triggering the action will execute the registered function
             /// @param is_enabled
             void set_enabled(bool);
@@ -109,20 +135,16 @@ namespace mousetrap
             /// @return true if action was set as stateful, false otherwise
             bool get_is_stateful() const;
 
+        protected:
+            /// @brief init from floating internal
+            /// @param internal
+            Action(detail::ActionInternal*);
+
         private:
-            ActionID _id;
-            std::vector<ShortcutTriggerID> _shortcuts;
+            detail::ActionInternal* _internal = nullptr;
 
-            static void on_action_activate(GSimpleAction*, GVariant*, Action*);
-            static void on_action_change_state(GSimpleAction*, GVariant*, Action*);
-
-            GSimpleAction* _g_action = nullptr;
-            GVariant* _g_state = nullptr;
-
-            std::function<void()>* _stateless_f = nullptr;
-            std::function<void()>* _stateful_f = nullptr;
-
-            bool _enabled = true;
+            static void on_action_activate(GSimpleAction*, GVariant*, detail::ActionInternal*);
+            static void on_action_change_state(GSimpleAction*, GVariant*, detail::ActionInternal*);
     };
 }
 

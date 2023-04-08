@@ -3,59 +3,96 @@
 #include <deque>
 #include <iostream>
 #include <thread>
+#include <memory>
 
 using namespace mousetrap;
 
-#include <include/g_object_attachment.hpp>
+G_DECLARE_FINAL_TYPE (Super, super, G, SUPER, GtkWidget)
 
-inline struct State {
-    Window window;
-    Window window_01;
-}* state = nullptr;
+class _Super
+{
+    private:
+        GObject parent_instance;
+        size_t member;
 
+    public:
+        _Super(size_t x)
+            : member(x)
+        {}
+
+        ~_Super()
+        {
+            std::cout << "deleted" << std::endl;
+        }
+};
+
+class _SuperClass
+{
+    GObjectClass parent_class;
+};
+
+G_DEFINE_TYPE (Super, super, G_TYPE_OBJECT)
+
+static void super_finalize(GObject* object)
+{
+    auto* self = G_SUPER(object);
+    G_OBJECT_CLASS(super_parent_class)->finalize(object);
+};
+
+static void super_init(Super*) {}
+
+static void super_class_init(SuperClass* c)
+{
+    GObjectClass *gobject_class = G_OBJECT_CLASS(c);
+    gobject_class->finalize = super_finalize;
+}
+
+static Super super_new()
+{
+    return *((Super*) g_object_new(super_get_type(), nullptr));
+}
 
 struct Test
 {
-    size_t _state;
-
-    Test(size_t x)
-        : _state(x)
-    {}
-
     ~Test()
     {
-        std::cout << "delete " << _state << std::endl;
+        std::cout << "delete" << std::endl;
     }
 };
 
-#define G_TYPE_BUTTON_WRAPPER G_TYPE_RIGHT(button_wrapper)
-G_NEW_TYPE(ButtonWrapper, button_wrapper, BUTTON_WRAPPER, Button);
+///
+inline struct State {
+    Window window;
+}* state = nullptr;
 
 int main()
 {
     auto app = Application("mousetrap.debug");
-    std::reference_wrapper<Action>* ref = nullptr;
 
-    app.connect_signal_activate([](Application* app) -> void
+    app.connect_signal_activate([&](Application* app) -> void
     {
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 
         state = new State {
-    Window(*app),
             Window(*app)
         };
 
-        auto* wrapper = button_wrapper_new();
-        auto* button = detail::attach_ref_to_object(state->window.operator GObject*(), wrapper);
-        ///detail::attach_ref_to_object(app->operator GObject *(), wrapper);
-
-        button->connect_signal_clicked([](Button* instance){
-            std::cout << instance->get_has_frame() << std::endl;
+        auto action = Action("test.test_action");
+        action.set_function([](){
+            std::cout << "test" << std::endl;
         });
+        action.add_shortcut("<Control>c");
+        app->add_action(action);
 
-        state->window.set_child(nullptr);
+        static auto shortcut_controller = ShortcutController(app);
+        shortcut_controller.add_action(action);
+        state->window.add_controller(&shortcut_controller);
+
+        static auto button = Button();
+        button.set_action(action);
+
+        state->window.set_child(&button);
         state->window.present();
-        state->window_01.present();
     });
 
     app.connect_signal_shutdown([](Application* app) -> void{

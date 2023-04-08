@@ -8,51 +8,84 @@
 
 #include <iostream>
 
+namespace mousetrap::detail
+{
+    DECLARE_NEW_TYPE(ActionInternal, action_internal, ACTION_INTERNAL)
+    DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ActionInternal, action_internal, ACTION_INTERNAL)
+    DEFINE_NEW_TYPE_TRIVIAL_INIT(ActionInternal, action_internal, ACTION_INTERNAL)
+    DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ActionInternal, action_internal, ACTION_INTERNAL)
+
+    static ActionInternal* action_internal_new(const std::string& in)
+    {
+        auto* self = (ActionInternal*) g_object_new(action_internal_get_type(), nullptr);
+        action_internal_init(self);
+
+        self->id = in;
+        self->shortcuts = {};
+        self->g_action = nullptr;
+        self->g_state = nullptr;
+        self->stateless_f = nullptr;
+        self->stateful_f = nullptr;
+        self->enabled = true;
+        return self;
+    }
+}
+
 namespace mousetrap
 {
     Action::Action(const std::string& id)
-        : _id(id)
+        : Action(detail::action_internal_new(id))
     {}
 
-    void Action::on_action_activate(GSimpleAction*, GVariant* variant, Action* instance)
+    Action::Action(detail::ActionInternal* internal)
+        : _internal(internal)
     {
-        if (instance->_stateless_f)
-            (*instance->_stateless_f)();
+        g_object_ref(_internal);
+    }
 
-        if (instance->_stateful_f)
-            (*instance->_stateful_f)();
+    Action::operator GObject*() const
+    {
+        return G_OBJECT(_internal);
+    }
+
+    void Action::on_action_activate(GSimpleAction*, GVariant* variant, detail::ActionInternal* instance)
+    {
+        if (instance->stateless_f)
+            instance->stateless_f();
+
+        if (instance->stateful_f)
+            instance->stateful_f();
     }
 
     Action::~Action()
     {
-        if (_g_action == nullptr)
-            g_object_unref(_g_action);
+        g_object_unref(_internal);
     }
 
-    void Action::on_action_change_state(GSimpleAction*, GVariant* variant, Action* instance)
+    void Action::on_action_change_state(GSimpleAction*, GVariant* variant, detail::ActionInternal* instance)
     {
-        if (instance->_stateless_f)
-            (*instance->_stateless_f)();
+        if (instance->stateless_f)
+            instance->stateless_f();
 
-        if (instance->_stateful_f)
-            (*instance->_stateful_f)();
+        if (instance->stateful_f)
+            instance->stateful_f();
     }
 
     void Action::activate() const
     {
-        if (_stateless_f)
-            (*_stateless_f)();
-        else if (_stateful_f)
-            (*_stateful_f)();
+        if (_internal->stateless_f)
+            (_internal->stateless_f)();
+        else if (_internal->stateful_f)
+            (_internal->stateful_f)();
 
-        if (not _stateful_f and not _stateless_f)
-            log::warning("In Action::activate: Activating action with id " + get_id() + ", but set_function or set_stateful_function has not been called yet", MOUSETRAP_DOMAIN);
+        if (not _internal->stateful_f and not _internal->stateless_f)
+            log::warning("In Action::activate: Activating action with id " + get_id() + ", but set_function or setstateful_function has not been called yet", MOUSETRAP_DOMAIN);
     }
 
     void Action::set_state(bool b)
     {
         if (get_is_stateful())
-            g_action_change_state(G_ACTION(_g_action), g_variant_new_boolean(b));
+            g_action_change_state(G_ACTION(_internal->g_action), g_variant_new_boolean(b));
         else
             log::warning("In Action::set_state: Action with id " + get_id() + " is stateless", MOUSETRAP_DOMAIN);
     }
@@ -60,7 +93,7 @@ namespace mousetrap
     bool Action::get_state() const
     {
         if (get_is_stateful())
-            return g_variant_get_boolean(g_action_get_state(G_ACTION(_g_action)));
+            return g_variant_get_boolean(g_action_get_state(G_ACTION(_internal->g_action)));
         else
         {
             log::warning("In Action::get_state: Action with id " + get_id() + " is stateless", MOUSETRAP_DOMAIN);
@@ -81,39 +114,39 @@ namespace mousetrap
         }
 
         g_object_unref(trigger);
-        _shortcuts.push_back(shortcut.c_str());
+        _internal->shortcuts.push_back(shortcut.c_str());
     }
 
     const std::vector<ShortcutTriggerID>& Action::get_shortcuts() const
     {
-        return _shortcuts;
+        return _internal->shortcuts;
     }
 
     Action::operator GAction*() const
     {
-        return G_ACTION(_g_action);
+        return G_ACTION(_internal->g_action);
     }
 
     ActionID Action::get_id() const
     {
-        return _id;
+        return _internal->id;
     }
 
     void Action::set_enabled(bool b)
     {
-        _enabled = b;
+        _internal->enabled = b;
 
-        if (_g_action != nullptr)
-            g_simple_action_set_enabled(_g_action, b);
+        if (_internal->g_action != nullptr)
+            g_simple_action_set_enabled(_internal->g_action, b);
     }
 
     bool Action::get_enabled() const
     {
-        return _enabled;
+        return _internal->enabled;
     }
 
     bool Action::get_is_stateful() const
     {
-        return _stateful_f != nullptr;
+        return _internal->stateful_f != nullptr;
     }
 }
