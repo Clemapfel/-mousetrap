@@ -737,7 +737,7 @@ namespace mousetrap
     /// @fn has_signal_activate_focused_widget::has_signal_activate_focused_widget
     /// \signal_ctor
 
-    DECLARE_SIGNAL(clicked, "clicked", void);
+    //DECLARE_SIGNAL(clicked, "clicked", void);
     /// @class has_signal_clicked
     /// @brief signal emitted when a button is clicked by the user, this is different from activating the button
     /// @tparam T instance type
