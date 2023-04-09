@@ -11,6 +11,33 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        DECLARE_NEW_TYPE(WidgetInternal, widget_internal, WIDGET_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(WidgetInternal, widget_internal, WIDGET_INTERNAL)
+
+        static void widget_internal_finalize(GObject* object)
+        {
+            auto* self = MOUSETRAP_WIDGET_INTERNAL(object);
+            std::cout << "called finalizer" << std::endl;
+            G_OBJECT_CLASS(widget_internal_parent_class)->finalize(object);
+        }
+
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(WidgetInternal, widget_internal, WIDGET_INTERNAL)
+
+        static WidgetInternal* widget_internal_new()
+        {
+            auto* self = (WidgetInternal*) g_object_new(widget_internal_get_type(), nullptr);
+            widget_internal_init(self);
+
+            self->tooltip_widget = nullptr;
+            self->tick_callback = nullptr;
+            self->tick_callback_id = false;
+
+            return self;
+        }
+    }
+
     Widget::Widget()
         : CTOR_SIGNAL(Widget, realize),
           CTOR_SIGNAL(Widget, unrealize),
@@ -22,7 +49,10 @@ namespace mousetrap
     {}
 
     Widget::~Widget()
-    {}
+    {
+        if (_internal != nullptr)
+            g_object_unref(_internal);
+    }
 
     Widget::operator GObject*() const
     {
@@ -358,63 +388,46 @@ namespace mousetrap
 
     void Widget::set_tooltip_widget(Widget* widget)
     {
-        _tooltip_widget = widget;
+        initialize();
+
+        _internal->tooltip_widget = widget;
         gtk_widget_set_has_tooltip(operator GtkWidget*(), true);
-        g_signal_connect(operator GtkWidget*(), "query-tooltip", G_CALLBACK(on_query_tooltip), this);
+        g_signal_connect(operator GtkWidget*(), "query-tooltip", G_CALLBACK(on_query_tooltip), _internal);
     }
 
-    gboolean Widget::on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, Widget* instance)
+    gboolean Widget::on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, detail::WidgetInternal* instance)
     {
-        if (instance->_tooltip_widget == nullptr)
+        if (instance->tooltip_widget == nullptr)
             return false;
 
-        gtk_tooltip_set_custom(tooltip, instance->_tooltip_widget->operator GtkWidget*());
+        gtk_tooltip_set_custom(tooltip, instance->tooltip_widget->operator GtkWidget*());
         return true;
     }
 
-    gboolean Widget::tick_callback_wrapper(GtkWidget*, GdkFrameClock* clock, Widget* instance)
+    void Widget::initialize()
     {
-        if (instance->_tick_callback_f != nullptr)
-            return instance->_tick_callback_f(clock);
+        if (_internal == nullptr)
+        {
+            _internal = detail::widget_internal_new();
+            g_object_ref(_internal);
+            detail::attach_ref_to(G_OBJECT(operator GtkWidget*()), _internal);
+        }
+    }
+
+    gboolean Widget::tick_callback_wrapper(GtkWidget*, GdkFrameClock* clock, detail::WidgetInternal* instance)
+    {
+        if (instance->tick_callback != nullptr)
+            return (gboolean) instance->tick_callback(clock);
         else
             return true;
     }
 
     void Widget::remove_tick_callback()
     {
-        if (_tick_callback_id != guint(-1))
-            gtk_widget_remove_tick_callback(operator GtkWidget*(), _tick_callback_id);
-    }
+        initialize();
 
-    Widget::Widget(Widget&& other)
-        : Widget()
-    {
-        other.remove_tick_callback();
-
-        _tick_callback_f = other._tick_callback_f;
-        other._tick_callback_f = nullptr;
-
-        _tick_callback_id = other._tick_callback_id;
-        other._tick_callback_id = guint(-1);
-
-        _tooltip_widget = other._tooltip_widget;
-        other._tooltip_widget = nullptr;
-    }
-
-    Widget& Widget::operator=(Widget&& other)
-    {
-        other.remove_tick_callback();
-
-        _tick_callback_f = other._tick_callback_f;
-        other._tick_callback_f = nullptr;
-
-        _tick_callback_id = other._tick_callback_id;
-        other._tick_callback_id = guint(-1);
-
-        _tooltip_widget = other._tooltip_widget;
-        other._tooltip_widget = nullptr;
-
-        return *this;
+        if (_internal->tick_callback_id != guint(-1))
+            gtk_widget_remove_tick_callback(operator GtkWidget*(), _internal->tick_callback_id);
     }
 
     Clipboard Widget::get_clipboard() const

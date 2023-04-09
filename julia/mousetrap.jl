@@ -59,15 +59,13 @@ struct State
 end
 const state = Ref{Union{State, Nothing}}(nothing)
 
-app = mousetrap.Application("test.app")
+app = Application("test.app")
 
 function activate(app)
-    state = State(mousetrap.Window(app))
-    mousetrap.set_title(state.window, "Hello Julia")
-    #mousetrap.log_warning("test warning", "Julia")
-    mousetrap.present(state.window)
+    state = State(Window(app)) # this needs to be delayed so it happens after run(app)
+    present(state.window)
     return nothing
 end
 
-mousetrap.connect_signal_activate(app, activate)
-@show mousetrap.run(app)
+connect_signal_activate(app, activate) #set behavior but does not execute it
+run(app) # this triggers activate at an unknown future point

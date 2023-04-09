@@ -70,22 +70,34 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     void Widget::set_tick_callback(Function_t f_in, Data_t data_in)
     {
+        initialize();
         remove_tick_callback();
-        _tick_callback_f = [f = f_in, data = data_in](GdkFrameClock* clock) -> bool {
-            return (bool) f(FrameClock(clock), data);
+        _internal->tick_callback = [f = f_in, data = data_in](GdkFrameClock* clock) -> TickCallbackResult {
+            return f(FrameClock(clock), data);
         };
 
-        _tick_callback_id = gtk_widget_add_tick_callback(operator GtkWidget*(), (GtkTickCallback) G_CALLBACK(tick_callback_wrapper), this, nullptr);
+        _internal->tick_callback_id = gtk_widget_add_tick_callback(
+            operator GtkWidget*(),
+            (GtkTickCallback) G_CALLBACK(tick_callback_wrapper),
+            _internal,
+            nullptr
+        );
     }
 
     template<typename Function_t>
     void Widget::set_tick_callback(Function_t f_in)
     {
+        initialize();
         remove_tick_callback();
-        _tick_callback_f = [f = f_in](GdkFrameClock* clock) -> bool {
-            return (bool) f(FrameClock(clock));
+        _internal->tick_callback = [f = f_in](GdkFrameClock* clock) -> TickCallbackResult {
+            return f(FrameClock(clock));
         };
 
-        _tick_callback_id = gtk_widget_add_tick_callback(operator GtkWidget*(), (GtkTickCallback) G_CALLBACK(tick_callback_wrapper), this, nullptr);
+        _internal->tick_callback_id = gtk_widget_add_tick_callback(
+            operator GtkWidget*(),
+            (GtkTickCallback) G_CALLBACK(tick_callback_wrapper),
+            _internal,
+            nullptr
+        );
     }
 }

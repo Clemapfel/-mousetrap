@@ -23,12 +23,7 @@
 
 namespace mousetrap
 {
-    template<typename GtkWidget_t>
-    struct WidgetImplementation;
-    struct EventController;
-    class Clipboard;
-
-    /// @brief result of tick callback of widget, determines whether the tick callback should be remove
+    /// @brief result of tick callback of widget, determines whether the tick callback should be removed
     enum class TickCallbackResult : bool
     {
         /// @brief tick callback should continue
@@ -38,10 +33,30 @@ namespace mousetrap
         DISCONTINUE = false
     };
 
+    /// @brief native widget type, non-owning pointer to GtkWidget
     using NativeWidget = GtkWidget*;
 
     /// @brief \only_used_in_julia_binding
     struct AbstractWidget {};
+
+    #ifndef DOXYGEN
+    template<typename GtkWidget_t> struct WidgetImplementation;
+    struct EventController;
+    class Clipboard;
+    class Widget;
+
+    namespace detail
+    {
+        struct _WidgetInternal
+        {
+            GObject parent;
+            std::function<TickCallbackResult(GdkFrameClock*)> tick_callback;
+            guint tick_callback_id = -1;
+            Widget* tooltip_widget = nullptr;
+        };
+        using WidgetInternal = _WidgetInternal;
+    }
+    #endif
 
     /// @brief Widget, super class of all renderable entities
     class Widget : public SignalEmitter, public AbstractWidget,
@@ -68,10 +83,10 @@ namespace mousetrap
 
             /// @brief move ctor, safely transfers widget-level properties
             /// @param other
-            Widget(Widget&&);
+            Widget(Widget&&) = delete;
 
             /// @brief move assignment, safely transfers widget-level properties
-            Widget& operator=(Widget&&);
+            Widget& operator=(Widget&&) = delete;
 
             /// @brief expose as GtkWidget, this is the only virtual function a class has to override to inherit all widget functionality
             virtual operator NativeWidget() const = 0;
@@ -301,13 +316,11 @@ namespace mousetrap
             Widget();
 
         private:
-            std::function<bool(GdkFrameClock*)> _tick_callback_f;
+            void initialize();
+            detail::WidgetInternal* _internal = nullptr;
 
-            guint _tick_callback_id = -1;
-            static gboolean tick_callback_wrapper(GtkWidget*, GdkFrameClock*, Widget* instance);
-
-            Widget* _tooltip_widget = nullptr;
-            static gboolean on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, Widget* instance);
+            static gboolean tick_callback_wrapper(GtkWidget*, GdkFrameClock*, detail::WidgetInternal* instance);
+            static gboolean on_query_tooltip(GtkWidget*, gint x, gint y, gboolean, GtkTooltip* tooltip, detail::WidgetInternal* instance);
     };
 
     /// @brief wrapper around native GTK4 widgets \internal
