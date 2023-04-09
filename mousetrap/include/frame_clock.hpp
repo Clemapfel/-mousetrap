@@ -27,7 +27,7 @@ namespace mousetrap
             FrameClock(GdkFrameClock*);
 
             /// @brief destruct
-            virtual ~FrameClock();
+            ~FrameClock();
 
             /// @brief copy ctor deleted
             FrameClock(const FrameClock&) = delete;

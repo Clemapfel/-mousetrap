@@ -6,28 +6,6 @@
 #include <include/button.hpp>
 #include <include/log.hpp>
 
-// TODO
-namespace mousetrap::detail
-{
-    #define IMPLEMENT_SIGNAL_INTERNAL(CamelCase, snake_case, CAPS_CASE) \
-        DECLARE_NEW_TYPE(CamelCase, snake_case, CAPS_CASE) \
-        DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(CamelCase, snake_case, CAPS_CASE) \
-        DEFINE_NEW_TYPE_TRIVIAL_INIT(CamelCase, snake_case, CAPS_CASE) \
-        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(CamelCase, snake_case, CAPS_CASE) \
-        \
-        CamelCase* snake_case##_new(void* instance) \
-        { \
-            auto* self = (CamelCase*) g_object_new(snake_case_get_type(), nullptr); \
-            snake_case##_init(self); \
-            self->instance = instance; \
-            self->function = nullptr; \
-            self->blocked = false; \
-            return self; \
-        }
-
-}
-// TODO
-
 namespace mousetrap
 {
     Button::Button()

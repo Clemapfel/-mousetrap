@@ -25,8 +25,13 @@ int main()
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 
         auto button = Button();
-        button.connect_signal_clicked([](Button*){
-           std::cout << "clicked" << std::endl;
+        button.connect_signal_clicked([](Button* button){
+            std::cout << "clicked" << std::endl;
+        });
+
+        state->window.connect_signal_close_request([](Window*) -> bool{
+            std::cout << "close" << std::endl;
+            return false;
         });
 
         state->window.set_child(&button);

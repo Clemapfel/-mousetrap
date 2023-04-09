@@ -8,14 +8,7 @@
 namespace mousetrap::detail
 {
     DECLARE_NEW_TYPE(ClipboardInternal, clipboard_internal, CLIPBOARD_INTERNAL)
-    //DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ClipboardInternal, clipboard_internal, CLIPBOARD_INTERNAL)
-    static void clipboard_internal_finalize(GObject* object)
-    {
-        auto* self = MOUSETRAP_CLIPBOARD_INTERNAL(object);
-        G_OBJECT_CLASS(clipboard_internal_parent_class)->finalize(object);
-        DEBUG_LOG_FINALIZE(snake_case);
-    }
-
+    DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ClipboardInternal, clipboard_internal, CLIPBOARD_INTERNAL)
     DEFINE_NEW_TYPE_TRIVIAL_INIT(ClipboardInternal, clipboard_internal, CLIPBOARD_INTERNAL)
     DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ClipboardInternal, clipboard_internal, CLIPBOARD_INTERNAL)
 

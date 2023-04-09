@@ -5,11 +5,10 @@
 #pragma once
 
 #include <functional>
-#include <gtk/gtk.h>
+#include <include/gtk_common.hpp>
 
 // TODO
 #include <iostream>
-// TODO
 
 namespace mousetrap
 {
@@ -18,105 +17,114 @@ namespace mousetrap
 
     #define SPLAT(...) __VA_ARGS__
 
-    #define SIGNAL_CLASS_NAME(signal_name) has_signal_##signal_name
-
     #define CTOR_SIGNAL(T, signal_name) \
         SIGNAL_CLASS_NAME(signal_name)<T>(this)
 
     #define HAS_SIGNAL(T, signal_name) \
         public SIGNAL_CLASS_NAME(signal_name)<T>
 
-    /// @brief declare a signal with the signature (T* instance, auto data) -> return_t
-    /// @param signal_name name of the signal, has to be a valid C++ variable name
-    /// @param g_signal_id Gio ID of the signal, string
-    /// @param return_t return type of the signal wrapper function
-    #define DECLARE_SIGNAL(signal_name, g_signal_id, return_t)                                     \
-        template<typename T>                                                                          \
-        class SIGNAL_CLASS_NAME(signal_name) : protected SignalComponent                                                             \
-        {                                                                                             \
-            private:                                                                                  \
-                T* _instance = nullptr;                                                               \
-                std::function<return_t(T*)> _function = nullptr;                                             \
-                bool _blocked = false;                                                                \
-                                                                                                      \
-                static return_t wrapper(void*, SIGNAL_CLASS_NAME(signal_name)<T>* instance)            \
-                {                                                                                     \
-                    return instance->emit_signal_##signal_name();                                          \
-                }                                                                                     \
-                                                                                                      \
-            protected:                                                                                \
-                explicit SIGNAL_CLASS_NAME(signal_name)(T* instance)                                      \
-                    : _instance(instance)                                                             \
-                {}                                                                                    \
-                                                                                                      \
-            public:                                                                                \
-                static inline constexpr const char* signal_id = g_signal_id;                          \
-                                                                                                   \
-                SIGNAL_CLASS_NAME(signal_name)(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;                                                                                   \
-                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(const SIGNAL_CLASS_NAME(signal_name)<T>& other) = delete;                                                                                   \
-                                                                                                   \
-                SIGNAL_CLASS_NAME(signal_name)(SIGNAL_CLASS_NAME(signal_name)<T>&& other)          \
-                {         \
-                    _function = other._function;                                                   \
-                    other._function = nullptr;                                                                               \
-                    _blocked = other._blocked; \
-                }                                                                                  \
-                SIGNAL_CLASS_NAME(signal_name)<T>& operator=(SIGNAL_CLASS_NAME(signal_name)<T>&& other)\
-                {                                                                                  \
-                    _function = other._function; \
-                    _blocked = other._blocked;                                          \
-                    return *this;                                                                               \
-                }\
-\
-                template<typename Data_t> \
-                using signal_handler_with_data_f = std::function<return_t(T* instance, Data_t data)>; \
+    #define SIGNAL_INTERNAL_PRIVATE_CLASS_NAME(CamelCase) _##CamelCase
+    #define SIGNAL_INTERNAL_CLASS_NAME(CamelCase) CamelCase
+    #define SIGNAL_CLASS_NAME(snake_case) has_signal_##snake_case
+
+    #define DECLARE_SIGNAL(CamelCase, snake_case, CAPS_CASE, g_signal_id, return_t) \
     \
-                template<typename Function_t, typename Data_t>                                        \
-                void connect_signal_##signal_name(Function_t function, Data_t data)                   \
-                {                                                                                     \
-                    _function = [f = function, d = data](T* instance) -> return_t                  \
-                    {                                                                                 \
-                        return f(instance, d);                                                                  \
-                    };                                                                                \
-                                                                                                      \
-                    static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
-                }                                                                                     \
-                                                                                                   \
-                using signal_handler_without_data_f = std::function<return_t(T* instance)>; \
-                                                                             \
-                void connect_signal_##signal_name(const signal_handler_without_data_f& function)                                \
-                {                                                                                     \
-                    _function = [f = function](T* instance) -> return_t                            \
-                    {                                                                                 \
-                        return f(instance);                                                           \
-                    };                                                                                \
-                                                                                                      \
-                    static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
-                }                                                                                     \
-                                                                                                      \
-                void set_signal_##signal_name##_blocked(bool b)                                       \
-                {                                                                                     \
-                    _blocked = b;                                                                     \
-                }                                                                                     \
-                                                                                                      \
-                bool get_signal_##signal_name##_blocked() const                                       \
-                {                                                                                     \
-                    return _blocked;                                                                  \
-                }                                                                                     \
-                                                                                                      \
-                return_t emit_signal_##signal_name()                                                    \
-                {                                                                                     \
-                    if (not _blocked and _function != nullptr)                                                                 \
-                        return _function(_instance);                                                  \
-                    else                                                                              \
-                        return return_t();                                                         \
-                }                                                                                     \
-                                                                                                      \
-                void disconnect_signal_##signal_name()                                                \
-                {                                                                                     \
-                    _instance->disconnect_signal(signal_id);                                      \
-                }                                                                                  \
-        }
+    namespace detail \
+    { \
+        struct SIGNAL_INTERNAL_PRIVATE_CLASS_NAME(CamelCase) \
+        { \
+            GObject parent; \
+            void* instance; \
+            std::function<return_t(void*)> function; \
+            bool blocked; \
+        }; \
+        using SIGNAL_INTERNAL_CLASS_NAME(CamelCase) = SIGNAL_INTERNAL_PRIVATE_CLASS_NAME(CamelCase); \
+        SIGNAL_INTERNAL_CLASS_NAME(CamelCase)* snake_case##_new(void* instance); \
+    } \
+    \
+    template<typename T> \
+    class SIGNAL_CLASS_NAME(snake_case) \
+    { \
+        private: \
+            detail::SIGNAL_INTERNAL_CLASS_NAME(CamelCase)* _internal = nullptr;               \
+            T* _instance = nullptr;                                                                        \
+            \
+            static return_t wrapper(void*, detail::SIGNAL_INTERNAL_CLASS_NAME(CamelCase)* internal) \
+            { \
+                if (not internal->blocked and internal->function) \
+                    return internal->function(internal->instance); \
+                else \
+                    return return_t(); \
+            }                                                                       \
+                                                                                    \
+            void initialize()                                                       \
+            {                                                                       \
+                if (_internal == nullptr)                                           \
+                {                                                                    \
+                    _internal = detail::snake_case##_new((void*) _instance); \
+                    detail::attach_ref_to(_instance->operator GObject*(), _internal);  \
+                    g_object_ref(_internal);                                                                    \
+                }                                                                        \
+            }\
+        \
+        protected: \
+            SIGNAL_CLASS_NAME(snake_case)(T* instance) \
+                : _instance(instance) \
+            {} \
+                                                                                    \
+            ~SIGNAL_CLASS_NAME(snake_case)()                                        \
+            {                                      \
+                if (_internal != nullptr)                                           \
+                    g_object_unref(_internal);\
+            }\
+        \
+        public: \
+            static inline constexpr const char* signal_id = g_signal_id; \
+            \
+            template<typename Function_t, typename Data_t> \
+            void connect_signal_##snake_case(Function_t f, Data_t data) \
+            { \
+                initialize();                                                                    \
+                _internal->function = [f, data](void* instance) -> return_t { \
+                    return f((T*) instance, data); \
+                }; \
+                ((T*) _internal->instance)->connect_signal(signal_id, wrapper, _internal); \
+            } \
+            \
+            template<typename Function_t> \
+            void connect_signal_##snake_case(Function_t f) \
+            { \
+                initialize();                                                                    \
+                _internal->function = [f](void* instance) -> return_t { \
+                    return f((T*) instance); \
+                }; \
+                ((T*) _internal->instance)->connect_signal(signal_id, wrapper, _internal); \
+            } \
+            \
+            void set_signal_##snake_case##_blocked(bool b) \
+            { \
+                initialize();                                                                    \
+                _internal->blocked = b; \
+            } \
+            \
+            bool get_signal_##snake_case##_blocked() const \
+            { \
+                initialize();                                                                    \
+                return _internal->blocked; \
+            } \
+            \
+            return_t emit_signal_##snake_case() \
+            { \
+                initialize();                                                                    \
+                return wrapper(nullptr, _internal); \
+            } \
+            \
+            void disconnect_signal_##snake_case() \
+            { \
+                initialize();                                                                    \
+                ((T*) _internal->instance)->disconnect_signal(signal_id); \
+            } \
+    };
 
     /// @brief declare a signal with the signature (T* instance, arg_list..., auto data) -> return_t
     /// @param signal_name name of the signal, has to be a valid C++ variable name
@@ -172,7 +180,7 @@ namespace mousetrap
                     {                                                                                 \
                         return f(instance, arg_name_list, d);                                            \
                     };                                                                                \
-                    static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
+                    ((T*) _instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
                                                                                               \
                 using signal_handler_without_data_f = std::function<return_t(T* instance, arg_list)>;                                                                                      \
@@ -183,7 +191,7 @@ namespace mousetrap
                     {                                                                                 \
                         return f(instance, arg_name_list);                                            \
                     };                                                                                \
-                    static_cast<SignalEmitter*>(_instance)->connect_signal(signal_id, wrapper, this); \
+                    ((T*) _instance)->connect_signal(signal_id, wrapper, this); \
                 }                                                                                     \
                                                                                                       \
                 void set_signal_##signal_name##_blocked(bool b)                                       \
@@ -211,7 +219,7 @@ namespace mousetrap
         }
 
     /// @see
-    DECLARE_SIGNAL(activate, "activate", void);
+    DECLARE_SIGNAL(Activate, activate, ACTIVATE, "activate", void);
     /// @class has_signal_activate
     /// @brief signal emitted when activate
     /// @tparam T instance type
@@ -246,7 +254,7 @@ namespace mousetrap
     /// @fn has_signal_activate::has_signal_activate
     /// \signal_ctor
 
-    DECLARE_SIGNAL(startup, "startup", void);
+    DECLARE_SIGNAL(Startup, startup, STARTUP, "startup", void);
     /// @class has_signal_startup
     /// @brief signal emitted when application registers with the OS, this usually happens before `activate` is emitted
     /// @tparam T instance type
@@ -281,7 +289,7 @@ namespace mousetrap
     /// @fn has_signal_startup::has_signal_startup
     /// \signal_ctor
 
-    DECLARE_SIGNAL(shutdown, "shutdown", void);
+    DECLARE_SIGNAL(Shutdown, shutdown, SHUTDOWN, "shutdown", void);
     /// @class has_signal_shutdown
     /// @brief signal emitted when application runtime ends
     /// @tparam T instance type
@@ -316,7 +324,7 @@ namespace mousetrap
     /// @fn has_signal_shutdown::has_signal_shutdown
     /// \signal_ctor
 
-    DECLARE_SIGNAL(update, "update", void);
+    DECLARE_SIGNAL(Update, update, UPDATE, "update", void);
     /// @class has_signal_update
     /// @brief signal emitted when a frame clock is updated, this happens exactly once per render frame
     /// @tparam T instance type
@@ -351,7 +359,7 @@ namespace mousetrap
     /// @fn has_signal_update::has_signal_update
     /// \signal_ctor
 
-    DECLARE_SIGNAL(paint, "paint", void);
+    DECLARE_SIGNAL(Paint, paint, PAINT, "paint", void);
     /// @class has_signal_paint
     /// @brief signal emitted during the render step of the frame
     /// @tparam T instance type
@@ -386,7 +394,7 @@ namespace mousetrap
     /// @fn has_signal_paint::has_signal_paint
     /// \signal_ctor
 
-    DECLARE_SIGNAL(realize, "realize", void);
+    DECLARE_SIGNAL(Realize, realize, REALIZE, "realize", void);
     /// @class has_signal_realize
     /// @brief signal emitted when a widget is realized
     /// @tparam T instance type
@@ -421,7 +429,7 @@ namespace mousetrap
     /// @fn has_signal_realize::has_signal_realize
     /// \signal_ctor
 
-    DECLARE_SIGNAL(unrealize, "unrealize", void);
+    DECLARE_SIGNAL(Unrealize, unrealize, UNREALIZE, "unrealize", void);
     /// @class has_signal_unrealize
     /// @brief signal emitted when a widget seizes to be displayed, it will deallocate its size and stop rendering
     /// @tparam T instance type
@@ -456,8 +464,7 @@ namespace mousetrap
     /// @fn has_signal_unrealize::has_signal_unrealize
     /// \signal_ctor
 
-
-    DECLARE_SIGNAL(destroy, "destroy", void);
+    DECLARE_SIGNAL(Destroy, destroy, DESTROY, "destroy", void);
     /// @class has_signal_destroy
     /// @brief signal emitted when a widget is destroyed, this happens only once the reference count of a widget reaches 0, calling Widget::~Widget may not necessarily emit this signal
     /// @tparam T instance type
@@ -492,7 +499,7 @@ namespace mousetrap
     /// @fn has_signal_destroy::has_signal_destroy
     /// \signal_ctor
 
-    DECLARE_SIGNAL(hide, "hide", void);
+    DECLARE_SIGNAL(Hide, hide, HIDE, "hide", void);
     /// @class has_signal_hide
     /// @brief signal emitted when a widget is hidden, usually triggered by calling Widget::hide
     /// @tparam T instance type
@@ -527,7 +534,7 @@ namespace mousetrap
     /// @fn has_signal_hide::has_signal_hide
     /// \signal_ctor
 
-    DECLARE_SIGNAL(show, "show", void);
+    DECLARE_SIGNAL(Show, show, SHOW, "show", void);
     /// @class has_signal_show
     /// @brief signal emitted when a widget is shown or presented
     /// @tparam T instance type
@@ -562,7 +569,7 @@ namespace mousetrap
     /// @fn has_signal_show::has_signal_show
     /// \signal_ctor
 
-    DECLARE_SIGNAL(map, "map", void);
+    DECLARE_SIGNAL(Map, map, MAP, "map", void);
     /// @class has_signal_map
     /// @brief signal emitted when a widget is mapped, this happens when it and all of its parents become visible
     /// @tparam T instance type
@@ -597,7 +604,7 @@ namespace mousetrap
     /// @fn has_signal_map::has_signal_map
     /// \signal_ctor
 
-    DECLARE_SIGNAL(unmap, "unmap", void);
+    DECLARE_SIGNAL(Unmap, unmap, UNMAP, "unmap", void);
     /// @class has_signal_unmap
     /// @brief signal emitted when a widget is unmapped, this happens when it is currently visible and it or at least one of its parents becomes invisible
     /// @tparam T instance type
@@ -632,7 +639,7 @@ namespace mousetrap
     /// @fn has_signal_unmap::has_signal_unmap
     /// \signal_ctor
 
-    DECLARE_SIGNAL(close_request, "close-request", bool);
+    DECLARE_SIGNAL(CloseRequest, close_request, CLOSE_REQUEST, "close-request", bool);
     /// @class has_signal_close_request
     /// @brief signal emitted when a window is requested to close, usually by calling Window::close or when a user presses the `x` button in the windows title bar
     /// @tparam T instance type
@@ -667,7 +674,7 @@ namespace mousetrap
     /// @fn has_signal_close_request::has_signal_close_request
     /// \signal_ctor
 
-    DECLARE_SIGNAL(activate_default_widget, "activate-default", void);
+    DECLARE_SIGNAL(ActivateDefaultWidget, activate_default_widget, ACTIVATE_DEFAULT_WIDGET, "activate-default", void);
     /// @class has_signal_activate_default_widget
     /// @brief signal emitted when the default widget of a window is activated
     /// @tparam T instance type
@@ -702,7 +709,7 @@ namespace mousetrap
     /// @fn has_signal_activate_default_widget::has_signal_activate_default_widget
     /// \signal_ctor
 
-    DECLARE_SIGNAL(activate_focused_widget, "activate-focus", void);
+    DECLARE_SIGNAL(ActivateFocusWidget, activate_focused_widget, ACTIVATE_FOCUS_WIDGET, "activate-focus", void);
     /// @class has_signal_activate_focused_widget
     /// @brief signal emitted when the focused widget of a window is activated
     /// @tparam T instance type
@@ -737,7 +744,7 @@ namespace mousetrap
     /// @fn has_signal_activate_focused_widget::has_signal_activate_focused_widget
     /// \signal_ctor
 
-    //DECLARE_SIGNAL(clicked, "clicked", void);
+    DECLARE_SIGNAL(Clicked, clicked, CLICKED, "clicked", void);
     /// @class has_signal_clicked
     /// @brief signal emitted when a button is clicked by the user, this is different from activating the button
     /// @tparam T instance type
@@ -772,7 +779,7 @@ namespace mousetrap
     /// @fn has_signal_clicked::has_signal_clicked
     /// \signal_ctor
 
-    DECLARE_SIGNAL(toggled, "toggled", void);
+    DECLARE_SIGNAL(Toggled, toggled, TOGGLED, "toggled", void);
     /// @class has_signal_toggled
     /// @brief signal emitted when a stateful-button such as CheckButton or ToggleButton changes its state
     /// @tparam T instance type
@@ -807,7 +814,7 @@ namespace mousetrap
     /// @fn has_signal_toggled::has_signal_toggled
     /// \signal_ctor
 
-    DECLARE_SIGNAL(text_changed, "changed", void);
+    DECLARE_SIGNAL(TextChanged, text_changed, TEXT_CHANGED, "changed", void);
     /// @class has_signal_text_changed
     /// @brief signal emitted when the text buffer of an editable widget changes
     /// @tparam T instance type
@@ -930,7 +937,7 @@ namespace mousetrap
     /// @fn has_signal_text_deleted::has_signal_text_deleted
     /// \signal_ctor
 
-    DECLARE_SIGNAL(undo, "undo", void);
+    DECLARE_SIGNAL(Undo, undo, UNDO, "undo", void);
     /// @class has_signal_undo
     /// @brief signal emitted when the user or application request an `undo` action for a text buffer
     /// @tparam T instance type
@@ -965,7 +972,7 @@ namespace mousetrap
     /// @fn has_signal_undo::has_signal_undo
     /// \signal_ctor
 
-    DECLARE_SIGNAL(redo, "redo", void);
+    DECLARE_SIGNAL(Redo, redo, REDO, "redo", void);
     /// @class has_signal_redo
     /// @brief signal emitted when the user or application requests a `redo` action for a text buffer
     /// @tparam T instance type
@@ -1272,7 +1279,7 @@ namespace mousetrap
     /// @fn has_signal_motion::has_signal_motion
     /// \signal_ctor
 
-    DECLARE_SIGNAL(motion_leave, "leave", void);
+    DECLARE_SIGNAL(MotionLeave, motion_leave, MOTION_LEAVE, "leave", void);
     /// @class has_signal_motion_leave
     /// @brief signal emitted when cursor exits the mapped area of a widget that has a mousetrap::MotionEventController connected
     /// @tparam T instance type
@@ -1397,7 +1404,7 @@ namespace mousetrap
     /// @fn has_signal_click_released::has_signal_click_released
     /// \signal_ctor
 
-    DECLARE_SIGNAL(click_stopped, "stopped", void);
+    DECLARE_SIGNAL(ClickStopped, click_stopped, CLICK_STOPPED, "stopped", void);
     /// @class has_signal_click_stopped
     /// @brief signal emitted when a sequence of clicks stops, emitted by mousetrap::ClickEventController
     /// @tparam T instance type
@@ -1476,7 +1483,7 @@ namespace mousetrap
     /// @fn has_signal_kinetic_scroll_decelerate::has_signal_kinetic_scroll_decelerate
     /// \signal_ctor
 
-    DECLARE_SIGNAL(scroll_begin, "scroll-begin", void);
+    DECLARE_SIGNAL(ScrollBegin, scroll_begin, SCROLL_BEGIN, "scroll-begin", void);
     /// @class has_signal_scroll_begin
     /// @brief signal emitted the first frame a user starts a scrolling action, emitted by mousetrap::ScrollEventController
     /// @tparam T instance type
@@ -1555,7 +1562,7 @@ namespace mousetrap
     /// @fn has_signal_scroll::has_signal_scroll
     /// \signal_ctor
 
-    DECLARE_SIGNAL(scroll_end, "scroll-end", void);
+    DECLARE_SIGNAL(ScrollEnd, scroll_end, SCROLL_END, "scroll-end", void);
     /// @class has_signal_scroll_end
     /// @brief signal emitted when the first frame after a user stops scrolling, emitted by mousetrap::ScrollEventController
     /// @tparam T instance type
@@ -1590,7 +1597,7 @@ namespace mousetrap
     /// @fn has_signal_scroll_end::has_signal_scroll_end
     /// \signal_ctor
 
-    DECLARE_SIGNAL(focus_gained, "enter", void);
+    DECLARE_SIGNAL(FocusGained, focus_gained, FOCUS_GAINED, "enter", void);
     /// @class has_signal_focus_gained
     /// @brief signal emitted when a widget that is currently not focused becomes focused. Emitted by mousetrap::FocusEventController
     /// @tparam T instance type
@@ -1625,7 +1632,7 @@ namespace mousetrap
     /// @fn has_signal_focus_gained::has_signal_focus_gained
     /// \signal_ctor
 
-    DECLARE_SIGNAL(focus_lost, "leave", void);
+    DECLARE_SIGNAL(FocusLost, focus_lost, FOCUS_LOST, "leave", void);
     /// @class has_signal_focus_lost
     /// @brief signal emitted when a widget that is currently focused looses focus to another widget. Emitted by mousetrap::FocusEventController
     /// @tparam T instance type
@@ -1879,7 +1886,7 @@ namespace mousetrap
     /// @fn has_signal_rotation_changed::has_signal_rotation_changed
     /// \signal_ctor
 
-    DECLARE_SIGNAL(properties_changed, "changed", void);
+    DECLARE_SIGNAL(PropertiesChanged, properties_changed, PROPERTIES_CHANGED, "changed", void);
     /// @class has_signal_properties_changed
     /// @brief signal emitted when properties other than the "value" property of a mousetrap::Adjustment change
     /// @tparam T instance type
@@ -1915,7 +1922,7 @@ namespace mousetrap
     /// @fn has_signal_properties_changed::has_signal_properties_changed
     /// \signal_ctor
 
-    DECLARE_SIGNAL(value_changed, "value-changed", void);
+    DECLARE_SIGNAL(ValueChanged, value_changed, VALUE_CHANGED, "value-changed", void);
     /// @class has_signal_value_changed
     /// @brief signal emitted when the value of a widget representing a range of values changes
     /// @tparam T instance type
@@ -2205,7 +2212,7 @@ namespace mousetrap
     /// @fn has_signal_page_selection_changed::has_signal_page_selection_changed
     /// \signal_ctor
 
-    DECLARE_SIGNAL(wrapped, "wrapped", void);
+    DECLARE_SIGNAL(Wrapped, wrapped, WRAPPED, "wrapped", void);
     /// @class has_signal_wrapped
     /// @brief signal emitted when a spin buttons values "wraps", meaning it overflows from the lowest possible value to the highest, or vice-versa. This signal is not emitted if mousetrap::SpinButton::set_should_wrap was set to false
     /// @tparam T instance type
