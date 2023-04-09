@@ -12,6 +12,16 @@
 
 namespace mousetrap
 {
+    /// @brief base class of all signal components
+    struct SignalComponent
+    {
+        SignalComponent() = default;
+        SignalComponent(SignalComponent&&) = delete;
+        SignalComponent& operator=(SignalComponent&&) = delete;
+        SignalComponent(const SignalComponent&) = delete;
+        SignalComponent& operator=(const SignalComponent&) = delete;
+    };
+
     #define SPLAT(...) __VA_ARGS__
 
     #define CTOR_SIGNAL(T, signal_name) \
@@ -40,7 +50,7 @@ namespace mousetrap
     } \
     \
     template<typename T> \
-    class SIGNAL_CLASS_NAME(snake_case) \
+    class SIGNAL_CLASS_NAME(snake_case) : protected SignalComponent \
     { \
         private: \
             detail::SIGNAL_INTERNAL_CLASS_NAME(CamelCase)* _internal = nullptr;               \
@@ -127,7 +137,7 @@ namespace mousetrap
     \
     namespace detail \
     {                                                                                                               \
-        struct SIGNAL_INTERNAL_PRIVATE_CLASS_NAME(CamelCase)                                                        \
+        struct SIGNAL_INTERNAL_PRIVATE_CLASS_NAME(CamelCase)   : protected SignalComponent                                                 \
         {                                                                                                           \
             GObject parent;                                                                                         \
             void* instance;                                                                                         \
@@ -643,7 +653,13 @@ namespace mousetrap
     /// @fn has_signal_unmap::has_signal_unmap
     /// \signal_ctor
 
-    DECLARE_SIGNAL(CloseRequest, close_request, CLOSE_REQUEST, "close-request", bool);
+    enum WindowCloseRequestResult : bool
+    {
+        ALLOW_CLOSE = false,
+        PREVENT_CLOSE = true
+    };
+
+    DECLARE_SIGNAL(CloseRequest, close_request, CLOSE_REQUEST, "close-request", WindowCloseRequestResult);
     /// @class has_signal_close_request
     /// @brief signal emitted when a window is requested to close, usually by calling Window::close or when a user presses the `x` button in the windows title bar
     /// @tparam T instance type
