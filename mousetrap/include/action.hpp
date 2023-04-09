@@ -23,7 +23,7 @@ namespace mousetrap
     {
         struct _ActionInternal
         {
-            GObject parent_instance;
+            GObject parent;
 
             ActionID id;
             std::vector<ShortcutTriggerID> shortcuts;

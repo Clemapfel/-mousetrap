@@ -14,7 +14,6 @@ namespace mousetrap
         DECLARE_NEW_TYPE(ApplicationInternal, application_internal, APPLICATION_INTERNAL)
         DEFINE_NEW_TYPE_TRIVIAL_INIT(ApplicationInternal, application_internal, APPLICATION_INTERNAL)
 
-
         static void application_internal_finalize(GObject* object)
         {
             auto* self = MOUSETRAP_APPLICATION_INTERNAL(object);
@@ -30,14 +29,11 @@ namespace mousetrap
 
             auto* self = (ApplicationInternal*) g_object_new(application_internal_get_type(), nullptr);
             application_internal_init(self);
-            std::cout << G_IS_OBJECT(self) << std::endl;
 
             self->native = native;
             self->actions = new std::unordered_map<ActionID, detail::ActionInternal*>();
             self->holding = false;
             self->busy = false;
-
-            std::cout << G_IS_OBJECT(self) << std::endl;
 
             return self;
         }
@@ -56,8 +52,6 @@ namespace mousetrap
 
         if (not G_IS_OBJECT(_internal))
             log::warning("TODO");
-
-        g_object_ref(_internal);
     }
 
     GObject* Application::get_internal() const 

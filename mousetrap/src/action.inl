@@ -19,7 +19,7 @@ namespace mousetrap
         };
 
         _internal->stateful_f = nullptr;
-        _internal->g_action = g_object_ref(g_simple_action_new(_internal->id.c_str(), nullptr));
+        _internal->g_action = (g_simple_action_new(_internal->id.c_str(), nullptr));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
     }
@@ -32,7 +32,7 @@ namespace mousetrap
         };
 
         _internal->stateful_f = nullptr;
-        _internal->g_action = g_object_ref(g_simple_action_new(_internal->id.c_str(), nullptr));
+        _internal->g_action = (g_simple_action_new(_internal->id.c_str(), nullptr));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
     }
@@ -49,7 +49,7 @@ namespace mousetrap
         _internal->stateless_f = nullptr;
 
         auto* variant = g_variant_new_boolean(true);
-        _internal->g_action = g_object_ref(g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
+        _internal->g_action = (g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
     }
@@ -66,7 +66,7 @@ namespace mousetrap
         _internal->stateless_f = nullptr;
 
         auto* variant = g_variant_new_boolean(true);
-        _internal->g_action = g_object_ref(g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
+        _internal->g_action = (g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
     }

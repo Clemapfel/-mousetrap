@@ -5,6 +5,7 @@
 #pragma once
 
 #include <gtk/gtk.h>
+#include <string>
 
 namespace mousetrap::detail
 {
@@ -33,7 +34,9 @@ namespace mousetrap::detail
     /// @brief simplified g object declaration
     /// @example \code
     ///     // in test.hpp
-    ///     struct _Test {};
+    ///     struct _Test {
+    ///         GObject parent; // this is always necessary
+    ///     };
     ///
     ///     // in test.cpp
     ///     DECLARE_NEW_TYPE(Test, test, TEST)
@@ -49,11 +52,14 @@ namespace mousetrap::detail
             DECLARE_STRUCT_CLASS(CamelCase)            \
             G_DEFINE_TYPE(CamelCase, snake_case, G_TYPE_OBJECT)                         \
 
+    #define DEBUG_LOG_FINALIZE(snake_case) log::debug(std::string(#snake_case) + "_finalize called.", MOUSETRAP_DOMAIN);
+
     #define DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(CamelCase, snake_case, CAPS_CASE) \
         static void snake_case##_finalize(GObject* object) \
         {                                                                                                        \
             auto* self = MOUSETRAP_##CAPS_CASE(object);                         \
-            G_OBJECT_CLASS(snake_case##_parent_class)->finalize(object);\
+            G_OBJECT_CLASS(snake_case##_parent_class)->finalize(object);       \
+            DEBUG_LOG_FINALIZE(snake_case);                                                                       \
         }
 
     #define DEFINE_NEW_TYPE_TRIVIAL_INIT(CamelCase, snake_case, CAPS_CASE) \
