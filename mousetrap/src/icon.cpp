@@ -9,53 +9,90 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        struct _IconInternal
+        {
+            GObject parent;
+            
+            GIcon* native = nullptr;
+            GtkIconPaintable* paintable = nullptr;
+
+            size_t resolution = 0;
+            size_t scale = 1;
+        };
+
+        DECLARE_NEW_TYPE(IconInternal, icon_internal, ICON_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(IconInternal, icon_internal, ICON_INTERNAL)
+
+        static void icon_internal_finalize(GObject* object)
+        {
+            auto* self = MOUSETRAP_ICON_INTERNAL(object);
+            G_OBJECT_CLASS(icon_internal_parent_class)->finalize(object);
+        }
+
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(IconInternal, icon_internal, ICON_INTERNAL)
+
+        static IconInternal* icon_internal_new()
+        {
+            auto* self = (IconInternal*) g_object_new(icon_internal_get_type(), nullptr);
+            icon_internal_init(self);
+            
+            self->native = nullptr;
+            self->paintable = nullptr;
+            self->resolution = 0;
+            self->scale = 1;
+            
+            return self;
+        }
+    }
+    
     Icon::Icon()
-        : _native(nullptr)
+        : _internal(detail::icon_internal_new())
     {}
 
     Icon::operator GIcon*() const
     {
-        return _native;
+        return _internal->native;
     }
 
     Icon::operator GtkIconPaintable*() const
     {
-        return _paintable;
+        return _internal->paintable;
     }
 
     size_t Icon::get_scale() const
     {
-        return _scale;
+        return _internal->scale;
     }
 
     Vector2ui Icon::get_size() const
     {
-        return {_resolution, _resolution};
+        return Vector2ui(_internal->resolution);
     }
 
     void Icon::create_from_file(const std::string& path, size_t square_resolution, size_t scale)
     {
-        if (_scale == 0)
-            _scale = 1;
+        if (_internal->scale == 0)
+            _internal->scale = 1;
 
         auto* file = g_file_new_for_path(path.c_str());
-        _native = g_file_icon_new(file);
-        _paintable = gtk_icon_paintable_new_for_file(file, square_resolution, scale);
+        _internal->native = g_file_icon_new(file);
+        _internal->paintable = gtk_icon_paintable_new_for_file(file, square_resolution, scale);
 
         g_free(file);
-        _resolution = square_resolution;
-        _scale = scale;
+        _internal->resolution = square_resolution;
+        _internal->scale = scale;
     }
 
     void Icon::create_from_theme(const IconTheme& theme, const IconID& id, size_t square_resolution, size_t scale)
     {
-        _resolution = square_resolution;
-        _scale = scale;
+        _internal->resolution = square_resolution;
+        _internal->scale = scale;
 
         GError* error = nullptr;
-        _native = g_icon_new_for_string(id.c_str(), &error);
-
-        _paintable = gtk_icon_theme_lookup_icon(
+        _internal->native = g_icon_new_for_string(id.c_str(), &error);
+        _internal->paintable = gtk_icon_theme_lookup_icon(
             theme.operator GtkIconTheme*(),
             id.c_str(),
             nullptr,
@@ -74,26 +111,23 @@ namespace mousetrap
 
     IconID Icon::get_name() const
     {
-        if (_native == nullptr)
+        if (_internal->native == nullptr)
             return IconID();
 
-        return g_icon_to_string(_native);
+        return g_icon_to_string(_internal->native);
     }
 
     bool Icon::operator==(const Icon& other) const
     {
-        if (this->_native == nullptr or other._native == nullptr)
+        if (this->_internal->native == nullptr or other._internal->native == nullptr)
             return false;
 
-        return g_icon_equal(this->_native, other._native);
+        return g_icon_equal(this->_internal->native, other._internal->native);
     }
 
     bool Icon::operator!=(const Icon& other) const
     {
-        if (this->_native == nullptr or other._native == nullptr)
-            return false;
-
-        return not g_icon_equal(this->_native, other._native);
+        return not (*this == other);
     }
 
     IconTheme::IconTheme()

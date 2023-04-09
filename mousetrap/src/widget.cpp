@@ -19,7 +19,6 @@ namespace mousetrap
         static void widget_internal_finalize(GObject* object)
         {
             auto* self = MOUSETRAP_WIDGET_INTERNAL(object);
-            std::cout << "called finalizer" << std::endl;
             G_OBJECT_CLASS(widget_internal_parent_class)->finalize(object);
         }
 

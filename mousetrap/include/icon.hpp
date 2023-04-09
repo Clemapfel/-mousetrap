@@ -58,6 +58,14 @@ namespace mousetrap
             GtkIconTheme* _native;
     };
 
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _IconInternal;
+        using IconInternal = _IconInternal;
+    }
+    #endif
+
     /// @brief object representing an icon. Note that this does not hodl any image data, instead it points to a file on disk or to an entry in an mousetrap::IconTheme
     class Icon
     {
@@ -107,10 +115,6 @@ namespace mousetrap
             Vector2ui get_size() const;
 
         private:
-            GIcon* _native = nullptr;
-            GtkIconPaintable* _paintable = nullptr;
-
-            size_t _resolution = 0;
-            size_t _scale = 1;
+            IconInternal* _internal = nullptr;
     };
 }
