@@ -45,7 +45,7 @@ namespace mousetrap
     };
 
     template<typename T>
-    class SIGNAL_CLASS_NAME(file_changed) : protected SignalComponent
+    class SIGNAL_CLASS_NAME(file_changed)
     {
         private:
             T* _instance = nullptr;
