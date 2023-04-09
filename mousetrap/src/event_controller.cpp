@@ -18,12 +18,12 @@ namespace mousetrap
         g_object_unref(_native);
     }
 
-    EventController::operator GObject*()
+    EventController::operator GObject*() const
     {
         return G_OBJECT(_native);
     }
 
-    EventController::operator GtkEventController*()
+    EventController::operator GtkEventController*() const
     {
         return _native;
     }

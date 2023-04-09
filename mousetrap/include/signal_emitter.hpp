@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 
 #include <string>
 #include <map>
@@ -15,6 +15,20 @@ namespace mousetrap
 {
     /// @brief \only_used_in_julia_binding
     struct AbstractSignalEmitter {};
+
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct SignalHandler
+        {
+            size_t id;
+            bool is_blocked = false;
+        };
+
+        struct _SignalEmitterInternal;
+        using SignalEmitterInternal = _SignalEmitterInternal;
+    }
+    #endif
 
     /// @brief object that can emit GLib signals \internal
     class SignalEmitter : public AbstractSignalEmitter
@@ -41,22 +55,17 @@ namespace mousetrap
 
             /// @brief add a new simple signal
             /// @param signal_id
-            void new_signal(const std::string& signal_id);
+            //void new_signal(const std::string& signal_id);
 
             /// @brief expose as GObject \internal
-            virtual operator GObject*() = 0;
+            virtual operator GObject*() const = 0;
 
         protected:
-            virtual ~SignalEmitter() = default;
+            ~SignalEmitter();
 
         private:
-            struct SignalHandler
-            {
-                size_t id;
-                bool is_blocked = false;
-            };
-
-            std::map<std::string, SignalHandler> _signal_handlers = {};
+            void initialize();
+            detail::SignalEmitterInternal* _internal = nullptr;
     };
 }
 

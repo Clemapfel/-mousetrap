@@ -7,12 +7,12 @@
 
 namespace mousetrap
 {
-    SelectionModel::operator GObject*()
+    SelectionModel::operator GObject*() const
     {
         return G_OBJECT(operator GtkSelectionModel*());
     }
 
-    SelectionModel::operator GtkSelectionModel*()
+    SelectionModel::operator GtkSelectionModel*() const
     {
         return _native;
     }

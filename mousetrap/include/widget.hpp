@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 
 #include <include/vector.hpp>
 #include <include/signal_emitter.hpp>
@@ -77,7 +77,7 @@ namespace mousetrap
             virtual operator NativeWidget() const = 0;
 
             /// @brief expose as GObject \internal
-            operator GObject*() override;
+            operator GObject*() const override;
 
             /// @brief get minimum allocated size
             /// @return width, height
@@ -217,11 +217,11 @@ namespace mousetrap
 
             /// @brief add an event controller to the widget, a widget may have an arbitrary number of controllers
             /// @param controller
-            void add_controller(EventController*);
+            void add_controller(const EventController&);
 
             /// @brief remove an event controller from the widget, if event controller is not registered to widget, does nothing
             /// @param controller controller to remove
-            void remove_controller(EventController*);
+            void remove_controller(const EventController&);
 
             /// @brief set whether the widgets can contain input focus
             /// @param b true if it can contain focus, false otherwise
@@ -312,7 +312,7 @@ namespace mousetrap
 
     /// @brief wrapper around native GTK4 widgets \internal
     template<typename GtkWidget_t>
-    class WidgetImplementation : public Widget, public Object
+    class WidgetImplementation : public Widget
     {
         public:
             /// @brief copy ctor deleted
@@ -352,7 +352,6 @@ namespace mousetrap
             void override_native(GtkWidget*);
 
         private:
-            GObject* get_internal() const override;
             GtkWidget* _native;
     };
 };

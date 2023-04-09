@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
+#include <include/signal_emitter.hpp>
 #include <string>
 #include <functional>
 #include <deque>
@@ -42,7 +43,7 @@ namespace mousetrap
     #endif
 
     /// @brief Command with a name, registered to an application. See the manual section on actions for more information
-    class Action : public Object
+    class Action : public SignalEmitter
     {
         friend class Application;
 
@@ -122,6 +123,9 @@ namespace mousetrap
             /// @brief cast to GAction \internal
             explicit operator GAction*() const;
 
+            /// @copydoc SignalEmitter::operator GObject*() const
+            operator GObject*() const override;
+
             /// @brief set whether triggering the action will execute the registered function
             /// @param is_enabled
             void set_enabled(bool);
@@ -140,7 +144,6 @@ namespace mousetrap
             Action(detail::ActionInternal*);
 
         private:
-            GObject* get_internal() const override;
             detail::ActionInternal* _internal = nullptr;
 
             static void on_action_activate(GSimpleAction*, GVariant*, detail::ActionInternal*);

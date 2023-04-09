@@ -6,7 +6,7 @@
 
 namespace mousetrap
 {
-    FrameClock::operator GObject*()
+    FrameClock::operator GObject*() const
     {
         return G_OBJECT(_native);
     }

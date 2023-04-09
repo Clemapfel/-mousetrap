@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>
 
@@ -24,7 +24,7 @@ namespace mousetrap
     }
 
     /// @brief adjustment, represents a continous range of values
-    class Adjustment : public Object, public SignalEmitter,
+    class Adjustment : public SignalEmitter,
         HAS_SIGNAL(Adjustment, value_changed),
         HAS_SIGNAL(Adjustment, properties_changed)
     {
@@ -46,6 +46,9 @@ namespace mousetrap
             /// @brief dtor
             ~Adjustment();
 
+            /// @copydoc SignalEmitter::operator GObject*() const
+            operator GObject*() const override;
+
             /// @brief copy ctor delete
             Adjustment(const Adjustment&) = delete;
 
@@ -62,10 +65,7 @@ namespace mousetrap
             Adjustment& operator=(Adjustment&&) noexcept;
 
             /// @brief expose gtk adjustment \internal
-            explicit operator GtkAdjustment*();
-
-            /// @brief export g object for signal handling \internal
-            explicit operator GObject*() override;
+            explicit operator GtkAdjustment*() const;
 
             /// @brief get lower bound
             /// @return float
@@ -100,7 +100,6 @@ namespace mousetrap
             void set_increment(float);
 
         private:
-            GObject* get_internal() const override;
             GtkAdjustment* _native;
     };
 }

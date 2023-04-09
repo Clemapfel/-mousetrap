@@ -54,11 +54,6 @@ namespace mousetrap
             log::warning("TODO");
     }
 
-    GObject* Application::get_internal() const 
-    {
-        return G_OBJECT(_internal);
-    }
-
     Application::~Application()
     {
         g_object_unref(_internal);
@@ -114,22 +109,22 @@ namespace mousetrap
             g_application_unmark_busy(G_APPLICATION(_internal->native));
     }
 
-    Application::operator GObject*()
+    Application::operator GObject*() const
     {
         return G_OBJECT(_internal->native);
     }
 
-    Application::operator GApplication*()
+    Application::operator GApplication*() const
     {
         return G_APPLICATION(_internal->native);
     }
 
-    Application::operator GtkApplication*()
+    Application::operator GtkApplication*() const
     {
         return GTK_APPLICATION(_internal->native);
     }
 
-    Application::operator GActionMap*()
+    Application::operator GActionMap*() const
     {
         return G_ACTION_MAP(_internal->native);
     }
@@ -139,9 +134,8 @@ namespace mousetrap
         if (action.operator GAction *() == nullptr)
             log::warning("In Application::add_action: Attempting to add action `" + action.get_id() + "` to application, but the actions behavior was not set yet. Call Action::set_function or Action::set_stateful_function first");
 
-        auto inserted = _internal->actions->insert({action.get_id(), (detail::ActionInternal*) action.get_internal()}).first->second;
+        auto inserted = _internal->actions->insert({action.get_id(), action._internal}).first->second;
         g_action_map_add_action(G_ACTION_MAP(_internal->native), G_ACTION(inserted->g_action));
-        action.ref();
 
         auto* app = operator GtkApplication*();
 

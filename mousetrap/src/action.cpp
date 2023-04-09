@@ -43,11 +43,6 @@ namespace mousetrap
         g_object_ref(_internal);
     }
 
-    GObject* Action::get_internal() const
-    {
-        return G_OBJECT(_internal);
-    }
-
     void Action::on_action_activate(GSimpleAction*, GVariant* variant, detail::ActionInternal* instance)
     {
         if (instance->stateless_f)
@@ -59,7 +54,8 @@ namespace mousetrap
 
     Action::~Action()
     {
-        g_object_unref(_internal);
+        if (G_IS_OBJECT(_internal))
+            g_object_unref(_internal);
     }
 
     void Action::on_action_change_state(GSimpleAction*, GVariant* variant, detail::ActionInternal* instance)
@@ -125,6 +121,11 @@ namespace mousetrap
     Action::operator GAction*() const
     {
         return G_ACTION(_internal->g_action);
+    }
+
+    Action::operator GObject*() const
+    {
+        return G_OBJECT(_internal->g_action);
     }
 
     ActionID Action::get_id() const

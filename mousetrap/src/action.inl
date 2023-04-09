@@ -18,10 +18,15 @@ namespace mousetrap
             f();
         };
 
+        if (_internal->g_action != nullptr)
+            detail::detach_ref_from(G_OBJECT(_internal->g_action), _internal);
+
         _internal->stateful_f = nullptr;
         _internal->g_action = (g_simple_action_new(_internal->id.c_str(), nullptr));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
+
+        detail::attach_ref_to(G_OBJECT(_internal->g_action), _internal);
     }
 
     template<typename Function_t, typename Data_t>
@@ -32,9 +37,15 @@ namespace mousetrap
         };
 
         _internal->stateful_f = nullptr;
+
+        if (_internal->g_action != nullptr)
+            detail::detach_ref_from(G_OBJECT(_internal->g_action), _internal);
+
         _internal->g_action = (g_simple_action_new(_internal->id.c_str(), nullptr));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
+
+        detail::attach_ref_to(G_OBJECT(_internal->g_action), _internal);
     }
 
     template<typename Function_t>
@@ -48,10 +59,15 @@ namespace mousetrap
 
         _internal->stateless_f = nullptr;
 
+        if (_internal->g_action != nullptr)
+            detail::detach_ref_from(G_OBJECT(_internal->g_action), _internal);
+
         auto* variant = g_variant_new_boolean(true);
         _internal->g_action = (g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
+
+        detail::attach_ref_to(G_OBJECT(_internal->g_action), _internal);
     }
 
     template<typename Function_t, typename Data_t>
@@ -65,9 +81,14 @@ namespace mousetrap
 
         _internal->stateless_f = nullptr;
 
+        if (_internal->g_action != nullptr)
+            detail::detach_ref_from(G_OBJECT(_internal->g_action), _internal);
+
         auto* variant = g_variant_new_boolean(true);
         _internal->g_action = (g_simple_action_new_stateful(_internal->id.c_str(), G_VARIANT_TYPE_BOOLEAN, variant));
         g_signal_connect(G_OBJECT(_internal->g_action), "activate", G_CALLBACK(on_action_activate), _internal);
         set_enabled(_internal->enabled);
+
+        detail::attach_ref_to(G_OBJECT(_internal->g_action), _internal);
     }
 }

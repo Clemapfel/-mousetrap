@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 #include <string>
 
 #include <include/window.hpp>

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 #include <include/time.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/signal_component.hpp>
@@ -45,7 +45,7 @@ namespace mousetrap
             FrameClock& operator=(FrameClock&&) noexcept;
 
             /// @brief expose as GObject \internal
-            operator GObject*();
+            operator GObject*() const;
 
             /// @brief get duration of one frame
             /// @return mousetrap::Time

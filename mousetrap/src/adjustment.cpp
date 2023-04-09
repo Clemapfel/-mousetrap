@@ -9,7 +9,7 @@
 
 namespace mousetrap
 {
-    Adjustment::operator GtkAdjustment*()
+    Adjustment::operator GtkAdjustment*() const
     {
         return _native;
     }
@@ -55,6 +55,11 @@ namespace mousetrap
         other._native = nullptr;
     }
 
+    Adjustment::operator GObject*() const
+    {
+        return G_OBJECT(_native);
+    }
+
     /*
     Adjustment::Adjustment(const Adjustment& other)
         : CTOR_SIGNAL(Adjustment, value_changed), CTOR_SIGNAL(Adjustment, properties_changed)
@@ -91,11 +96,6 @@ namespace mousetrap
         return *this;
     }
      */
-
-    Adjustment::operator GObject*()
-    {
-        return G_OBJECT(_native);
-    }
 
     float Adjustment::get_lower() const
     {
@@ -162,10 +162,5 @@ namespace mousetrap
         }
 
         gtk_adjustment_set_step_increment(_native, value);
-    }
-
-    GObject* Adjustment::get_internal() const
-    {
-        return G_OBJECT(_native);
     }
 }

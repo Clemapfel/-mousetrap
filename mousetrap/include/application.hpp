@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <include/object.hpp>
+#include <include/gtk_common.hpp>
 #include <include/signal_emitter.hpp>
 #include <include/window.hpp>
 #include <include/action.hpp>
@@ -40,7 +40,7 @@ namespace mousetrap
     #endif
 
     /// @brief object representing an entire application, supplies the main render loop, mapping of actions
-    class Application : public Object, public SignalEmitter,
+    class Application : public SignalEmitter,
         HAS_SIGNAL(Application, activate),
         HAS_SIGNAL(Application, shutdown)
     {
@@ -76,16 +76,16 @@ namespace mousetrap
             void unmark_as_busy();
 
             /// @brief expose as GObject for signal handling \internal
-            explicit operator GObject*() override;
+            explicit operator GObject*() const override;
 
             /// @brief expose as GApplication \internal
-            explicit operator GApplication*();
+            explicit operator GApplication*() const;
 
             /// @brief expose as GtkApplication \internal
-            explicit operator GtkApplication*();
+            explicit operator GtkApplication*() const;
 
             /// @brief expose as GActionMap \internal
-            explicit operator GActionMap*();
+            explicit operator GActionMap*() const;
 
             /// @brief add an action to application, see the manual page on actions for details
             /// @param action pointer to action, the user is responsible for making sure the action stays in scope
@@ -110,7 +110,6 @@ namespace mousetrap
             void set_menubar(MenuModel*);
 
         private:
-            GObject* get_internal() const override;
             detail::ApplicationInternal* _internal = nullptr;
     };
 }

@@ -24,17 +24,21 @@ int main()
 
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 
-        auto button = Button();
-        button.connect_signal_clicked([](Button* button){
-            std::cout << "clicked" << std::endl;
+        auto action = Action("test");
+        action.set_function([](){
+            std::cout << "action" << std::endl;
         });
+        app->add_action(action);
+
+        auto button = Button();
+        button.set_action(action);
 
         auto motion_controller = MotionEventController();
         motion_controller.connect_signal_motion_enter([](MotionEventController*, float, float){
             std::cout << "enter" << std::endl;
         });
 
-        state->window.add_controller(&motion_controller);
+        state->window.add_controller(motion_controller);
         state->window.connect_signal_close_request([](Window*) -> bool{
             std::cout << "close" << std::endl;
             return false;

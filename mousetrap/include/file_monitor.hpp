@@ -183,7 +183,7 @@ namespace mousetrap
             FileMonitor& operator=(FileMonitor&&) noexcept;
 
             /// @brief expose as GObject \internal
-            operator GObject*() override;
+            operator GObject*() const override;
 
             /// @brief cancel the file monitor, cannot be undone
             void cancel();

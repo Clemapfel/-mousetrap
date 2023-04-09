@@ -41,10 +41,10 @@ namespace mousetrap
             ~EventController();
 
             /// @brief expose as GObject \internal
-            operator GObject*() override;
+            operator GObject*() const override;
 
             /// @brief expose as GtkEventController \internal
-            operator GtkEventController*();
+            operator GtkEventController*() const;
 
             /// @brief set propagation phase
             /// @param phase

@@ -39,7 +39,7 @@ namespace mousetrap
         std::cout << "changed" << std::endl;
     }
 
-    FileMonitor::operator GObject*()
+    FileMonitor::operator GObject*() const
     {
         return G_OBJECT(_native);
     }

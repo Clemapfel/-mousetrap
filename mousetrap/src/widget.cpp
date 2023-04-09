@@ -24,7 +24,7 @@ namespace mousetrap
     Widget::~Widget()
     {}
 
-    Widget::operator GObject*()
+    Widget::operator GObject*() const
     {
         return G_OBJECT(operator GtkWidget*());
     }
@@ -285,21 +285,15 @@ namespace mousetrap
         }
     }
 
-    void Widget::add_controller(EventController* controller)
+    void Widget::add_controller(const EventController& controller)
     {
-        if (controller == nullptr)
-            return;
-
-        gtk_widget_add_controller(operator GtkWidget*(), controller->operator GtkEventController*());
+       gtk_widget_add_controller(operator GtkWidget*(), controller.operator GtkEventController*());
         gtk_widget_set_focusable(operator GtkWidget*(), true);
     }
 
-    void Widget::remove_controller(EventController* controller)
+    void Widget::remove_controller(const EventController& controller)
     {
-        if (controller == nullptr)
-            return;
-
-        gtk_widget_remove_controller(operator GtkWidget*(), controller->operator GtkEventController*());
+        gtk_widget_remove_controller(operator GtkWidget*(), controller.operator GtkEventController*());
     }
 
     void Widget::set_is_focusable(bool b)
