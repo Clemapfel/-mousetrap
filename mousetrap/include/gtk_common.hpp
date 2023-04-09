@@ -10,25 +10,49 @@
 namespace mousetrap::detail
 {
     template <typename T>
-    static void toggle_notify(T* attachment, GObject* parent, gboolean last_ref)
+    static void toggle_notify_pointer(T* attachment, GObject* parent, gboolean last_ref)
     {
         if (last_ref)
         {
-            g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify<T>, attachment);
+            g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify_pointer<T>, attachment);
             delete attachment;
         }
     }
 
     template<typename T>
+    static void toggle_notify_ref(T* attachment, GObject* parent, gboolean last_ref)
+    {
+        if (last_ref)
+        {
+            g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify_ref<T>, attachment);
+
+            if (G_IS_OBJECT(attachment))
+                g_object_unref(G_OBJECT(attachment));
+        }
+    }
+
+    template<typename T>
+    static void attach_pointer_to(GObject* parent, T* attachment)
+    {
+        g_object_add_toggle_ref(parent, (GToggleNotify) toggle_notify_pointer<T>, attachment);
+    }
+
+    template<typename T>
+    static void detach_pointer_from(GObject* parent, T* attachment)
+    {
+        g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify_pointer<T>, attachment);
+    }
+
+    template<typename T>
     static void attach_ref_to(GObject* parent, T* attachment)
     {
-        g_object_add_toggle_ref(parent, (GToggleNotify) toggle_notify<T>, attachment);
+        g_object_add_toggle_ref(parent, (GToggleNotify) toggle_notify_ref<T>, attachment);
     }
 
     template<typename T>
     static void detach_ref_from(GObject* parent, T* attachment)
     {
-        g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify<T>, attachment);
+        g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify_ref<T>, attachment);
     }
 
     /// @brief simplified g object declaration

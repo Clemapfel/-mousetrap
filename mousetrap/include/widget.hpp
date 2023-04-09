@@ -26,6 +26,7 @@ namespace mousetrap
     template<typename GtkWidget_t>
     struct WidgetImplementation;
     struct EventController;
+    class Clipboard;
 
     /// @brief result of tick callback of widget, determines whether the tick callback should be remove
     enum class TickCallbackResult : bool
@@ -290,6 +291,10 @@ namespace mousetrap
 
             /// @brief remove callback that si invoked every frame
             void remove_tick_callback();
+
+            /// @brief get the widgets associated clipboard
+            /// @return clipboard
+            Clipboard get_clipboard() const;
 
         protected:
             /// @brief default ctor, protected. Only inheriting classes should call this

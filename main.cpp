@@ -79,7 +79,10 @@ int main()
 
         auto action = Action("test.test_action");
         action.set_function([](){
-            std::cout << "test" << std::endl;
+            auto clipboard = state->window.get_clipboard();
+            clipboard.get_string([](const Clipboard&, const std::string& in){
+                std::cout << in << std::endl;
+            });
         });
         action.add_shortcut("<Control>c");
         app->add_action(action);

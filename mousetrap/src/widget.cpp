@@ -7,6 +7,7 @@
 #include <sstream>
 #include <include/widget.hpp>
 #include <include/event_controller.hpp>
+#include <include/clipboard.hpp>
 
 namespace mousetrap
 {
@@ -420,5 +421,10 @@ namespace mousetrap
         other._tooltip_widget = nullptr;
 
         return *this;
+    }
+
+    Clipboard Widget::get_clipboard() const
+    {
+        return Clipboard(this);
     }
 }

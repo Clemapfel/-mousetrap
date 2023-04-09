@@ -13,12 +13,31 @@
 
 namespace mousetrap
 {
+    class Clipboard;
+
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ClipboardInternal
+        {
+            GObject parent;
+
+            GdkClipboard* native;
+            std::function<void(const Clipboard&, const std::string&)> get_string_f;
+            std::function<void(const Clipboard&, const Image&)> get_image_f;
+        };
+        using ClipboardInternal = _ClipboardInternal;
+    }
+    #endif
+
     /// @brief object representing the data in the systems clipboard
     class Clipboard
     {
+        friend class Widget;
+
         public:
-            /// @brief constructor from widget, usually a window
-            Clipboard(Widget*);
+            /// @brief has no public constructor, use Widget::get_clipboard to create a clipboard
+            Clipboard() = delete;
 
             /// @brief expose as GdkClipboard \internal
             operator GdkClipboard*();
@@ -78,16 +97,18 @@ namespace mousetrap
             void set_file(const FileDescriptor&);
 
         protected:
-            Clipboard(GdkClipboard*);
+            /// @brief constructor from widget, usually a window
+            Clipboard(const Widget*);
+
+            /// @brief construct as thin wrapper from internal
+            /// @param internal
+            Clipboard(detail::ClipboardInternal*);
 
         private:
-            GdkClipboard* _native;
+            detail::ClipboardInternal* _internal = nullptr;
 
-            std::function<void(Clipboard*, const std::string&)> get_string_f;
-            static void get_string_callback_wrapper(GObject* clipboard, GAsyncResult* result, gpointer data);
-
-            std::function<void(Clipboard*, const Image&)> get_image_f;
-            static void get_image_callback_wrapper(GObject* clipboard, GAsyncResult* result, gpointer data);
+            static void get_string_callback_wrapper(GObject* clipboard, GAsyncResult* result, detail::ClipboardInternal* data);
+            static void get_image_callback_wrapper(GObject* clipboard, GAsyncResult* result, detail::ClipboardInternal* data);
     };
 }
 
