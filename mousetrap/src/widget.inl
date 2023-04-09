@@ -67,6 +67,12 @@ namespace mousetrap
         return *this;
     }
 
+    template<typename T>
+    GObject* WidgetImplementation<T>::get_internal() const
+    {
+        return G_OBJECT(get_native());
+    }
+
     template<typename Function_t, typename Data_t>
     void Widget::set_tick_callback(Function_t f_in, Data_t data_in)
     {

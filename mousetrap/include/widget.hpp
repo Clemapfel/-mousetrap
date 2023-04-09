@@ -307,7 +307,7 @@ namespace mousetrap
 
     /// @brief wrapper around native GTK4 widgets \internal
     template<typename GtkWidget_t>
-    class WidgetImplementation : public Widget
+    class WidgetImplementation : public Widget, public Object
     {
         public:
             /// @brief copy ctor deleted
@@ -346,6 +346,8 @@ namespace mousetrap
             /// @param new_pointer
             void override_native(GtkWidget*);
 
+        private:
+            GObject* get_internal() const override;
             GtkWidget* _native;
     };
 };

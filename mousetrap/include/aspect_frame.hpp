@@ -10,7 +10,7 @@
 namespace mousetrap
 {
     /// @brief container widget that assures childs size conforms to given aspect ratio
-    class AspectFrame : public WidgetImplementation<GtkAspectFrame>
+    class AspectFrame : public Object, public WidgetImplementation<GtkAspectFrame>
     {
         public:
             /// @brief construct
