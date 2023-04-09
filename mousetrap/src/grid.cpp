@@ -13,44 +13,29 @@ namespace mousetrap
         : WidgetImplementation<GtkGrid>(GTK_GRID(gtk_grid_new()))
     {}
 
-    void Grid::insert(Widget* widget, Vector2i row_column_index, size_t n_horizontal_cells, size_t n_vertical_cells)
+    void Grid::insert(const Widget& widget, Vector2i row_column_index, size_t n_horizontal_cells, size_t n_vertical_cells)
     {
-        WARN_IF_SELF_INSERTION(Grid::insert, this, widget);
-
-        if (widget == nullptr)
-            return;
-
-        gtk_grid_attach(get_native(), widget->operator GtkWidget*(), row_column_index.x, row_column_index.y, n_horizontal_cells, n_vertical_cells);
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Grid::insert, this, ptr);
+        gtk_grid_attach(get_native(), widget.operator GtkWidget*(), row_column_index.x, row_column_index.y, n_horizontal_cells, n_vertical_cells);
     }
 
-    void Grid::remove(Widget* widget)
+    void Grid::remove(const Widget& widget)
     {
-        if (widget == nullptr)
-            return;
-
-        gtk_grid_remove(get_native(), widget->operator GtkWidget*());
+        gtk_grid_remove(get_native(), widget.operator GtkWidget*());
     }
 
-    Vector2i Grid::get_position(Widget* widget) const
+    Vector2i Grid::get_position(const Widget& widget) const
     {
-        if (widget == nullptr)
-        {
-            log::critical("In Grid::get_position: Querying position of a nullptr", MOUSETRAP_DOMAIN);
-            return Vector2i();
-        }
-
         int column, row, width, height;
-        gtk_grid_query_child(get_native(), widget->operator GtkWidget *(), &column, &row, &width, &height);
+        gtk_grid_query_child(get_native(), widget.operator GtkWidget *(), &column, &row, &width, &height);
         return Vector2i(column, row);
     }
 
-    Vector2ui Grid::get_bounds(Widget* widget) const
+    Vector2ui Grid::get_bounds(const Widget& widget) const
     {
-        if (widget == nullptr)
-            return Vector2i(0, 0);
-
         int column, row, width, height;
-        gtk_grid_query_child(get_native(), widget->operator GtkWidget *(), &column, &row, &width, &height);
+        gtk_grid_query_child(get_native(), widget.operator GtkWidget *(), &column, &row, &width, &height);
         return Vector2ui(width, height);
     }
 

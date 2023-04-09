@@ -19,20 +19,20 @@ namespace mousetrap
             /// @brief add child at specified position
             /// @param widget
             /// @param position top left corner, in pixels
-            void add_child(Widget*, Vector2f);
+            void add_child(const Widget&, Vector2f);
 
             /// @brief remove child
             /// @param widget
-            void remove_child(Widget*);
+            void remove_child(const Widget&);
 
             /// @brief set child position
             /// @param child
             /// @param position top left corner, in pixels
-            void set_child_position(Widget*, Vector2f);
+            void set_child_position(const Widget&, Vector2f);
 
             /// @brief get current child position
             /// @param widget
             /// @param position top left corner, in pixels
-            Vector2f get_child_position(Widget*);
+            Vector2f get_child_position(const Widget&);
     };
 }

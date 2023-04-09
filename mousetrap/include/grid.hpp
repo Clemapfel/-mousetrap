@@ -21,21 +21,21 @@ namespace mousetrap
             /// @param row_column row and column index, may be negative
             /// @param n_horizontal_cells how many horizontal cells should the widget occupy
             /// @param n_vertical_cells how many vertical cells should the widget occupy
-            void insert(Widget* widget, Vector2i row_column_index, size_t n_horizontal_cells, size_t n_vertical_cells);
+            void insert(const Widget& widget, Vector2i row_column_index, size_t n_horizontal_cells, size_t n_vertical_cells);
 
             /// @brief remove a widget from the grid
             /// @param widget
-            void remove(Widget*);
+            void remove(const Widget&);
 
             /// @brief get the row and column position of a widget
             /// @param widget
             /// @return row index, column index
-            Vector2i get_position(Widget*) const;
+            Vector2i get_position(const Widget&) const;
 
             /// @brief get how many cells a widget should occupy
             /// @param widget
             /// @return number of rows, number of columns
-            Vector2ui get_bounds(Widget*) const;
+            Vector2ui get_bounds(const Widget&) const;
 
             /// @brief insert a new row at given index
             /// @param index may be negative
