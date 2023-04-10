@@ -2317,7 +2317,6 @@ namespace mousetrap
     ///
     /// @fn void has_signal_pressed::emit_signal_pressed(int32_t n_press, double x, double y)
     /// \signal_emit_brief
-    /// @param n_press number of clicks in this sequence
     /// @param x x-coordinate of the cursor, widget-relative position, in pixels
     /// @param y y-coordinate of the cursor, widget-relative position, in pixels
     ///
@@ -2405,9 +2404,8 @@ namespace mousetrap
     ///
     /// @fn void has_signal_pan::emit_signal_pan(int32_t n_press, double x, double y)
     /// \signal_emit_brief
-    /// @param n_press number of clicks in this sequence
-    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
-    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    /// @param direction pan direction
+    /// @param offset offset from starting position, in pixels
     ///
     /// @var has_signal_pan::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pan.html}
@@ -2438,5 +2436,50 @@ namespace mousetrap
     /// \signal_disconnect
     ///
     /// @fn has_signal_pan::has_signal_pan
+    /// \signal_ctor
+
+    DECLARE_SIGNAL_MANUAL(Swipe, swipe, SWIPE, "swipe", void,
+                          SPLAT(double x_velocity, double y_velocity),
+                          SPLAT(x_velocity, y_velocity)
+    );
+    /// @class has_signal_swip
+    /// @brief signal emitted when a swipning gesture is recognized
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_swip::emit_signal_swip(int32_t n_press, double x, double y)
+    /// \signal_emit_brief
+    /// @param n_press number of clicks in this sequence
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_swip::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.swip.html}
+    ///
+    /// @var has_signal_swip::signal_handler_with_data_f
+    /// \signal_with_data_f{swip}
+    /// \signal_see_emit_for_parameters{swip}
+    ///
+    /// @var has_signal_swip::signal_handler_without_data_f
+    /// \signal_without_data_f{swip}
+    /// \signal_see_emit_for_parameters{swip}
+    ///
+    /// @fn void has_signal_swip::connect_signal_swip(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_swip::connect_signal_swip(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_swip::set_signal_swip_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_swip::get_signal_swip_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_swip::disconnect_signal_swip()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_swip::has_signal_swip
     /// \signal_ctor
 }

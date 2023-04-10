@@ -183,4 +183,9 @@ DEFINE_SIGNAL(Scroll, scroll, SCROLL, "scroll", bool,
                           SPLAT(PanDirection direction, double offset),
                           SPLAT(direction, offset)
     );
+
+    DECLARE_SIGNAL(Swipe, swipe, SWIPE, "swipe", void,
+                          SPLAT(double x_velocity, double y_velocity),
+                          SPLAT(x_velocity, y_velocity)
+    );
 }

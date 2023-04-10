@@ -17,12 +17,12 @@ namespace mousetrap
             /// @brief construct
             PanEventController(Orientation);
 
-            /// @brief set the amount of time that has to pass until a long press is registered
-            /// @param factor multiplier with the standard duration, 1 means no modification, 2 means twice as long of a delay, 0.5 half as a long
+            /// @brief set recognized swipe orientation
+            /// @param orientation
             void set_orientation(Orientation);
 
-            /// @brief get amount of time that has to pass until a long press is registered
-            /// @return multiplier with the standard duration, 1 means no modification, 2 means twice as long of a delay, 0.5 half as a long
+            /// @brief get recognized swipe orientation
+            /// @return orientation
             Orientation get_orientation() const;
     };
 }
