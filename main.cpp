@@ -31,18 +31,12 @@ int main()
 
         static auto scale = Scale(0, 1, 0.01);
 
-        static auto column_view = ColumnView();
+        auto column_view = ColumnView();
+        column_view.push_back_column("01");
+        column_view.push_back_column("02");
 
-        size_t n_columns = 4;
-        size_t n_rows = 4;
-        for (size_t i = 0; i < n_columns; ++i)
-        {
-            auto column = column_view.push_back_column(std::to_string(i));
-            for (size_t j = 0; j < n_columns; ++j)
-            {
-                column->set_widget_at(j, new Label("Label_" + std::to_string(j)));
-            }
-        }
+        auto label = Label("test");
+        column_view.append_row(label);
 
         /*
         for (size_t i = 0; i < n_rows; ++i)

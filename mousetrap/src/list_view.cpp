@@ -150,6 +150,7 @@ namespace mousetrap::detail
         self->orientation = (GtkOrientation) orientation;
 
         auto gtk_mode = (GtkSelectionMode) mode;
+        self->selection_mode = gtk_mode;
         if (gtk_mode == GTK_SELECTION_MULTIPLE)
             self->selection_model = new MultiSelectionModel(G_LIST_MODEL(self->tree_list_model));
         else if (gtk_mode == GTK_SELECTION_SINGLE or gtk_mode == GTK_SELECTION_BROWSE)
