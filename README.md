@@ -1,7 +1,6 @@
 # mousetrap
 
 # refacotr:
-+ ColumnView
 + FileMonitor
 + shape, texture, rendertexture, render_area, render_task, shader
 + music, sound, soundbuffer
@@ -12,20 +11,27 @@ learning the library tsake weeks, meaning many user will feel overwhelmed and ne
 wrapping GTK4 in a way that is much easier to understand and use, allowing beginners to start developing applications within minutes instead of days.
 
 ## Advantages of mousetrap over GTK4
-+ supports C++ types, allowing lambdas to be used in place of static c functions
++ automatic memory management, `new` is unnecessary to be called
++ complex widgets like `ColumnView` or `TreeView` can be initialized with exactly one line
 + Adds Image- and Sound-processing utilities, including natively playing sounds at runtime
 + Adds high-level, fully abstracted OpenGL functionality, such as native 2d shapes, textures, render textures, shaders, blend-modes, transforms and more
-+ Input of funtions are sanity checked and verbose warnings are printed, speeding up debugging and preventing bugs
-+ All widgets can be ininitialized with a single line of code, this includes complex widgets like `TreeListView` or `ColumnView` which would take dozens of lines to create in native GTK4
-+ Documentation is in a single place, as opposed to being split across multiple websites
-+ Many things have been redesigned for improved clarity and usability, especially the signal and action architecture
-+ focuses on stability, misuse of the library should never crash the application
++ Input of funtions are sanity checked and verbose warnings are printed before something breaks, this speeds up 
+  debugging and prevents potential bugs
++ Documentation is in one single place, tutorial introduces readers gently step-by-step
+
+## Disadvantages over GTK4
++ many of the gio and glib functionality is not yet exposed, file I/O and anything related to images is present in 
+  mousetrap, however
++ GTK Builder is ommitted completely, all objects are defined and initializes in a C++ file
++ a hand full of widgets are not yet exposed, or where intentionally ommitted, the latter category includes `FlowBox`,
+  `ScaleButton`, and any widget marked for deprecation since GTK4.10
 
 The main disadvantage of mousetrap is that not every GTK4 functionality is imported, making mousetrap somewhat less flexible. However, **every non-deprecated GTK4-widget is available**, 
 meaning there is no limiation put upon the actual graphical user interface.
 
 # TODO
 + Search Bar
++ FontDialog
 + Allow multiple tick callbacks for widget
 + Make ListView, GridView, ColumnView filterable
 + Add DropDown search bar

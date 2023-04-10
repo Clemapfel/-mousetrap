@@ -2306,4 +2306,84 @@ namespace mousetrap
     ///
     /// @fn has_signal_response::has_signal_response
     /// \signal_ctor
+
+    DECLARE_SIGNAL_MANUAL(Pressed, pressed, PRESSED, "pressed", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+    /// @class has_signal_pressed
+    /// @brief signal emitted a long press staet
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_pressed::emit_signal_pressed(int32_t n_press, double x, double y)
+    /// \signal_emit_brief
+    /// @param n_press number of clicks in this sequence
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_pressed::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pressed.html}
+    ///
+    /// @var has_signal_pressed::signal_handler_with_data_f
+    /// \signal_with_data_f{pressed}
+    /// \signal_see_emit_for_parameters{pressed}
+    ///
+    /// @var has_signal_pressed::signal_handler_without_data_f
+    /// \signal_without_data_f{pressed}
+    /// \signal_see_emit_for_parameters{pressed}
+    ///
+    /// @fn void has_signal_pressed::connect_signal_pressed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_pressed::connect_signal_pressed(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_pressed::set_signal_pressed_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_pressed::get_signal_pressed_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_pressed::disconnect_signal_pressed()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_pressed::has_signal_pressed
+    /// \signal_ctor
+
+    DECLARE_SIGNAL(PressCancelled, press_cancelled, PRESS_CANCELLED, "cancelled", void);
+    /// @class has_signal_press_cancelled
+    /// @brief signal emitted when a long press ends
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_press_cancelled::emit_signal_press_cancelled()
+    /// \signal_emit_brief
+    ///
+    /// @var has_signal_press_cancelled::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureLongPress.cancelled.html}
+    ///
+    /// @var has_signal_press_cancelled::signal_handler_with_data_f
+    /// \signal_with_data_f{press_cancelled}
+    ///
+    /// @var has_signal_press_cancelled::signal_handler_without_data_f
+    /// \signal_without_data_f{press_cancelled}
+    ///
+    /// @fn void has_signal_press_cancelled::connect_signal_press_cancelled(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    ///
+    /// @fn void has_signal_press_cancelled::connect_signal_press_cancelled(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    ///
+    /// @fn void has_signal_press_cancelled::set_signal_press_cancelled_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_press_cancelled::get_signal_press_cancelled_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_press_cancelled::disconnect_signal_press_cancelled()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_press_cancelled::has_signal_press_cancelled
+    /// \signal_ctor
 }

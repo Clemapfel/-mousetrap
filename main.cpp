@@ -7,6 +7,40 @@
 
 using namespace mousetrap;
 
+struct TestSuper
+{
+    TestSuper()
+    {
+        log::critical("TestSuper()");
+    }
+
+    ~TestSuper()
+    {
+        log::critical("~TestSuper()");
+    }
+};
+
+struct Test : public TestSuper
+{
+    Test(size_t in)
+        : i(in)
+    {
+        log::critical("Test()");
+    }
+
+    Test(TestSuper*)
+    {
+        log::critical("Test(TestSuper*)");
+    }
+
+    ~Test()
+    {
+        log::critical("~Test()");
+    }
+
+    size_t i = 0;
+};
+
 ///
 inline struct State {
     Window window;
@@ -14,6 +48,15 @@ inline struct State {
 
 int main()
 {
+    TestSuper* test_super;
+    {
+        auto* test = new Test(1234);
+        test_super = (TestSuper*) test;
+    }
+    auto test_new = static_cast<Test*>(test_super);
+    std::cout << test_new->i << std::endl;
+    exit(0);
+
     auto app = Application("mousetrap.debug");
 
     app.connect_signal_activate([&](Application* app) -> void
