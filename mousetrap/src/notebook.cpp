@@ -9,6 +9,24 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        DECLARE_NEW_TYPE(NotebookInternal, notebook_internal, NOTEBOOK_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(NotebookInternal, notebook_internal, NOTEBOOK_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(NotebookInternal, notebook_internal, NOTEBOOK_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(NotebookInternal, notebook_internal, NOTEBOOK_INTERNAL)
+
+        static NotebookInternal* notebook_internal_new()
+        {
+            auto* self = (NotebookInternal*) g_object_new(notebook_internal_get_type(), nullptr);
+            notebook_internal_init(self);
+
+            self->popup_enabled = false;
+            self->tabs_reorderable = false;
+            return self;
+        }
+    }
+    
     Notebook::Notebook()
         : WidgetImplementation<GtkNotebook>(GTK_NOTEBOOK(gtk_notebook_new())),
           CTOR_SIGNAL(Notebook, page_added),
@@ -17,6 +35,8 @@ namespace mousetrap
           CTOR_SIGNAL(Notebook, page_selection_changed)
     {
         gtk_notebook_popup_disable(get_native());
+        _internal = detail::notebook_internal_new();
+        detail::attach_ref_to(G_OBJECT(get_native()), _internal);
     }
 
     size_t Notebook::push_front(Widget* child_widget, Widget* label_widget)
@@ -42,7 +62,7 @@ namespace mousetrap
         gtk_notebook_set_tab_reorderable(
             get_native(),
             child_widget != nullptr ? child_widget->operator GtkWidget *() : nullptr,
-            _tabs_reorderable
+            _internal->tabs_reorderable
         );
 
         return out;
@@ -68,7 +88,7 @@ namespace mousetrap
         gtk_notebook_set_tab_reorderable(
             get_native(),
             child_widget != nullptr ? child_widget->operator GtkWidget *() : nullptr,
-            _tabs_reorderable
+            _internal->tabs_reorderable
         );
 
         return out;
@@ -98,7 +118,7 @@ namespace mousetrap
         gtk_notebook_set_tab_reorderable(
             get_native(),
             child_widget != nullptr ? child_widget->operator GtkWidget *() : nullptr,
-            _tabs_reorderable
+            _internal->tabs_reorderable
         );
 
         return out;
@@ -182,12 +202,12 @@ namespace mousetrap
         else
             gtk_notebook_popup_disable(get_native());
 
-        _popup_enabled = b;
+        _internal->popup_enabled = b;
     }
 
     bool Notebook::get_quick_change_menu_enabled() const
     {
-        return _popup_enabled;
+        return _internal->popup_enabled;
     }
 
     void Notebook::set_tabs_reorderable(bool b)
@@ -199,11 +219,11 @@ namespace mousetrap
                 b
             );
 
-        _tabs_reorderable = b;
+        _internal->tabs_reorderable = b;
     }
 
     bool Notebook::get_tabs_reorderable() const
     {
-        return _tabs_reorderable;
+        return _internal->tabs_reorderable;
     }
 }

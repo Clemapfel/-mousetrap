@@ -10,6 +10,31 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        DECLARE_NEW_TYPE(StackInternal, stack_internal, STACK_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(StackInternal, stack_internal, STACK_INTERNAL)
+
+        static void stack_internal_finalize(GObject* object)
+        {
+            auto* self = MOUSETRAP_STACK_INTERNAL(object);
+            G_OBJECT_CLASS(stack_internal_parent_class)->finalize(object);
+            delete self->children;
+        }
+
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(StackInternal, stack_internal, STACK_INTERNAL)
+
+        static StackInternal* stack_internal_new(GtkStack* native)
+        {
+            auto* self = (StackInternal*) g_object_new(stack_internal_get_type(), nullptr);
+            stack_internal_init(self);
+            self->native = native;
+            self->selection_model = new SelectionModel(gtk_stack_get_pages(native));
+            self->children = new std::map<std::string, Widget*>();
+            return self;
+        }
+    }
+    
     StackSidebar::StackSidebar(const Stack& stack)
         : WidgetImplementation<GtkStackSidebar>(GTK_STACK_SIDEBAR(gtk_stack_sidebar_new()))
     {
@@ -25,19 +50,16 @@ namespace mousetrap
     Stack::Stack()
         : WidgetImplementation<GtkStack>(GTK_STACK(gtk_stack_new()))
     {
+        _internal = detail::stack_internal_new(get_native());
+        detail::attach_ref_to(G_OBJECT(get_native()), _internal);
     }
 
     Stack::~Stack()
-    {
-        delete _selection_model;
-    }
+    {}
 
     SelectionModel* Stack::get_selection_model()
     {
-        if (_selection_model == nullptr)
-            _selection_model = new SelectionModel(gtk_stack_get_pages(get_native()));
-
-        return _selection_model;
+        return _internal->selection_model;
     }
 
     Stack::ID Stack::add_child(Widget* widget, const std::string& title)
@@ -49,13 +71,13 @@ namespace mousetrap
         }
 
         gtk_stack_add_titled(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*(), title.c_str(), title.c_str());
-        _children.insert({title, widget});
+        _internal->children->insert({title, widget});
         return title;
     }
 
     void Stack::remove_child(Stack::ID id)
     {
-        if (_children.find(id) == _children.end())
+        if (_internal->children->find(id) == _internal->children->end())
         {
             std::stringstream str;
             str << "In Stack::remove_child: No child with ID `" << id << "`";
@@ -63,8 +85,8 @@ namespace mousetrap
             return;
         }
 
-        gtk_stack_remove(get_native(), _children.at(id)->operator GtkWidget *());
-        _children.erase(id);
+        gtk_stack_remove(get_native(), _internal->children->at(id)->operator GtkWidget *());
+        _internal->children->erase(id);
     }
 
     Stack::ID Stack::get_visible_child()
@@ -126,7 +148,5 @@ namespace mousetrap
     {
         return gtk_stack_get_interpolate_size(get_native());
     }
-
-
 }
 

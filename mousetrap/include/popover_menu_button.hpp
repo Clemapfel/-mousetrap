@@ -24,13 +24,13 @@ namespace mousetrap
         public:
             /// @brief create from menu model
             /// @param menu_model
-            PopoverMenu(MenuModel*);
+            PopoverMenu(const MenuModel&);
 
         protected:
             void refresh_widgets();
 
         private:
-            MenuModel* _model;
+            const MenuModel* _model = nullptr;
     };
 
     /// @brief popover menu button, if pressed, shows it's attached popover or popover menu automatically
@@ -51,11 +51,11 @@ namespace mousetrap
 
             /// @brief attach a popover to the button, the button will take care of showing / hiding the popover
             /// @param popover Popover or nullptr to remove any popover or popover menu
-            void set_popover(Popover*);
+            void set_popover(Popover&);
 
             /// @brief attach a popover menu to the button, the button will take care of showing / hiden the popover menu
-            /// @param popover_menu PopoverMenu or nullptr to remove any popover or popover menu
-            void set_popover_menu(PopoverMenu*);
+            /// @param popover_menu
+            void set_popover_menu(PopoverMenu&);
 
             /// @brief set relative position, applied to any popover attached
             /// @param relative_position
@@ -64,6 +64,9 @@ namespace mousetrap
             /// @brief get relative position of any potential popover
             /// @return relative position
             RelativePosition get_popover_position() const;
+
+            /// @brief remove bound PopoverMenu or Popover
+            void remove_popover();
 
             /// @brief set whether a menu dropdown arrow should appear next to the label widget, on by default
             /// @param b true if arrow should appearn, false otherwise
@@ -89,6 +92,8 @@ namespace mousetrap
 
         private:
             Widget* _child = nullptr;
+
+            Popover* _popover = nullptr;
             PopoverMenu* _popover_menu = nullptr;
     };
 }

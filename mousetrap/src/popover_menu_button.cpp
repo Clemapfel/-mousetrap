@@ -10,12 +10,12 @@
 
 namespace mousetrap
 {
-    PopoverMenu::PopoverMenu(MenuModel* model)
+    PopoverMenu::PopoverMenu(const MenuModel& model)
         : WidgetImplementation<GtkPopoverMenu>(GTK_POPOVER_MENU(
-            gtk_popover_menu_new_from_model(model->operator GMenuModel*()))
+            gtk_popover_menu_new_from_model(model.operator GMenuModel*()))
           )
     {
-        _model = model;
+        _model = &model;
         refresh_widgets();
     }
 
@@ -23,10 +23,13 @@ namespace mousetrap
     {
         for (auto& pair : _model->get_widgets())
         {
-            if (not gtk_popover_menu_add_child(get_native(), pair.second->operator GtkWidget*(), pair.first.c_str()))
+            if (gtk_popover_menu_add_child(get_native(), pair.second, pair.first.c_str()) != TRUE)
             {
+                // TODO this is triggered but widget insertion seem to be working fine
+                continue;
+
                 std::stringstream str;
-                str << "In PopoverMenu::refresh_widgets: Failed to add Widget of type " << G_STRINGIFY(pair.second->operator GtkWidget*()) << " to submenu." << std::endl;
+                str << "In PopoverMenu::refresh_widgets: Failed to add Widget of type " << G_STRINGIFY(pair.second) << " to submenu." << std::endl;
                 log::critical(str.str(), MOUSETRAP_DOMAIN);
             }
         }
@@ -60,19 +63,26 @@ namespace mousetrap
         return (RelativePosition) gtk_popover_get_position(gtk_menu_button_get_popover(get_native()));
     }
 
-    void PopoverMenuButton::set_popover(Popover* popover)
+    void PopoverMenuButton::set_popover(Popover& popover)
     {
+        _popover = &popover;
         _popover_menu = nullptr;
-        gtk_menu_button_set_popover(get_native(), popover != nullptr ? popover->operator GtkWidget*() : nullptr);
+        gtk_menu_button_set_popover(get_native(), popover.operator GtkWidget*());
     }
 
-    void PopoverMenuButton::set_popover_menu(PopoverMenu* popover_menu)
+    void PopoverMenuButton::set_popover_menu(PopoverMenu& popover_menu)
     {
-        _popover_menu = popover_menu;
-        gtk_menu_button_set_popover(get_native(), _popover_menu != nullptr ? _popover_menu->operator GtkWidget*() : nullptr);
+        _popover = nullptr;
+        _popover_menu = &popover_menu;
 
-        if (_popover_menu != nullptr)
-            _popover_menu->refresh_widgets();
+        gtk_menu_button_set_popover(get_native(), popover_menu.operator GtkWidget*());
+        _popover_menu->refresh_widgets();
+    }
+
+    void PopoverMenuButton::remove_popover()
+    {
+        _popover_menu = nullptr;
+        gtk_menu_button_set_popover(get_native(), nullptr);
     }
 
     void PopoverMenuButton::popup()

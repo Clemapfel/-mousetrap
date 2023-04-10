@@ -29,7 +29,26 @@ int main()
             return std::to_string(value) + "%";
         });
 
-        state->window.set_child(spin);
+        auto scale = Scale(0, 1, 0.01);
+
+        auto model = MenuModel();
+
+        auto spin_model = MenuModel();
+        model.add_widget(spin);
+        model.add_submenu("spin", spin_model);
+
+        auto scale_model = MenuModel();
+        model.add_widget(scale);
+        model.add_submenu("scale", scale_model);
+
+        auto menu_button = PopoverMenuButton();
+        auto menu_popover = PopoverMenu(model);
+        menu_button.set_popover_menu(menu_popover);
+
+        auto box = Box(Orientation::VERTICAL);
+        box.push_back(menu_popover);
+
+        state->window.set_child(box);
         state->window.present();
     });
 

@@ -61,6 +61,7 @@
 #include <include/pinch_zoom_event_controller.hpp>
 #include <include/popover.hpp>
 #include <include/popover_menu_button.hpp>
+#include <include/menubar.hpp>
 #include <include/progress_bar.hpp>
 #include <include/relative_position.hpp>
 #include <include/render_area.hpp>

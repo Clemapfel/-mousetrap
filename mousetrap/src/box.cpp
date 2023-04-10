@@ -14,45 +14,34 @@ namespace mousetrap
         : WidgetImplementation<GtkBox>(GTK_BOX(gtk_box_new((GtkOrientation) orientation, 0)))
     {}
 
-    void Box::push_back(Widget* widget)
+    void Box::push_back(const Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Box::push_back, this, widget);
-
-        if (widget != nullptr)
-            gtk_box_append(get_native(), widget->operator GtkWidget*());
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Box::push_back, this, ptr);
+        gtk_box_append(get_native(), widget.operator GtkWidget*());
     }
 
-    void Box::push_front(Widget* widget)
+    void Box::push_front(const Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Box::push_back, this, widget);
-
-        if (widget != nullptr)
-            gtk_box_prepend(get_native(), widget->operator GtkWidget*());
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Box::push_back, this, ptr);
+        gtk_box_prepend(get_native(), widget.operator GtkWidget*());
     }
 
-    void Box::insert_after(Widget* to_append, Widget* after)
+    void Box::insert_after(const Widget& to_append, const Widget& after)
     {
-        WARN_IF_SELF_INSERTION(Box::push_back, this, to_append);
-
-        if (to_append == nullptr)
-            return;
-
-        if (after == nullptr)
-            push_front(to_append);
-        else
-            gtk_box_insert_child_after(
-                get_native(),
-                to_append->operator GtkWidget*(),
-                after->operator GtkWidget*()
-            );
+        auto* ptr = &to_append;
+        WARN_IF_SELF_INSERTION(Box::push_back, this, ptr);
+        gtk_box_insert_child_after(
+            get_native(),
+            to_append.operator GtkWidget*(),
+            after.operator GtkWidget*()
+        );
     }
 
-    void Box::remove(Widget* widget)
+    void Box::remove(const Widget& widget)
     {
-        if (widget == nullptr)
-            return;
-
-        gtk_box_remove(get_native(), widget->operator GtkWidget *());
+        gtk_box_remove(get_native(), widget.operator GtkWidget *());
     }
 
     void Box::clear()

@@ -14,9 +14,27 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    class MenuModel;
+    namespace detail
+    {
+        struct _MenuModelInternal
+        {
+            GObject parent;
+
+            GMenu* native;
+            std::unordered_map<std::string, GtkWidget*>* id_to_widget;
+            std::set<const MenuModel*>* submenus;
+            bool has_widget_in_toplevel = false;
+        };
+        using MenuModelInternal = _MenuModelInternal;
+    }
+    #endif
+
     /// @brief menu model, used to specifc behavior of menu bars and popover menus
     class MenuModel
     {
+        friend class MenuBar;
         friend class PopoverMenu;
 
         public:
@@ -50,7 +68,7 @@ namespace mousetrap
 
             /// @brief add widget to menu, note that widgets can only be display when they are part of a section or submenu, not if they are in the toplevel sectino
             /// @param widget
-            void add_widget(Widget*);
+            void add_widget(const Widget&);
 
             /// @brief formatting for sectsion
             enum SectionFormat
@@ -80,26 +98,25 @@ namespace mousetrap
             /// @param format section format to use
             void add_section(
                 const std::string& label,
-                MenuModel*,
+                const MenuModel&,
                 SectionFormat = NORMAL
             );
 
             /// @brief add submenu to a menu. A submenut will appear as a single menu item, when clicked, the menu will open another popup to display the menu items contained in the submenu
             /// @param label label for the submenu
             /// @param menu_model model to use for populating the submenu items
-            void add_submenu(const std::string& label, MenuModel*);
+            void add_submenu(const std::string& label, const MenuModel&);
 
             /// @brief expose as GMenuModel \internal
-            operator GMenuModel*();
+            operator GMenuModel*() const;
 
         protected:
-            std::unordered_map<std::string, Widget*> get_widgets();
+            /// @brief get list of registered widgets \internal
+            /// @return map with internal id to widget mapping
+            [[nodiscard]] std::unordered_map<std::string, GtkWidget*> get_widgets() const;
 
         private:
-            GMenu* _native;
-
             static inline size_t current_id = 1;
-            std::unordered_map<std::string, Widget*> _id_to_widget;
-            std::set<MenuModel*> _submenus;
+            detail::MenuModelInternal* _internal = nullptr;
     };
 }

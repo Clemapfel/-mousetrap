@@ -13,6 +13,20 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _StackInternal
+        {
+            GObject parent;
+            GtkStack* native;
+            SelectionModel* selection_model;
+            std::map<std::string, Widget*>* children;
+        };
+        using StackInternal = _StackInternal;
+    }
+    #endif
+
     /// @brief displays exactly one of multiple widgets. Use mousetrap::StackSwitcher and mousetrap::StackSidebar to allow a user to switch them through the GUI
     class Stack : public WidgetImplementation<GtkStack>, public Selectable
     {
@@ -26,11 +40,13 @@ namespace mousetrap
             /// @brief destruct
             ~Stack();
 
+            using WidgetImplementation<GtkStack>::operator GtkStack*;
+
             /// @copydoc mousetrap::Selectable::get_selection_model
             SelectionModel* get_selection_model() override;
 
             /// @brief add a page to the stack
-            /// @param widget
+            /// @param widget may be nullptr to create an empty page
             /// @param title title of the page, usually used to identify pages in widgets allowed user interaction with the stack
             /// @return id of the page, the user is responsible for keeping track of this id to be able to refer to specific pages
             [[nodiscard]] Stack::ID add_child(Widget*, const std::string& child_title);
@@ -92,8 +108,7 @@ namespace mousetrap
             bool get_should_interpolate_size() const;
 
         private:
-            SelectionModel* _selection_model = nullptr;
-            std::map<Stack::ID, Widget*> _children;
+            detail::StackInternal* _internal = nullptr;
     };
 
     class StackSidebar : public WidgetImplementation<GtkStackSidebar>

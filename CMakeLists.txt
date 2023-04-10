@@ -125,6 +125,7 @@ set(MOUSETRAP_HEADER_FILES
     mousetrap/src/log.inl
     mousetrap/include/file_chooser.hpp
     mousetrap/include/shortcut_controller.hpp
+    mousetrap/include/menubar.hpp
 )
 
 set(MOUSETRAP_SOURCE_FILES
@@ -210,7 +211,7 @@ set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/file_chooser.cpp
     mousetrap/src/file_chooser.cpp
     mousetrap/src/shortcut_controller.cpp
-    mousetrap/src/signal_component.cpp)
+    mousetrap/src/signal_component.cpp mousetrap/src/menu_bar.cpp)
 
 add_library(mousetrap SHARED
    ${MOUSETRAP_HEADER_FILES}

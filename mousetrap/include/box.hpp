@@ -20,20 +20,20 @@ namespace mousetrap
 
             /// @brief add a widget to the end of the box
             /// @param widget
-            void push_back(Widget*);
+            void push_back(const Widget&);
 
             /// @brief add a widget to the start of the box
             /// @param widget
-            void push_front(Widget*);
+            void push_front(const Widget&);
 
             /// @brief insert a widget after another widget already in the box
             /// @param to_append widget not currently in box
             /// @param after widget already in box, or nullptr to insert widget at the start of the box
-            void insert_after(Widget* to_append, Widget* after);
+            void insert_after(const Widget& to_append, const Widget& after);
 
             /// @brief remove a widget from the box
             /// @param widget widget already in box, if widget is not contained in box, does nothing
-            void remove(Widget*);
+            void remove(const Widget&);
 
             /// @brief remove all widgets from the box
             void clear();

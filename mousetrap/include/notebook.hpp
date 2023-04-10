@@ -14,6 +14,19 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _NotebookInternal
+        {
+            GObject parent;
+            bool popup_enabled = false;
+            bool tabs_reorderable = false;
+        };
+        using NotebookInternal = _NotebookInternal;
+    }
+    #endif
+
     /// @brief container widget that displays multiple pages the cuser can switch between. Each page as a "tab" with a label
     /// @todo wrap the signals such that unused first argument is eliminated
     class Notebook : public WidgetImplementation<GtkNotebook>,
@@ -115,7 +128,6 @@ namespace mousetrap
             bool get_tabs_reorderable() const;
 
         private:
-            bool _popup_enabled = false;
-            bool _tabs_reorderable = false;
+            detail::NotebookInternal* _internal = nullptr;
     };
 }

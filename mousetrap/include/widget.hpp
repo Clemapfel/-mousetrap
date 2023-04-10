@@ -343,7 +343,7 @@ namespace mousetrap
             WidgetImplementation<GtkWidget_t>& operator=(WidgetImplementation<GtkWidget_t>&&);
 
             /// @brief expose as native GTK4 widget \internal
-            operator GtkWidget_t*() const;
+            virtual operator GtkWidget_t*() const;
 
             /// @copydoc Widget::operator NativeWidget() const
             operator NativeWidget() const override;

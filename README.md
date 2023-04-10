@@ -8,8 +8,6 @@
 + menu_model
 + shape, texture, rendertexture, render_area, render_task, shader
 + music, sound, soundbuffer
-+ notebook
-+ stack
 > > This repo is under rapid active development and should not be interacted with by the public. Licensed CC-BY-SA-NC
 
 GTK4 is well optimized, incredibly powerful and utterly inscrutable. It has hundreds of thousands of lines of code and with functionality split between GTK, GDK, Glib and more,
