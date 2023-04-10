@@ -32,22 +32,19 @@ int main()
         static auto scale = Scale(0, 1, 0.01);
 
         auto column_view = ColumnView();
+        column_view.push_back_column("00");
         column_view.push_back_column("01");
-        column_view.push_back_column("02");
 
         auto label = Label("test");
-        column_view.append_row(label);
 
-        /*
-        for (size_t i = 0; i < n_rows; ++i)
+        for (size_t i = 0; i < 10; ++i)
         {
-            std::vector<Widget*> row;
-
-
-            column_view.push_back_row(row);
-            std::cout << i << std::endl;
+            for (size_t j = 0; j < column_view.get_n_columns(); ++j)
+            {
+                auto label = Label("label_" + std::to_string(i) + "_" + std::to_string(j));
+                column_view.set_widget(column_view.get_column_at(j), i, label);
+            }
         }
-         */
 
         state->window.set_child(column_view);
         state->window.present();

@@ -53,7 +53,7 @@ namespace mousetrap
         struct _ColumnViewRowItem
         {
             GObject parent;
-            GtkWidget* widget;
+            std::map<GtkColumnViewColumn*, GtkWidget*>* widgets;
         };
 
         DECLARE_NEW_TYPE(ColumnViewRowItem, column_view_row_item, COLUMN_VIEW_ROW_ITEM)
@@ -62,32 +62,38 @@ namespace mousetrap
         static void column_view_row_item_finalize(GObject* object)
         {
             auto* self = MOUSETRAP_COLUMN_VIEW_ROW_ITEM(object);
-            g_object_unref(self->widget);
+            delete self->widgets;
             G_OBJECT_CLASS(column_view_row_item_parent_class)->finalize(object);
         }
 
         DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ColumnViewRowItem, column_view_row_item, COLUMN_VIEW_ROW_ITEM)
 
-        static ColumnViewRowItem* column_view_row_item_new(GtkWidget* widget)
+        static ColumnViewRowItem* column_view_row_item_new()
         {
             auto* self = MOUSETRAP_COLUMN_VIEW_ROW_ITEM(g_object_new(column_view_row_item_get_type(), nullptr));
             column_view_row_item_init(self);
-
-            self->widget = g_object_ref(widget);
+            self->widgets = new std::map<GtkColumnViewColumn*, GtkWidget*>();
             return self;
         }
     }
 
     ///
 
-    void ColumnView::on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, GtkColumnViewColumn*)
+    void ColumnView::on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, GtkColumnViewColumn* column)
     {
         auto* list_item = GTK_LIST_ITEM(object);
         auto* row_item = detail::MOUSETRAP_COLUMN_VIEW_ROW_ITEM(gtk_list_item_get_item(list_item));
-        gtk_list_item_set_child(list_item, row_item->widget);
+        auto it = row_item->widgets->find(column);
+
+        if (it == row_item->widgets->end())
+            gtk_list_item_set_child(list_item, nullptr);
+        else
+            gtk_list_item_set_child(list_item, it->second);
+
+        std::cout << "bind: " << column << " -> " << gtk_list_item_get_child(list_item) << std::endl;
     }
 
-    void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, GtkColumnViewColumn*)
+    void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, GtkColumnViewColumn* column)
     {
         auto* list_item = GTK_LIST_ITEM(object);
         gtk_list_item_set_child(list_item, nullptr);
@@ -196,14 +202,90 @@ namespace mousetrap
         return Column(GTK_COLUMN_VIEW_COLUMN(g_list_model_get_item(model, column_i)));
     }
 
+    ColumnView::Column ColumnView::get_column_with_title(const std::string& title)
+    {
+        auto* model = gtk_column_view_get_columns(get_native());
+        for (size_t i = 0; i < g_list_model_get_n_items(model); ++i)
+        {
+            auto* out = GTK_COLUMN_VIEW_COLUMN(g_list_model_get_item(model, i));
+            if (gtk_column_view_column_get_title(out) == title)
+                return Column(out);
+        }
+
+        log::critical("In ColumnView::get_column_with_title: No column with title `" + title + "`");
+        return Column(nullptr);
+    }
+
+    bool ColumnView::has_column_with_title(const std::string& title)
+    {
+        auto* model = gtk_column_view_get_columns(get_native());
+        for (size_t i = 0; i < g_list_model_get_n_items(model); ++i)
+        {
+            if (gtk_column_view_column_get_title(GTK_COLUMN_VIEW_COLUMN(g_list_model_get_item(model, i))) == title)
+                return true;
+        }
+
+        return false;
+    }
+
     size_t ColumnView::get_n_columns() const
     {
         return g_list_model_get_n_items(gtk_column_view_get_columns(get_native()));
     }
 
-    // TODO
-    void ColumnView::append_row(const Widget& widget)
+    void ColumnView::set_widget(const Column& column, size_t row_i, const Widget& widget)
     {
-        g_list_store_append(_internal->list_store, detail::column_view_row_item_new(widget.operator NativeWidget()));
+        if (column._native == nullptr)
+        {
+            log::critical("In ColumnView::set_widget: Column does not exist, no insetion will take place", MOUSETRAP_DOMAIN);
+            return;
+        }
+
+        auto* model = _internal->list_store;
+        while (g_list_model_get_n_items(G_LIST_MODEL(model)) <= row_i)
+            g_list_store_append(model, detail::column_view_row_item_new());
+
+        auto* item = detail::MOUSETRAP_COLUMN_VIEW_ROW_ITEM(g_list_model_get_item(G_LIST_MODEL(model), row_i));
+        item->widgets->insert_or_assign(column._native, widget.operator NativeWidget());
+    }
+
+    void ColumnView::set_enable_rubberband_selection(bool b)
+    {
+        gtk_column_view_set_enable_rubberband(get_native(), b);
+    }
+
+    bool ColumnView::get_enable_rubberband_selection() const
+    {
+        return gtk_column_view_get_enable_rubberband(get_native());
+    }
+
+    void ColumnView::set_show_row_separators(bool b)
+    {
+        gtk_column_view_set_show_row_separators(get_native(), true);
+    }
+
+    bool ColumnView::get_show_row_separators() const
+    {
+        return gtk_column_view_get_show_row_separators(get_native());
+    }
+
+    void ColumnView::set_show_column_separators(bool b)
+    {
+        gtk_column_view_set_show_column_separators(get_native(), b);
+    }
+
+    bool ColumnView::get_show_column_separators() const
+    {
+        return gtk_column_view_get_show_column_separators(get_native());
+    }
+
+    SelectionModel* ColumnView::get_selection_model()
+    {
+        return _internal->selection_model;
+    }
+
+    size_t ColumnView::get_n_rows() const
+    {
+        return g_list_model_get_n_items(G_LIST_MODEL(_internal->list_store));
     }
 }

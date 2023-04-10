@@ -8,6 +8,7 @@
 #include <include/menu_model.hpp>
 #include <include/gtk_common.hpp>
 #include <include/selection_model.hpp>
+#include <include/selectable.hpp>
 
 namespace mousetrap
 {
@@ -28,7 +29,7 @@ namespace mousetrap
     }
     #endif
 
-    class ColumnView : public WidgetImplementation<GtkColumnView>
+    class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable
     {
         public:
             class Column
@@ -109,15 +110,68 @@ namespace mousetrap
 
             /// @brief get column at specified position
             /// @param column_i index
-            /// @returns column or nullptr if column_i out of bounds
+            /// @returns column, may be a wrapped nullptr if column_i out of bounds
             [[nodiscard]] Column get_column_at(size_t column_i);
 
-            /// @brief get number of columns
-            /// @return n
-            size_t get_n_columns() const;
+            /// @brief get column with given title
+            /// @param title current title of the column
+            /// @returns column, may be a wrapped nullptr if column_i out of bounds
+            [[nodiscard]] Column get_column_with_title(const std::string& title);
 
-            /// TODO
-            void append_row(const Widget& widget);
+            /// @brief get whether at least one column has given title
+            /// @param title
+            /// @return true if at least once column with that title exists, false otherwise
+            bool has_column_with_title(const std::string& title);
+
+            /// @brief set at row / column. If the row does not yet exist, the table will be backfilled with empty rows until the given index is reached. If the column  does not yet exist, no action will be taken and the widget will not appear in the table
+            /// @param column column
+            /// @param row_i row index
+            /// @param widget widget to insert
+            void set_widget(const Column&, size_t row_i, const Widget& widget);
+
+            /// @brief set whether the user is able to selecte multiple items by click-dragging
+            /// @param b true if this type of selection should be enabled, false otherwise
+            void set_enable_rubberband_selection(bool);
+
+            /// @brief get whether the user is able to selecte multiple items by click-dragging
+            /// @return true if this type of selection should be enabled, false otherwise
+            bool get_enable_rubberband_selection() const;
+
+            /// @brief set whether rows should be separated
+            /// @param b true if separators should be visible, false otherwise
+            void set_show_row_separators(bool);
+
+            /// @brief get whether row separators are shown
+            /// @return true if separators are visible, false otherwise
+            bool get_show_row_separators() const;
+
+            /// @brief set whether columns should be separated
+            /// @param b true if spearators should be visible, false otherwise
+            void set_show_column_separators(bool);
+
+            /// @brief get whether row separators are shown
+            /// @return true if separators are visible, false otherwise
+            bool get_show_column_separators() const;
+
+            /// @brief set whether the column views seletion model should emit an activate signal when the user clicks on an item in the view once
+            /// @param b true if signal emissions this way should be allowed, false otherwise
+            void set_single_click_activate(bool);
+
+            /// @brief get whether the column views seletion model should emit an activate signal when the user clicks on an item in the view once
+            /// @param b true if signal emissions this way should be allowed, false otherwise
+            bool get_single_click_activate() const;
+
+            /// @brief expose the selection model
+            /// @return selection model
+            SelectionModel* get_selection_model() override;
+
+            /// @brief get number of rows
+            /// @return size_t
+            size_t get_n_rows() const;
+
+            /// @brief get number of columns
+            /// qreturn size_t
+            size_t get_n_columns() const;
 
         private:
             static GtkColumnViewColumn* new_column(const std::string& title);

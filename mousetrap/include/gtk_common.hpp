@@ -32,6 +32,18 @@ namespace mousetrap::detail
     }
 
     template<typename T>
+    static void destroy_notify_delete(void* in)
+    {
+        delete (T*) in;
+    }
+
+    template<typename T>
+    static void destroy_notify_unref(void* in)
+    {
+        g_object_unref(G_OBJECT(in));
+    }
+
+    template<typename T>
     static void attach_pointer_to(GObject* parent, T* attachment)
     {
         g_object_add_toggle_ref(parent, (GToggleNotify) toggle_notify_pointer<T>, attachment);
@@ -53,6 +65,18 @@ namespace mousetrap::detail
     static void detach_ref_from(GObject* parent, T* attachment)
     {
         g_object_remove_toggle_ref(parent, (GToggleNotify) toggle_notify_ref<T>, attachment);
+    }
+
+    template<typename T>
+    static void set_data(GObject* object, const std::string& key, T* data)
+    {
+        g_object_set_qdata_full(object, g_quark_from_string(key.c_str()), new T(data), destroy_notify_delete<T>);
+    }
+
+    template<typename T>
+    static T* get_data(GObject* object, const std::string& key)
+    {
+        return (T*) g_object_get_qdata(object, g_quark_from_string(key.c_str()));
     }
 
     /// @brief simplified g object declaration
