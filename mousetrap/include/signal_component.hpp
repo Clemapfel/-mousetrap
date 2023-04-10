@@ -2386,4 +2386,57 @@ namespace mousetrap
     ///
     /// @fn has_signal_press_cancelled::has_signal_press_cancelled
     /// \signal_ctor
+
+    enum class PanDirection
+    {
+        LEFT = GTK_PAN_DIRECTION_LEFT,
+        RIGHT = GTK_PAN_DIRECTION_RIGHT,
+        TOP = GTK_PAN_DIRECTION_UP,
+        DOWN = GTK_PAN_DIRECTION_DOWN
+    };
+
+    DECLARE_SIGNAL_MANUAL(Pan, pan, PAN, "pan", void,
+          SPLAT(PanDirection direction, double offset),
+          SPLAT(direction, offset)
+    );
+    /// @class has_signal_pan
+    /// @brief signal emitted when a panning gesture is recognized
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_pan::emit_signal_pan(int32_t n_press, double x, double y)
+    /// \signal_emit_brief
+    /// @param n_press number of clicks in this sequence
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_pan::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pan.html}
+    ///
+    /// @var has_signal_pan::signal_handler_with_data_f
+    /// \signal_with_data_f{pan}
+    /// \signal_see_emit_for_parameters{pan}
+    ///
+    /// @var has_signal_pan::signal_handler_without_data_f
+    /// \signal_without_data_f{pan}
+    /// \signal_see_emit_for_parameters{pan}
+    ///
+    /// @fn void has_signal_pan::connect_signal_pan(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_pan::connect_signal_pan(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_pan::set_signal_pan_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_pan::get_signal_pan_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_pan::disconnect_signal_pan()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_pan::has_signal_pan
+    /// \signal_ctor
 }
