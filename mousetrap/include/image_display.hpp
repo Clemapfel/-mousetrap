@@ -12,12 +12,23 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ImageDisplayInternal;
+        using ImageDisplayInternal = _ImageDisplayInternal;
+    }
+    #endif
+
     /// @brief widget that display an iamge
     class ImageDisplay : public WidgetImplementation<GtkImage>
     {
         public:
             /// @brief default ctor, initialize as 0x0 image
             ImageDisplay();
+
+            /// @brief destructor
+            ~ImageDisplay();
 
             /// @brief construct from GtkImage \internal
             /// @param image GtkImage instance
@@ -63,6 +74,8 @@ namespace mousetrap
             void set_scale(int);
 
         private:
-            Vector2ui _size;
+            detail::ImageDisplayInternal* _internal = nullptr;
+            void update_size(size_t, size_t);
+            void initialize();
     };
 }

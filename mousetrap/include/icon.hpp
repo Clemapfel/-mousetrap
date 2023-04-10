@@ -73,6 +73,9 @@ namespace mousetrap
             /// @brief construct as empty icon
             Icon();
 
+            /// @brief destructor
+            ~Icon();
+
             /// @brief expose as GIcon \internal
             operator GIcon*() const;
 
@@ -115,6 +118,6 @@ namespace mousetrap
             Vector2ui get_size() const;
 
         private:
-            IconInternal* _internal = nullptr;
+            detail::IconInternal* _internal = nullptr;
     };
 }

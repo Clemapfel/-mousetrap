@@ -7,22 +7,39 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        DECLARE_NEW_TYPE(ScaleInternal, scale_internal, SCALE_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(ScaleInternal, scale_internal, SCALE_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ScaleInternal, scale_internal, SCALE_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ScaleInternal, scale_internal, SCALE_INTERNAL)
+
+        static ScaleInternal* scale_internal_new(GtkScale* scale)
+        {
+            auto* self = (ScaleInternal*) g_object_new(scale_internal_get_type(), nullptr);
+            scale_internal_init(self);
+            self->adjustment = new Adjustment(gtk_range_get_adjustment(GTK_RANGE(scale)));
+            self->formatting_function = nullptr;
+            return self;
+        }
+    }
+    
     Scale::Scale(float min, float max, float step, Orientation orientation)
         : WidgetImplementation<GtkScale>(GTK_SCALE(gtk_scale_new_with_range((GtkOrientation) orientation, min, max, step))),
           CTOR_SIGNAL(Scale, value_changed)
     {
         gtk_scale_set_draw_value(get_native(), false);
-        _adjustment = Adjustment(gtk_range_get_adjustment(GTK_RANGE(get_native())));
+        _internal = detail::scale_internal_new(get_native());
     }
 
-    Adjustment& Scale::get_adjustment() 
+    Adjustment* Scale::get_adjustment()
     {
-        return _adjustment;
+        return _internal->adjustment;
     }
 
-    const Adjustment& Scale::get_adjustment() const 
+    const Adjustment* Scale::get_adjustment() const
     {
-        return _adjustment;
+        return _internal->adjustment;
     }
 
     float Scale::get_lower() const
@@ -100,9 +117,9 @@ namespace mousetrap
         gtk_scale_set_format_value_func(get_native(), nullptr, nullptr, nullptr);
     }
 
-    char* Scale::on_format_value(GtkScale* scale, double value, Scale* instance)
+    char* Scale::on_format_value(GtkScale* scale, double value, detail::ScaleInternal* instance)
     {
-        auto out = instance->_format_f(value);
+        auto out = instance->formatting_function(value);
         return g_strdup(out.c_str());
     }
 

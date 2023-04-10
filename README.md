@@ -5,8 +5,6 @@
 + FileMonitor
 + gridview
 + listview
-+ icon (size)
-+ imagedisplay (size)
 + menu_model
 + shape, texture, rendertexture, render_area, render_task, shader
 + music, sound, soundbuffer

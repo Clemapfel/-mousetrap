@@ -51,6 +51,12 @@ namespace mousetrap
         : _internal(detail::icon_internal_new())
     {}
 
+    Icon::~Icon()
+    {
+        if (G_IS_OBJECT(_internal))
+            g_object_unref(_internal);
+    }
+
     Icon::operator GIcon*() const
     {
         return _internal->native;

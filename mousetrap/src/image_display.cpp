@@ -10,39 +10,87 @@
 
 namespace mousetrap
 {
+    namespace detail
+    {
+        struct _ImageDisplayInternal
+        {
+            GObject parent;
+            Vector2ui size;
+        };
+
+        DECLARE_NEW_TYPE(ImageDisplayInternal, image_display_internal, IMAGE_DISPLAY_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(ImageDisplayInternal, image_display_internal, IMAGE_DISPLAY_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ImageDisplayInternal, image_display_internal, IMAGE_DISPLAY_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ImageDisplayInternal, image_display_internal, IMAGE_DISPLAY_INTERNAL)
+
+        static ImageDisplayInternal* image_display_internal_new()
+        {
+            auto* self = (ImageDisplayInternal*) g_object_new(image_display_internal_get_type(), nullptr);
+            image_display_internal_init(self);
+            self->size = {0, 0};
+            return self;
+        }
+    }
+
+    void ImageDisplay::initialize()
+    {
+        if (_internal == nullptr)
+        {
+            _internal = detail::image_display_internal_new();
+            g_object_ref(_internal);
+            detail::attach_ref_to(G_OBJECT(get_native()), _internal);
+        }
+    }
+
+    ImageDisplay::~ImageDisplay()
+    {
+        g_object_unref(_internal);
+    }
+    
+    void ImageDisplay::update_size(size_t width, size_t height)
+    {
+        _internal->size.x = width;
+        _internal->size.y = height;
+    }
+
     ImageDisplay::ImageDisplay()
         : WidgetImplementation<GtkImage>(GTK_IMAGE(gtk_image_new()))
     {
-        _size = {0, 0};
+        initialize();
+        update_size(0, 0);
     }
 
     ImageDisplay::ImageDisplay(GtkImage* image)
         : WidgetImplementation<GtkImage>(image)
     {
-        _size = {0, 0};
+        initialize();
+        update_size(0, 0);
     }
 
     ImageDisplay::ImageDisplay(const std::string& file)
        : ImageDisplay()
     {
         create_from_file(file);
+        initialize();
     }
 
     ImageDisplay::ImageDisplay(const Image& image)
         : ImageDisplay()
     {
         create_from_image(image);
+        initialize();
     }
 
     ImageDisplay::ImageDisplay(const Icon& icon)
         : ImageDisplay()
     {
         create_from_icon(icon);
+        initialize();
     }
 
     Vector2ui ImageDisplay::get_size() const
     {
-        return _size;
+        return _internal->size;
     }
 
     void ImageDisplay::create_from_image(const Image& image)
@@ -70,7 +118,10 @@ namespace mousetrap
 
     void ImageDisplay::create_from_icon(const Icon& icon)
     {
-        _size = icon.get_size() * Vector2ui(icon.get_scale());
+        auto size = icon.get_size() * Vector2ui(icon.get_scale());
+        std::cout << size.x << " " << size.y << std::endl;
+        update_size(size.x, size.y);
+
         gtk_image_set_from_paintable(get_native(), GDK_PAINTABLE(icon.operator GtkIconPaintable*()));
     }
 
@@ -84,11 +135,13 @@ namespace mousetrap
         {
             gtk_image_set_from_pixbuf(get_native(), pixbuf_maybe);
             g_object_unref(pixbuf_maybe);
+            update_size(0, 0);
         }
         else
         {
             auto* icon = g_content_type_get_icon(file.query_info(G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE).c_str());
             gtk_image_set_from_gicon(get_native(), G_ICON(icon));
+            update_size(gdk_pixbuf_get_width(pixbuf_maybe), gdk_pixbuf_get_height(pixbuf_maybe));
             g_object_unref(icon);
         }
     }

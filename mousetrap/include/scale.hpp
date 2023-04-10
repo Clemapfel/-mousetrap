@@ -18,6 +18,19 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ScaleInternal
+        {
+            GObject parent;
+            Adjustment* adjustment;
+            std::function<std::string(float)> formatting_function;
+        };
+        using ScaleInternal = _ScaleInternal;
+    }
+    #endif
+
     /// @brief widget that allows users to choose a value from a range by dragging a slider
     class Scale : public WidgetImplementation<GtkScale>, public Orientable,
         HAS_SIGNAL(Scale, value_changed)
@@ -31,11 +44,11 @@ namespace mousetrap
 
             /// @brief get adjustment
             /// @returns reference to adjustment, modifying it modifies the scale
-            Adjustment& get_adjustment();
+            Adjustment* get_adjustment();
 
             /// @brief get const reference to adjustment
             /// @returns adjustmnet, cannot be modified but its values reflect those of the scale
-            const Adjustment& get_adjustment() const;
+            const Adjustment* get_adjustment() const;
 
             /// @brief get lower bound of the range
             /// @return float
@@ -119,10 +132,8 @@ namespace mousetrap
             Orientation get_orientation() const override;
 
         private:
-            Adjustment _adjustment;
-
-            static char* on_format_value(GtkScale* scale, double value, Scale* instance);
-            std::function<std::string(float)> _format_f;
+            detail::ScaleInternal* _internal = nullptr;
+            static char* on_format_value(GtkScale* scale, double value, detail::ScaleInternal* instance);
     };
 }
 

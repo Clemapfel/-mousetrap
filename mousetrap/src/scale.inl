@@ -7,7 +7,7 @@ namespace mousetrap
     template<typename Function_t, typename Data_t>
     void Scale::set_format_value_function(Function_t function, Data_t data)
     {
-        _format_f = [f = function, d = data](float value) -> std::string{
+        _internal->formatting_function = [f = function, d = data](float value) -> std::string{
             return f(value, d);
         };
 
@@ -17,7 +17,7 @@ namespace mousetrap
     template<typename Function_t>
     void Scale::set_format_value_function(Function_t function)
     {
-        _format_f = [f = function](float value) -> std::string{
+        _internal->formatting_function = [f = function](float value) -> std::string{
             return f(value);
         };
 
