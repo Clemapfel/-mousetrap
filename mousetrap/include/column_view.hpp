@@ -29,6 +29,7 @@ namespace mousetrap
     }
     #endif
 
+    /// @brief view that displays widget in a table, ordered by column
     class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable
     {
         public:
@@ -129,6 +130,25 @@ namespace mousetrap
             /// @param widget widget to insert
             void set_widget(const Column&, size_t row_i, const Widget& widget);
 
+            /// @brief convenience function that maps widgets to columns and appends them as a new row at end of the list
+            /// @tparam WidgetRef_ts has to be Widget, Widget& or const Widget&
+            /// @param widgets number of widgets has to smaller than or equal to the number of columns
+            template<typename... WidgetRef_ts>
+            void push_back_row(WidgetRef_ts... widget_by_column);
+
+            /// @brief convenience functino that maps widgets to columns and appends them as a new row at end of the list
+            /// @tparam WidgetRef_ts has to be Widget, Widget& or const Widget&
+            /// @param widgets
+            template<typename... WidgetRef_ts>
+            void push_front_row(WidgetRef_ts... widget_by_column);
+
+            /// @brief convenience functino that maps widgets to columns and appends them as a new row at end of the list
+            /// @tparam WidgetRef_ts has to be Widget, Widget& or const Widget&
+            /// @param i row index, table is backfilled if current number of rows is less than i
+            /// @param widgets
+            template<typename... WidgetRef_ts>
+            void insert_row(size_t i, WidgetRef_ts... widget_by_column);
+
             /// @brief set whether the user is able to selecte multiple items by click-dragging
             /// @param b true if this type of selection should be enabled, false otherwise
             void set_enable_rubberband_selection(bool);
@@ -161,6 +181,14 @@ namespace mousetrap
             /// @param b true if signal emissions this way should be allowed, false otherwise
             bool get_single_click_activate() const;
 
+            /// @brief set whether user can reorder columns by click-dragging
+            /// @param b true if reorderable, false otherwise
+            void set_is_reorderable(bool);
+
+            /// @brief get whether the user can reorder columns by click-dragging
+            /// @return true if reorderable, false otherwise
+            bool get_is_reorderable() const;
+
             /// @brief expose the selection model
             /// @return selection model
             SelectionModel* get_selection_model() override;
@@ -181,3 +209,5 @@ namespace mousetrap
             detail::ColumnViewInternal* _internal = nullptr;
     };
 }
+
+#include <src/column_view.inl>

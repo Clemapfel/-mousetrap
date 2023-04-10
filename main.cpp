@@ -46,6 +46,8 @@ int main()
             }
         }
 
+        column_view.push_back_row(Label("test"), Label("test2"));
+
         state->window.set_child(column_view);
         state->window.present();
     });

@@ -89,8 +89,6 @@ namespace mousetrap
             gtk_list_item_set_child(list_item, nullptr);
         else
             gtk_list_item_set_child(list_item, it->second);
-
-        std::cout << "bind: " << column << " -> " << gtk_list_item_get_child(list_item) << std::endl;
     }
 
     void ColumnView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, GtkColumnViewColumn* column)
@@ -287,5 +285,21 @@ namespace mousetrap
     size_t ColumnView::get_n_rows() const
     {
         return g_list_model_get_n_items(G_LIST_MODEL(_internal->list_store));
+    }
+
+    void ColumnView::set_is_reorderable(bool b)
+    {
+        gtk_column_view_set_reorderable(get_native(), b);
+    }
+
+    bool ColumnView::get_is_reorderable() const
+    {
+        return gtk_column_view_get_reorderable(get_native());
+    }
+
+    template<typename... Ts>
+    void push_back_row(Ts... widgets)
+    {
+
     }
 }

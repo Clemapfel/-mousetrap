@@ -190,6 +190,7 @@ set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/stack.cpp
     mousetrap/src/notebook.cpp
     mousetrap/src/column_view.cpp
+    mousetrap/src/column_view.inl
     mousetrap/src/spin_button.cpp
     mousetrap/src/drop_down.cpp
     mousetrap/src/fixed.cpp
@@ -211,7 +212,8 @@ set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/file_chooser.cpp
     mousetrap/src/file_chooser.cpp
     mousetrap/src/shortcut_controller.cpp
-    mousetrap/src/signal_component.cpp mousetrap/src/menu_bar.cpp)
+    mousetrap/src/signal_component.cpp
+    mousetrap/src/menu_bar.cpp)
 
 add_library(mousetrap SHARED
    ${MOUSETRAP_HEADER_FILES}
