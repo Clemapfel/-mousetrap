@@ -12,7 +12,18 @@
 
 namespace mousetrap
 {
-    namespace detail { struct _ColumnViewItem; }
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ColumnViewItem;
+
+        struct _ColumnViewColumnInternal;
+        using ColumnViewColumnInternal = _ColumnViewColumnInternal;
+
+        struct _ColumnViewInternal;
+        using ColumnViewInternal = _ColumnViewInternal;
+    }
+    #endif
 
     /// @brief display a list of items separator by columns
     class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable
@@ -152,8 +163,6 @@ namespace mousetrap
 
             GListStore* _list_store = nullptr;
 
-            static void on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*);
-            static void on_list_item_factory_teardown(GtkSignalListItemFactory* self, void* object, void*);
             static void on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, void*);
             static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*);
 

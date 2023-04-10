@@ -92,12 +92,6 @@ namespace mousetrap
         gtk_list_item_set_child(list_item, nullptr);
     }
 
-    void ColumnView::on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*)
-    {}
-
-    void ColumnView::on_list_item_factory_teardown(GtkSignalListItemFactory* self, void* object, void*)
-    {}
-
     ColumnView::Column::Column(ColumnView* owner, const std::string& title)
         : _owner(owner), _title(title)
     {
@@ -105,8 +99,6 @@ namespace mousetrap
 
         g_signal_connect(_factory, "bind", G_CALLBACK(on_list_item_factory_bind), this);
         g_signal_connect(_factory, "unbind", G_CALLBACK(on_list_item_factory_unbind), this);
-        g_signal_connect(_factory, "setup", G_CALLBACK(on_list_item_factory_setup), this);
-        g_signal_connect(_factory, "teardown", G_CALLBACK(on_list_item_factory_teardown), this);
 
         _column = gtk_column_view_column_new(title.c_str(), GTK_LIST_ITEM_FACTORY(_factory));
     }
