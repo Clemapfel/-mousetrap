@@ -50,6 +50,7 @@ namespace mousetrap::detail
         auto* item = (GridViewItem*) g_object_new(G_TYPE_GRID_VIEW_ITEM, nullptr);
         grid_view_item_init(item);
         item->widget = in != nullptr ? in->operator NativeWidget() : nullptr;
+        g_object_ref(item->widget);
         return item;
     }
     
@@ -85,8 +86,13 @@ namespace mousetrap::detail
         auto* list_item = GTK_LIST_ITEM(object);
         auto* object_in = detail::G_GRID_VIEW_ITEM(gtk_list_item_get_item(list_item));
 
-        std::cout << "called" << std::endl;
         gtk_list_item_set_child(list_item, object_in->widget);
+    }
+
+    static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, detail::GridViewInternal* instance)
+    {
+        auto* list_item = GTK_LIST_ITEM(object);
+        gtk_list_item_set_child(list_item, nullptr);
     }
 
     static GridViewInternal* grid_view_internal_new(GtkGridView* native, Orientation orientation, SelectionMode mode)
@@ -100,6 +106,7 @@ namespace mousetrap::detail
         self->list_store = g_list_store_new(G_TYPE_OBJECT);
         self->factory = GTK_SIGNAL_LIST_ITEM_FACTORY(gtk_signal_list_item_factory_new());
         g_signal_connect(self->factory, "bind", G_CALLBACK(on_list_item_factory_bind), self);
+        g_signal_connect(self->factory, "unbind", G_CALLBACK(on_list_item_factory_unbind), self);
 
         if (self->selection_mode == GTK_SELECTION_MULTIPLE)
             self->selection_model = new MultiSelectionModel(G_LIST_MODEL(self->list_store));
@@ -125,8 +132,7 @@ namespace mousetrap
     {
         _internal =  detail::grid_view_internal_new(get_native(), orientation, mode);
         detail::attach_ref_to(G_OBJECT(_internal->native), _internal);
-
-       }
+    }
 
     void GridView::push_back(const Widget& widget)
     {

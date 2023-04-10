@@ -17,8 +17,7 @@ namespace mousetrap::detail
         GObject parent_instance;
 
         GtkTreeExpander* expander;
-        Widget* widget;
-        GtkWidget* widget_ref;
+        GtkWidget* widget;
         GListStore* children;
     };
 
@@ -32,9 +31,9 @@ namespace mousetrap::detail
     static void tree_list_view_item_finalize (GObject *object)
     {
         auto* self = G_TREE_VIEW_ITEM(object);
+        g_object_unref(self->widget);
         g_object_unref(self->expander);
         g_object_unref(self->children);
-        g_object_unref(self->widget_ref);
 
         G_OBJECT_CLASS(tree_list_view_item_parent_class)->finalize (object);
     }
@@ -43,7 +42,6 @@ namespace mousetrap::detail
     {
         item->expander = g_object_ref(GTK_TREE_EXPANDER(gtk_tree_expander_new()));
         item->widget = nullptr;
-        item->widget_ref = nullptr;
         item->children = g_object_ref(g_list_store_new(G_TYPE_OBJECT));
 
         gtk_tree_expander_set_indent_for_icon(item->expander, true);
@@ -56,64 +54,71 @@ namespace mousetrap::detail
         gobject_class->finalize = tree_list_view_item_finalize;
     }
 
-    static ListViewItem* tree_list_view_item_new(Widget* in)
+    static ListViewItem* tree_list_view_item_new(const Widget* in)
     {
         auto* item = (ListViewItem*) g_object_new(G_TYPE_LIST_VIEW_ITEM, nullptr);
         tree_list_view_item_init(item);
-        item->widget = in;
-        item->widget_ref = g_object_ref(in->operator GtkWidget*());
+        item->widget = in != nullptr ? in->operator GtkWidget*() : nullptr;
+        g_object_ref(item->widget);
         return item;
     }
-}
+    
+    ///
+    struct _ListViewInternal
+    {
+        GObject parent;
 
-namespace mousetrap
-{
-    ListView::ListView(Orientation orientation, SelectionMode mode)
-    : WidgetImplementation<GtkListView>([&]() -> GtkListView* {
+        GtkSignalListItemFactory* factory;
 
-        _root = g_list_store_new(G_TYPE_OBJECT);
-        _tree_list_model = gtk_tree_list_model_new(G_LIST_MODEL(_root), false, false, on_tree_list_model_create, nullptr, on_tree_list_model_destroy);
+        GtkListView* list_view;
+        GListStore* root;
+        GtkTreeListModel* tree_list_model;
 
-        _orientation = (GtkOrientation) orientation;
+        SelectionModel* selection_model;
+        GtkSelectionMode selection_mode;
+        GtkOrientation orientation;
+    };
 
-        auto gtk_mode = (GtkSelectionMode) mode;
-        if (gtk_mode == GTK_SELECTION_MULTIPLE)
-            _selection_model = new MultiSelectionModel(G_LIST_MODEL(_tree_list_model));
-        else if (gtk_mode == GTK_SELECTION_SINGLE or gtk_mode == GTK_SELECTION_BROWSE)
+    DECLARE_NEW_TYPE(ListViewInternal, list_view_internal, LIST_VIEW_INTERNAL)
+    DEFINE_NEW_TYPE_TRIVIAL_INIT(ListViewInternal, list_view_internal, LIST_VIEW_INTERNAL)
+
+    static void list_view_internal_finalize(GObject* object)
+    {
+        auto* self = MOUSETRAP_LIST_VIEW_INTERNAL(object);
+        G_OBJECT_CLASS(list_view_internal_parent_class)->finalize(object);
+        delete self->selection_model;
+    }
+
+    DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ListViewInternal, list_view_internal, LIST_VIEW_INTERNAL)
+
+    static void on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, detail::ListViewInternal*)
+    {
+        auto* list_item = GTK_LIST_ITEM(object);
+        auto* tree_list_row = GTK_TREE_LIST_ROW(gtk_list_item_get_item(list_item));
+        auto* tree_list_view_item = G_TREE_VIEW_ITEM(gtk_tree_list_row_get_item(tree_list_row));
+
+        if (g_list_model_get_n_items(G_LIST_MODEL(tree_list_view_item->children)) != 0) // non-leaf
         {
-            _selection_model = new SingleSelectionModel(G_LIST_MODEL(_tree_list_model));
-            gtk_single_selection_set_can_unselect(GTK_SINGLE_SELECTION(_selection_model->operator GtkSelectionModel *()), true);
+            gtk_tree_expander_set_child(tree_list_view_item->expander, tree_list_view_item->widget);
+            gtk_tree_expander_set_list_row(tree_list_view_item->expander, tree_list_row);
+            gtk_list_item_set_child(list_item, GTK_WIDGET(tree_list_view_item->expander));
         }
-        else if (gtk_mode == GTK_SELECTION_NONE)
-            _selection_model = new NoSelectionModel(G_LIST_MODEL(_tree_list_model));
+        else // leaf
+        {
+           gtk_list_item_set_child(list_item, tree_list_view_item->widget);
+        }
 
-        _factory = GTK_SIGNAL_LIST_ITEM_FACTORY(gtk_signal_list_item_factory_new());
-        g_signal_connect(_factory, "bind", G_CALLBACK(on_list_item_factory_bind), this);
-        g_signal_connect(_factory, "unbind", G_CALLBACK(on_list_item_factory_unbind), this);
-        g_signal_connect(_factory, "setup", G_CALLBACK(on_list_item_factory_setup), this);
-        g_signal_connect(_factory, "teardown", G_CALLBACK(on_list_item_factory_teardown), this);
-
-        _list_view = GTK_LIST_VIEW(gtk_list_view_new(_selection_model->operator GtkSelectionModel*(), GTK_LIST_ITEM_FACTORY(_factory)));
-        gtk_orientable_set_orientation(GTK_ORIENTABLE(_list_view), _orientation);
-
-        return _list_view;
-    }()), CTOR_SIGNAL(ListView, activate)
-    {
-        g_object_ref(_factory);
-        g_object_ref(_root);
-        g_object_ref(_tree_list_model);
+        gtk_list_item_set_activatable(list_item, true);
     }
 
-    ListView::~ListView()
+    static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, detail::ListViewInternal*)
     {
-        g_object_unref(_factory);
-        g_object_unref(_root);
-        g_object_unref(_tree_list_model);
-
-        delete _selection_model;
+        auto* list_item = GTK_LIST_ITEM(object);
+        gtk_list_item_set_child(list_item, nullptr);
+        gtk_list_item_set_activatable(list_item, false);
     }
 
-    GListModel* ListView::on_tree_list_model_create(void* item, void* user_data)
+    static GListModel* on_tree_list_model_create(void* item, void* user_data)
     {
         auto* tree_list_view_item = (detail::ListViewItem*) item;
 
@@ -125,41 +130,65 @@ namespace mousetrap
         return G_LIST_MODEL(out);
     }
 
-    void ListView::on_tree_list_model_destroy(void* item)
+    static void on_tree_list_model_destroy(void* item)
     {
         g_object_unref(item);
     }
 
-    void ListView::on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, void* instance)
+    static ListViewInternal* list_view_internal_new(GtkListView* native, Orientation orientation, SelectionMode mode)
     {
-        auto* list_item = GTK_LIST_ITEM(object);
-        auto* tree_list_row = GTK_TREE_LIST_ROW(gtk_list_item_get_item(list_item));
-        detail::ListViewItem* tree_list_view_item = (detail::ListViewItem*) gtk_tree_list_row_get_item(tree_list_row);
+        auto* self = (ListViewInternal*) g_object_new(list_view_internal_get_type(), nullptr);
+        list_view_internal_init(self);
 
-        if (g_list_model_get_n_items(G_LIST_MODEL(tree_list_view_item->children)) != 0) // non-leaf
+        self->root = g_list_store_new(G_TYPE_OBJECT);
+        self->tree_list_model = gtk_tree_list_model_new(
+            G_LIST_MODEL(self->root),
+            false,
+            false,
+            on_tree_list_model_create, nullptr, on_tree_list_model_destroy);
+
+        self->orientation = (GtkOrientation) orientation;
+
+        auto gtk_mode = (GtkSelectionMode) mode;
+        if (gtk_mode == GTK_SELECTION_MULTIPLE)
+            self->selection_model = new MultiSelectionModel(G_LIST_MODEL(self->tree_list_model));
+        else if (gtk_mode == GTK_SELECTION_SINGLE or gtk_mode == GTK_SELECTION_BROWSE)
         {
-            gtk_tree_expander_set_child(tree_list_view_item->expander, tree_list_view_item->widget->operator GtkWidget*());
-            gtk_tree_expander_set_list_row(tree_list_view_item->expander, tree_list_row);
-            gtk_list_item_set_child(list_item, GTK_WIDGET(tree_list_view_item->expander));
+            self->selection_model = new SingleSelectionModel(G_LIST_MODEL(self->tree_list_model));
+            gtk_single_selection_set_can_unselect(GTK_SINGLE_SELECTION(self->selection_model->operator GtkSelectionModel *()), true);
         }
-        else // leaf
-            gtk_list_item_set_child(list_item, GTK_WIDGET(tree_list_view_item->widget->operator GtkWidget*()));
+        else if (gtk_mode == GTK_SELECTION_NONE)
+            self->selection_model = new NoSelectionModel(G_LIST_MODEL(self->tree_list_model));
 
-        gtk_list_item_set_activatable(list_item, true);
+        self->factory = GTK_SIGNAL_LIST_ITEM_FACTORY(gtk_signal_list_item_factory_new());
+        g_signal_connect(self->factory, "bind", G_CALLBACK(on_list_item_factory_bind), self);
+        g_signal_connect(self->factory, "unbind", G_CALLBACK(on_list_item_factory_unbind), self);
+
+        self->list_view = native;
+        gtk_list_view_set_model(self->list_view, self->selection_model->operator GtkSelectionModel*());
+        gtk_list_view_set_factory(self->list_view, GTK_LIST_ITEM_FACTORY(self->factory));
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(self->list_view), self->orientation);
+
+        return self;
+    }
+}
+
+namespace mousetrap
+{
+    ListView::ListView(Orientation orientation, SelectionMode mode)
+        : WidgetImplementation<GtkListView>(GTK_LIST_VIEW(gtk_list_view_new(nullptr, nullptr))),
+          CTOR_SIGNAL(ListView, activate)
+    {
+        _internal = detail::list_view_internal_new(get_native(), orientation, mode);
+        detail::attach_ref_to(G_OBJECT(_internal->list_view), _internal);
     }
 
-    void ListView::on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*)
+    ListView::~ListView()
     {}
 
-    void ListView::on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*)
-    {}
-
-    void ListView::on_list_item_factory_teardown(GtkSignalListItemFactory* self, void* object, void*)
-    {}
-
-    ListView::Iterator ListView::push_back(Widget* widget, Iterator it)
+    ListView::Iterator ListView::push_back(const Widget& widget, Iterator it)
     {
-        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        if (widget.operator GtkWidget*() == this->operator GtkWidget*())
         {
             log::critical("In ListView::push_back: Attempting to insert ListView into itself, this would cause an infinite loop");
             return nullptr;
@@ -167,20 +196,20 @@ namespace mousetrap
 
         GListModel* to_append_to;
         if (it == nullptr)
-            to_append_to = G_LIST_MODEL(_root);
+            to_append_to = G_LIST_MODEL(_internal->root);
         else
             to_append_to = G_LIST_MODEL(it->children);
 
-        auto* item = detail::tree_list_view_item_new(widget);
+        auto* item = detail::tree_list_view_item_new(&widget);
         g_list_store_append(G_LIST_STORE(to_append_to), item);
         g_object_unref(item);
 
         return detail::G_TREE_VIEW_ITEM(g_list_model_get_item(to_append_to, g_list_model_get_n_items(to_append_to) - 1));
     }
 
-    ListView::Iterator ListView::push_front(Widget* widget, Iterator it)
+    ListView::Iterator ListView::push_front(const Widget& widget, Iterator it)
     {
-        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        if (widget.operator GtkWidget*() == this->operator GtkWidget*())
         {
             log::critical("In ListView::push_front: Attempting to insert ListView into itself, this would cause an infinite loop");
             return nullptr;
@@ -189,9 +218,9 @@ namespace mousetrap
         return insert(0, widget, it);
     }
 
-    ListView::Iterator ListView::insert(size_t i, Widget* widget, Iterator it)
+    ListView::Iterator ListView::insert(size_t i, const Widget& widget, Iterator it)
     {
-        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        if (widget.operator GtkWidget*() == this->operator GtkWidget*())
         {
             log::critical("In ListView::insert: Attempting to insert ListView into itself, this would cause an infinite loop");
             return nullptr;
@@ -199,11 +228,11 @@ namespace mousetrap
 
         GListModel* to_append_to;
         if (it == nullptr)
-            to_append_to = G_LIST_MODEL(_root);
+            to_append_to = G_LIST_MODEL(_internal->root);
         else
             to_append_to = G_LIST_MODEL(it->children);
 
-        auto* item = detail::tree_list_view_item_new(widget);
+        auto* item = detail::tree_list_view_item_new(&widget);
 
         auto n =  g_list_model_get_n_items(G_LIST_MODEL(to_append_to));
         if (i > n)
@@ -219,7 +248,7 @@ namespace mousetrap
     {
         GListStore* list;
         if (it == nullptr)
-            list = _root;
+            list = _internal->root;
         else
             list = it->children;
 
@@ -230,29 +259,31 @@ namespace mousetrap
     {
         GListStore* list;
         if (it == nullptr)
-            list = _root;
+            list = _internal->root;
         else
             list = it->children;
 
-        gtk_selection_model_unselect_all(_selection_model->operator GtkSelectionModel*());
+        gtk_selection_model_unselect_all(_internal->selection_model->operator GtkSelectionModel*());
         g_list_store_remove_all(list);
     }
 
+    /*
     Widget* ListView::get_widget_at(size_t i, Iterator it)
     {
         GListModel* list;
         if (it == nullptr)
-            list = G_LIST_MODEL(_root);
+            list = G_LIST_MODEL(_internal->root);
         else
             list = G_LIST_MODEL(it->children);
 
         auto* item =  detail::G_TREE_VIEW_ITEM(g_list_model_get_item(list, i));
-        return item->widget;
+        return const_cast<Widget*>(item->widget);
     }
+     */
 
-    void ListView::set_widget_at(size_t i, Widget* widget, Iterator it)
+    void ListView::set_widget_at(size_t i, const Widget& widget, Iterator it)
     {
-        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        if (widget.operator GtkWidget*() == this->operator GtkWidget*())
         {
             log::critical("In ListView::push_back: Attempting to insert ListView into itself, this would cause an infinite loop");
             return;
@@ -260,55 +291,53 @@ namespace mousetrap
 
         GListModel* list;
         if (it == nullptr)
-            list = G_LIST_MODEL(_root);
+            list = G_LIST_MODEL(_internal->root);
         else
             list = G_LIST_MODEL(it->children);
 
         auto* item =  detail::G_TREE_VIEW_ITEM(g_list_model_get_item(list, i));
-        item->widget = widget;
-
-        g_object_unref(item->widget_ref);
-        item->widget_ref = g_object_ref(widget->operator GtkWidget*());
+        item->widget = widget.operator GtkWidget*();
+        g_list_model_items_changed(G_LIST_MODEL(list), i, 0, 0);
     }
 
     void ListView::set_enable_rubberband_selection(bool b)
     {
-        gtk_list_view_set_enable_rubberband(_list_view, b);
+        gtk_list_view_set_enable_rubberband(_internal->list_view, b);
     }
 
     bool ListView::get_enable_rubberband_selection() const
     {
-        return gtk_list_view_get_enable_rubberband(_list_view);
+        return gtk_list_view_get_enable_rubberband(_internal->list_view);
     }
 
     void ListView::set_show_separators(bool b)
     {
-        gtk_list_view_set_show_separators(_list_view, b);
+        gtk_list_view_set_show_separators(_internal->list_view, b);
     }
 
     bool ListView::get_show_separators() const
     {
-        return gtk_list_view_get_show_separators(_list_view);
+        return gtk_list_view_get_show_separators(_internal->list_view);
     }
 
     void ListView::set_single_click_activate(bool b)
     {
-        gtk_list_view_set_single_click_activate(_list_view, b);
+        gtk_list_view_set_single_click_activate(_internal->list_view, b);
     }
 
     bool ListView::get_single_click_activate() const
     {
-        return gtk_list_view_get_single_click_activate(_list_view);
+        return gtk_list_view_get_single_click_activate(_internal->list_view);
     }
 
     SelectionModel* ListView::get_selection_model()
     {
-        return _selection_model;
+        return _internal->selection_model;
     }
 
     size_t ListView::get_n_items() const
     {
-        return g_list_model_get_n_items(G_LIST_MODEL(_root));
+        return g_list_model_get_n_items(G_LIST_MODEL(_internal->root));
     }
 
     void ListView::set_orientation(Orientation orientation)

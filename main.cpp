@@ -31,11 +31,11 @@ int main()
 
         auto scale = Scale(0, 1, 0.01);
 
-        auto grid = GridView();
-        grid.push_back(spin);
-        grid.push_back(scale);
+        auto list = ListView();
+        auto it = list.push_back(spin);
+        list.push_back(scale, it);
 
-        state->window.set_child(grid);
+        state->window.set_child(list);
         state->window.present();
     });
 

@@ -18,7 +18,14 @@
 
 namespace mousetrap
 {
-    namespace detail { struct _ListViewItem; }
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _ListViewItem;
+        struct _ListViewInternal;
+        using ListViewInternal = _ListViewInternal;
+    }
+    #endif
 
     /// @brief Container widget that displays a number of items in a single row, nested lists are possible
     class ListView : public WidgetImplementation<GtkListView>, public Orientable, public Selectable,
@@ -40,19 +47,19 @@ namespace mousetrap
             /// @param widget
             /// @param iterator iterator to sub-list, or nullptr to add to the toplevel list
             /// @return iterator to list the widget was inserted in
-            Iterator push_back(Widget* widget, Iterator = nullptr);
+            Iterator push_back(const Widget& widget, Iterator = nullptr);
 
             /// @brief add a widget to the front of the list
             /// @param widget
             /// @param iterator iterator to sub-list, or nullptr to add to the toplevel list
             /// @return iterator to list the widget was inserted in
-            Iterator push_front(Widget* widget, Iterator = nullptr);
+            Iterator push_front(const Widget& widget, Iterator = nullptr);
 
             /// @brief add a widget at a specific position to the list
             /// @param widget
             /// @param iterator iterator to sub-list, or nullptr to add to the toplevel list
             /// @return iterator to list the widget was inserted in
-            Iterator insert(size_t, Widget*, Iterator = nullptr);
+            Iterator insert(size_t, const Widget&, Iterator = nullptr);
 
             /// @brief remove n-th element from list specified by iterator
             /// @param index
@@ -73,7 +80,7 @@ namespace mousetrap
             /// @param i index
             /// @param widget
             /// @param iterator iterator to list, or nullptr to set widget in toplevel list
-            void set_widget_at(size_t i, Widget*, Iterator = nullptr);
+            void set_widget_at(size_t i, const Widget&, Iterator = nullptr);
 
             /// @brief enable users to select multiple elements by click-dragging
             /// @param b true if enabled, false otherwise
@@ -114,23 +121,7 @@ namespace mousetrap
             Orientation get_orientation() const override;
 
         private:
-            static void on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, void*);
-            static void on_list_item_factory_teardown(GtkSignalListItemFactory* self, void* object, void*);
-            static void on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, void*);
-            static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, void*);
-
-            static GListModel* on_tree_list_model_create(void* item, void* user_data);
-            static void on_tree_list_model_destroy(void* item);
-
-            GtkSignalListItemFactory* _factory;
-
-            GtkListView* _list_view;
-            GListStore* _root;
-            GtkTreeListModel* _tree_list_model;
-
-            SelectionModel* _selection_model;
-            GtkSelectionMode _selection_mode;
-            GtkOrientation _orientation;
+            detail::ListViewInternal* _internal = nullptr;
     };
 
     using TreeListView = ListView;
