@@ -62,12 +62,17 @@ namespace mousetrap
             gtk_window_unfullscreen(get_native());
     }
 
-    void Window::set_child(Widget* widget)
+    void Window::set_child(Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Window::set_child, this, widget);
-
-        _child = widget;
+        _child = &widget;
+        WARN_IF_SELF_INSERTION(Window::set_child, this, _child);
         gtk_window_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
+    }
+
+    void Window::remove_child()
+    {
+        _child = nullptr;
+        gtk_window_set_child(get_native(), nullptr);
     }
 
     Widget* Window::get_child() const

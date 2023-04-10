@@ -9,8 +9,6 @@
 + shape, texture, rendertexture, render_area, render_task, shader
 + music, sound, soundbuffer
 + notebook
-+ scale
-+ spinbutton
 + stack
 > > This repo is under rapid active development and should not be interacted with by the public. Licensed CC-BY-SA-NC
 

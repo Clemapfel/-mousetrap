@@ -7,12 +7,48 @@
 
 namespace mousetrap
 {
-    SpinButton::SpinButton(float min, float max, float step)
-    : WidgetImplementation<GtkSpinButton>(GTK_SPIN_BUTTON(gtk_spin_button_new_with_range(min, max, step))),
-      CTOR_SIGNAL(SpinButton, value_changed),
-      CTOR_SIGNAL(SpinButton, wrapped)
+    namespace detail
     {
-        _adjustment = Adjustment(gtk_spin_button_get_adjustment(get_native()));
+        DECLARE_NEW_TYPE(SpinButtonInternal, spin_button_internal, SPIN_BUTTON_INTERNAL)
+        DEFINE_NEW_TYPE_TRIVIAL_INIT(SpinButtonInternal, spin_button_internal, SPIN_BUTTON_INTERNAL)
+
+        static void spin_button_internal_finalize(GObject* object)
+        {
+            auto* self = MOUSETRAP_SPIN_BUTTON_INTERNAL(object);
+            G_OBJECT_CLASS(spin_button_internal_parent_class)->finalize(object);
+            delete self->adjustment;
+        }
+
+        DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(SpinButtonInternal, spin_button_internal, SPIN_BUTTON_INTERNAL)
+
+        static SpinButtonInternal* spin_button_internal_new(GtkSpinButton* scale)
+        {
+            auto* self = (SpinButtonInternal*) g_object_new(spin_button_internal_get_type(), nullptr);
+            spin_button_internal_init(self);
+            self->adjustment = new Adjustment(gtk_spin_button_get_adjustment(scale));
+            self->native = scale;
+            self->value_to_text_function = nullptr;
+            self->text_to_value_function = nullptr;
+            return self;
+        }
+    }
+
+    SpinButton::SpinButton(float min, float max, float step)
+        : WidgetImplementation<GtkSpinButton>(GTK_SPIN_BUTTON(gtk_spin_button_new_with_range(min, max, step))),
+          CTOR_SIGNAL(SpinButton, value_changed),
+          CTOR_SIGNAL(SpinButton, wrapped)
+    {
+        _internal = detail::spin_button_internal_new(get_native());
+        detail::attach_ref_to(G_OBJECT(get_native()), _internal);
+    }
+
+    SpinButton::SpinButton(detail::SpinButtonInternal* internal)
+        : WidgetImplementation<GtkSpinButton>(internal->native),
+          CTOR_SIGNAL(SpinButton, value_changed),
+          CTOR_SIGNAL(SpinButton, wrapped)
+    {
+        _internal = internal;
+        // detail::attach_ref_to(G_OBJECT(get_native()), _internal);
     }
 
     void SpinButton::set_n_digits(size_t n)
@@ -35,14 +71,14 @@ namespace mousetrap
         return gtk_spin_button_get_wrap(get_native());
     }
 
-    Adjustment& SpinButton::get_adjustment()
+    Adjustment* SpinButton::get_adjustment()
     {
-        return _adjustment;
+        return _internal->adjustment;
     }
 
-    const Adjustment& SpinButton::get_adjustment() const
+    const Adjustment* SpinButton::get_adjustment() const
     {
-        return _adjustment;
+        return _internal->adjustment;
     }
 
     void SpinButton::set_acceleration_rate(float v)
@@ -128,16 +164,18 @@ namespace mousetrap
         disconnect_signal("output");
     }
 
-    gint SpinButton::on_input(GtkSpinButton* button, double* new_value, SpinButton* instance)
+    gint SpinButton::on_input(GtkSpinButton* button, double* new_value, detail::SpinButtonInternal* instance)
     {
         std::string text = gtk_editable_get_text(GTK_EDITABLE(button));
         float res = 0;
         try
         {
-            res = instance->_text_to_value_f(instance, text);
+            auto button = SpinButton(instance);
+            res = instance->text_to_value_function(&button, text);
         }
-        catch (...)
+        catch (std::exception& e)
         {
+            log::critical("In SpinButton::on_input: Bound text-to-value function caused an exception: " + std::string(e.what()));
             return GTK_INPUT_ERROR;
         }
 
@@ -145,12 +183,21 @@ namespace mousetrap
         return TRUE;
     }
 
-    bool SpinButton::on_output(GtkSpinButton* button, SpinButton* instance)
+    bool SpinButton::on_output(GtkSpinButton*, detail::SpinButtonInternal* instance)
     {
-        float value = gtk_adjustment_get_value(gtk_spin_button_get_adjustment(button));
-        std::string res = instance->_value_to_text_f(instance, value);
-        gtk_editable_set_text(GTK_EDITABLE(button), res.c_str());
+        float value = gtk_adjustment_get_value(gtk_spin_button_get_adjustment(instance->native));
 
-        return TRUE;
+        try
+        {
+            auto button = SpinButton(instance);
+            std::string res = instance->value_to_text_function(&button, value);
+            gtk_editable_set_text(GTK_EDITABLE(instance->native), res.c_str());
+            return TRUE;
+        }
+        catch (std::exception& e)
+        {
+            log::critical("In SpinButton::on_output: Bound value-to-text function caused an exception: " + std::string(e.what()));
+            return FALSE;
+        }
     }
 }

@@ -24,7 +24,12 @@ int main()
 
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 
-        //state->window.set_child(&scale);
+        auto spin = SpinButton(0, 1, 0.001);
+        spin.set_value_to_text_function([](const SpinButton* instance, float value) -> std::string{
+            return std::to_string(value) + "%";
+        });
+
+        state->window.set_child(spin);
         state->window.present();
     });
 

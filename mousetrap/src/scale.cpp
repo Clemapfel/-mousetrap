@@ -11,13 +11,21 @@ namespace mousetrap
     {
         DECLARE_NEW_TYPE(ScaleInternal, scale_internal, SCALE_INTERNAL)
         DEFINE_NEW_TYPE_TRIVIAL_INIT(ScaleInternal, scale_internal, SCALE_INTERNAL)
-        DEFINE_NEW_TYPE_TRIVIAL_FINALIZE(ScaleInternal, scale_internal, SCALE_INTERNAL)
+
+        static void scale_internal_finalize(GObject* object)
+        {
+            auto* self = MOUSETRAP_SCALE_INTERNAL(object);
+            G_OBJECT_CLASS(scale_internal_parent_class)->finalize(object);
+            delete self->adjustment;
+        }
+
         DEFINE_NEW_TYPE_TRIVIAL_CLASS_INIT(ScaleInternal, scale_internal, SCALE_INTERNAL)
 
         static ScaleInternal* scale_internal_new(GtkScale* scale)
         {
             auto* self = (ScaleInternal*) g_object_new(scale_internal_get_type(), nullptr);
             scale_internal_init(self);
+            self->native = scale;
             self->adjustment = new Adjustment(gtk_range_get_adjustment(GTK_RANGE(scale)));
             self->formatting_function = nullptr;
             return self;

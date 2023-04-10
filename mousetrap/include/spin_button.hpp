@@ -14,6 +14,23 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    class SpinButton;
+    namespace detail
+    {
+        struct _SpinButtonInternal
+        {
+            GObject parent;
+
+            GtkSpinButton* native;
+            Adjustment* adjustment;
+            std::function<std::string(const SpinButton*, float)> value_to_text_function;
+            std::function<float(const SpinButton*, const std::string&)> text_to_value_function;
+        };
+        using SpinButtonInternal = _SpinButtonInternal;
+    }
+    #endif
+
     /// @brief entry with and "increase" and "decrease" button, allows user to pick a value by entering the exact numebr
     class SpinButton : public WidgetImplementation<GtkSpinButton>,
         HAS_SIGNAL(SpinButton, value_changed),
@@ -26,13 +43,17 @@ namespace mousetrap
             /// @param step minimum step increment
             SpinButton(float min, float max, float step);
 
+            /// @brief construct as thin wrapper \internal
+            /// @param internal
+            SpinButton(detail::SpinButtonInternal*);
+
             /// @brief get adjustment, modifying it will modify the spin button
             /// @return adjusment
-            Adjustment& get_adjustment();
+            Adjustment* get_adjustment();
 
             /// @brief get adjusment, immutable
             /// @return adjustment, const
-            const Adjustment& get_adjustment() const;
+            const Adjustment* get_adjustment() const;
 
             /// @brief get lower bound of the range
             /// @return float
@@ -142,13 +163,10 @@ namespace mousetrap
             void reset_value_to_text_function();
 
         private:
-            Adjustment _adjustment;
+            detail::SpinButtonInternal* _internal = nullptr;
 
-            static gint on_input(GtkSpinButton*, double* new_value, SpinButton* instance);
-            std::function<std::string(const SpinButton*, float)> _value_to_text_f;
-
-            static bool on_output(GtkSpinButton*, SpinButton* instance);
-            std::function<float(const SpinButton*, const std::string&)> _text_to_value_f;
+            static gint on_input(GtkSpinButton*, double* new_value, detail::SpinButtonInternal* instance);
+            static bool on_output(GtkSpinButton*, detail::SpinButtonInternal* instance);
     };
 }
 

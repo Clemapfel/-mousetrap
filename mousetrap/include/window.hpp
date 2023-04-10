@@ -56,8 +56,11 @@ namespace mousetrap
             void close();
 
             /// @brief set the child of the window
-            /// @param widget child, may be nullptr
-            void set_child(Widget*);
+            /// @param widget child
+            void set_child(Widget&);
+
+            /// @brief remove child
+            void remove_child();
 
             /// @brief get child
             /// @return widget

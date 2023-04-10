@@ -24,6 +24,7 @@ namespace mousetrap
         struct _ScaleInternal
         {
             GObject parent;
+            GtkScale* native;
             Adjustment* adjustment;
             std::function<std::string(float)> formatting_function;
         };
