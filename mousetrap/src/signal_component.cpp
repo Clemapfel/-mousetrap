@@ -184,8 +184,23 @@ DEFINE_SIGNAL(Scroll, scroll, SCROLL, "scroll", bool,
                           SPLAT(direction, offset)
     );
 
-    DECLARE_SIGNAL(Swipe, swipe, SWIPE, "swipe", void,
+    DEFINE_SIGNAL(Swipe, swipe, SWIPE, "swipe", void,
                           SPLAT(double x_velocity, double y_velocity),
                           SPLAT(x_velocity, y_velocity)
+    );
+
+    DEFINE_SIGNAL(StylusDown, stylus_down, STYLUS_DOWN, "down", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+
+    DEFINE_SIGNAL(StylusUp, stylus_up, STYLUS_UP, "up", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+
+    DEFINE_SIGNAL(Proximity, proximity, PROXIMITY, "proximity", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
     );
 }

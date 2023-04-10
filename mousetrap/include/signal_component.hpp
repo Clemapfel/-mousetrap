@@ -2443,43 +2443,177 @@ namespace mousetrap
                           SPLAT(x_velocity, y_velocity)
     );
     /// @class has_signal_swip
-    /// @brief signal emitted when a swipning gesture is recognized
+    /// @brief signal emitted when a swipening gesture is recognized
     /// @tparam T instance type
     ///
-    /// @fn void has_signal_swip::emit_signal_swip(int32_t n_press, double x, double y)
+    /// @fn void has_signal_swipe::emit_signal_swipe(int32_t n_press, double x, double y)
     /// \signal_emit_brief
     /// @param n_press number of clicks in this sequence
     /// @param x x-coordinate of the cursor, widget-relative position, in pixels
     /// @param y y-coordinate of the cursor, widget-relative position, in pixels
     ///
-    /// @var has_signal_swip::signal_id
-    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.swip.html}
+    /// @var has_signal_swipe::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.swipe.html}
     ///
-    /// @var has_signal_swip::signal_handler_with_data_f
-    /// \signal_with_data_f{swip}
-    /// \signal_see_emit_for_parameters{swip}
+    /// @var has_signal_swipe::signal_handler_with_data_f
+    /// \signal_with_data_f{swipe}
+    /// \signal_see_emit_for_parameters{swipe}
     ///
-    /// @var has_signal_swip::signal_handler_without_data_f
-    /// \signal_without_data_f{swip}
-    /// \signal_see_emit_for_parameters{swip}
+    /// @var has_signal_swipe::signal_handler_without_data_f
+    /// \signal_without_data_f{swipe}
+    /// \signal_see_emit_for_parameters{swipe}
     ///
-    /// @fn void has_signal_swip::connect_signal_swip(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// @fn void has_signal_swipe::connect_signal_swipe(const signal_handler_with_data_f<Data_t>& function, Data_t data)
     /// \signal_connect_data
     /// \signal_see_emit_for_parameters{text_inserted}
     ///
-    /// @fn void has_signal_swip::connect_signal_swip(const signal_handler_without_data_f&)
+    /// @fn void has_signal_swipe::connect_signal_swipe(const signal_handler_without_data_f&)
     /// \signal_connect_no_data
     /// \signal_see_emit_for_parameters{text_inserted}
     ///
-    /// @fn void has_signal_swip::set_signal_swip_blocked(bool)
+    /// @fn void has_signal_swipe::set_signal_swipe_blocked(bool)
     /// \signal_set_blocked
     ///
-    /// @fn bool has_signal_swip::get_signal_swip_blocked() const
+    /// @fn bool has_signal_swipe::get_signal_swipe_blocked() const
     /// \signal_get_blocked
     ///
-    /// @fn void has_signal_swip::disconnect_signal_swip()
+    /// @fn void has_signal_swipe::disconnect_signal_swipe()
     /// \signal_disconnect
     ///
-    /// @fn has_signal_swip::has_signal_swip
+    /// @fn has_signal_swipe::has_signal_swipe
     /// \signal_ctor
+
+    DECLARE_SIGNAL_MANUAL(StylusDown, stylus_down, STYLUS_DOWN, "down", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+    /// @class has_signal_stylus_down
+    /// @brief signal emitted when a stylus makes physical contact with the touchpad
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_stylus_down::emit_signal_stylus_down(double x, double y)
+    /// \signal_emit_brief
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_stylus_down::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.stylus_down.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.down.html}
+    ///
+    /// @var has_signal_stylus_down::signal_handler_with_data_f
+    /// \signal_with_data_f{stylus_down}
+    /// \signal_see_emit_for_parameters{stylus_down}
+    ///
+    /// @var has_signal_stylus_down::signal_handler_without_data_f
+    /// \signal_without_data_f{stylus_down}
+    /// \signal_see_emit_for_parameters{stylus_down}
+    ///
+    /// @fn void has_signal_stylus_down::connect_signal_stylus_down(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_stylus_down::connect_signal_stylus_down(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_stylus_down::set_signal_stylus_down_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_stylus_down::get_signal_stylus_down_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_stylus_down::disconnect_signal_stylus_down()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_stylus_down::has_signal_stylus_down
+    /// \signal_ctor
+
+    DECLARE_SIGNAL_MANUAL(StylusUp, stylus_up, STYLUS_UP, "up", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+    /// @class has_signal_stylus_up
+    /// @brief signal emitted when a stylus seizes to make physical contact with the touchpad
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_stylus_up::emit_signal_stylus_up(double x, double y)
+    /// \signal_emit_brief
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_stylus_up::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.stylus_up.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.up.html}
+    ///
+    /// @var has_signal_stylus_up::signal_handler_with_data_f
+    /// \signal_with_data_f{stylus_up}
+    /// \signal_see_emit_for_parameters{stylus_up}
+    ///
+    /// @var has_signal_stylus_up::signal_handler_without_data_f
+    /// \signal_without_data_f{stylus_up}
+    /// \signal_see_emit_for_parameters{stylus_up}
+    ///
+    /// @fn void has_signal_stylus_up::connect_signal_stylus_up(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_stylus_up::connect_signal_stylus_up(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_stylus_up::set_signal_stylus_up_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_stylus_up::get_signal_stylus_up_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_stylus_up::disconnect_signal_stylus_up()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_stylus_up::has_signal_stylus_up
+    /// \signal_ctor
+
+    DECLARE_SIGNAL_MANUAL(Proximity, proximity, PROXIMITY, "proximity", void,
+                          SPLAT(double x, double y),
+                          SPLAT(x, y)
+    );
+    /// @class has_signal_proximity
+    /// @brief signal emitted when a stylus comes into proximity of the touchpad without physically touching it
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_proximity::emit_signal_proximity(double x, double y)
+    /// \signal_emit_brief
+    /// @param x x-coordinate of the cursor, widget-relative position, in pixels
+    /// @param y y-coordinate of the cursor, widget-relative position, in pixels
+    ///
+    /// @var has_signal_proximity::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.proximity.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.up.html}
+    ///
+    /// @var has_signal_proximity::signal_handler_with_data_f
+    /// \signal_with_data_f{proximity}
+    /// \signal_see_emit_for_parameters{proximity}
+    ///
+    /// @var has_signal_proximity::signal_handler_without_data_f
+    /// \signal_without_data_f{proximity}
+    /// \signal_see_emit_for_parameters{proximity}
+    ///
+    /// @fn void has_signal_proximity::connect_signal_proximity(const signal_handler_with_data_f<Data_t>& function, Data_t data)
+    /// \signal_connect_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_proximity::connect_signal_proximity(const signal_handler_without_data_f&)
+    /// \signal_connect_no_data
+    /// \signal_see_emit_for_parameters{text_inserted}
+    ///
+    /// @fn void has_signal_proximity::set_signal_proximity_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_proximity::get_signal_proximity_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_proximity::disconnect_signal_proximity()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_proximity::has_signal_proximity
+    /// \signal_ctor
+
+
 }
