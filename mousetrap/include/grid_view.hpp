@@ -15,6 +15,14 @@
 
 namespace mousetrap
 {
+    #ifndef DOXYGEN
+    namespace detail
+    {
+        struct _GridViewInternal;
+        using GridViewInternal = _GridViewInternal;
+    }
+    #endif
+
     /// @brief container, arranges widget in a grid
     class GridView : public WidgetImplementation<GtkGridView>, public Orientable, public Selectable,
         HAS_SIGNAL(GridView, activate)
@@ -27,23 +35,23 @@ namespace mousetrap
 
             /// @brief add widget to the left if orientation is horizontal, to the top if vertical
             /// @param widget
-            void push_front(Widget*);
+            void push_front(const Widget&);
 
             /// @brief add widget to the right if orientation is horizontal, to the bottom if vertical
             /// @param widget
-            void push_back(Widget*);
+            void push_back(const Widget&);
 
             /// @brief insert widget at index
             /// @param widget
             /// @param index
-            void insert(Widget*, size_t);
+            void insert(const Widget&, size_t);
 
             /// @brief remove all widgets
             void clear();
 
             /// @brief remove widget
             /// @param widget
-            void remove(Widget*);
+            void remove(const Widget&);
 
             /// @brief get number of widgets
             /// @return n
@@ -92,17 +100,6 @@ namespace mousetrap
             Orientation get_orientation() const override;
 
         private:
-            static void on_list_item_factory_setup(GtkSignalListItemFactory* self, void* object, GridView* instance);
-            static void on_list_item_factory_teardown(GtkSignalListItemFactory* self, void* object, GridView* instance);
-            static void on_list_item_factory_bind(GtkSignalListItemFactory* self, void* object, GridView* instance);
-            static void on_list_item_factory_unbind(GtkSignalListItemFactory* self, void* object, GridView* instance);
-
-            GtkGridView* _native;
-            GtkSignalListItemFactory* _factory;
-            GListStore* _list_store;
-
-            SelectionModel* _selection_model;
-            GtkSelectionMode _selection_mode;
-            GtkOrientation _orientation;
+           detail::GridViewInternal* _internal = nullptr;
     };
 }
