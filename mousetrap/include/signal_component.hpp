@@ -2442,7 +2442,7 @@ namespace mousetrap
                           SPLAT(double x_velocity, double y_velocity),
                           SPLAT(x_velocity, y_velocity)
     );
-    /// @class has_signal_swip
+    /// @class has_signal_swipe
     /// @brief signal emitted when a swipening gesture is recognized
     /// @tparam T instance type
     ///

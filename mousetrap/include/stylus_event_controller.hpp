@@ -36,8 +36,9 @@ namespace mousetrap
         MOUSE = GDK_DEVICE_TOOL_TYPE_UNKNOWN
     };
 
+
     /// @brief handles events emitted by a touchpad stylus
-    /// @todo expose set_stylus_only, get_stylus_only once 4.10 releases, https://docs.gtk.org/gtk4/method.GestureStylus.set_stylus_only.html
+    /// @todo expose high resolution motion history: https://docs.gtk.org/gtk4/method.GestureStylus.get_backlog.html
     class StylusEventController : public EventController,
         HAS_SIGNAL(StylusEventController, stylus_down),
         HAS_SIGNAL(StylusEventController, stylus_up),

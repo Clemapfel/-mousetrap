@@ -23,7 +23,7 @@ wrapping GTK4 in a way that is much easier to understand and use, allowing begin
 + many of the gio and glib functionality is not yet exposed, file I/O and anything related to images is present in 
   mousetrap, however
 + GTK Builder is ommitted completely, all objects are defined and initializes in a C++ file
-+ a hand full of widgets are not yet exposed, or where intentionally ommitted, the latter category includes `FlowBox`,
++ a hand-full of widgets are not yet exposed, or where intentionally ommitted, the latter category includes `FlowBox`,
   `ScaleButton`, and any widget marked for deprecation since GTK4.10
 
 The main disadvantage of mousetrap is that not every GTK4 functionality is imported, making mousetrap somewhat less flexible. However, **every non-deprecated GTK4-widget is available**, 
@@ -34,22 +34,17 @@ meaning there is no limiation put upon the actual graphical user interface.
 + FontDialog
 + Allow multiple tick callbacks for widget
 + Make ListView, GridView, ColumnView filterable
-+ Add DropDown search bar
++ Add search bar to DropDown
 + Expose TextView widget insertion
 + Refactor ColumnView to be a tree
-+ Scale: pango layout interface to allow markdown during text format function
 + Expose GTK_DEBUG interface
-+ File: file system, monitor, measure disk size, asynchronous read/write 
 + Action: allow changing shortcut triggers during runtime
-+ Grid: Baseline Positions
-+ check button groups
-+ clipboard: allow arbitrary datatypes
-+ Sound: Mutate SoundBuffer, allow Music stream from memory
++ Clipboard: allow arbitrary datatypes
++ Sound: Make SoundBuffer data mutable
 + Expose GResource interface
-+ Log: allow stream to file
-+ FileSystem: allow async operations
 
 # Design Goals
+
 
 ## Widgets can only contain Widgets
 

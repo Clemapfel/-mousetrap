@@ -2523,3 +2523,56 @@ h2:hover a.anchorlink, h1:hover a.anchorlink, h3:hover a.anchorlink, h4:hover a.
 html.dark-mode .tabs-overview button.tab-button:hover .tab-title {
     color: var(--page-foreground-color);
 }
+
+/* collapsible cpp */
+
+.cpp-code {}
+
+.cpp-code > details {
+    background-color: var(--blockquote-background);
+    padding: 10px;
+    border: var(--icon-background-color) solid 1px;
+    border-radius: 10px;
+    margin-bottom: 10px
+}
+
+.cpp-code > details div.fragment,p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.cpp-code > details > summary {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* collapsible julia */
+
+.cpp-code {}
+
+.cpp-code > details {
+    background-color: var(--blockquote-background);
+    padding: 10px;
+    border: var(--icon-background-color) solid 1px;
+    border-radius: 10px;
+    margin-bottom: 10px
+}
+
+.cpp-code > details div.fragment,p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.cpp-code > details > summary {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+
