@@ -24,6 +24,7 @@ struct State
 end
 const state = Ref{Union{State, Nothing}}(nothing)
 
+# test
 app = Application("test.app")
 sym = :test
 function activate(app)
@@ -31,6 +32,11 @@ function activate(app)
     present(state.window)
     return nothing
 end
+
+true == false + 2;
+
+
+@macro test 
 
 connect_signal_activate(app, activate) 
 run(app) 
@@ -43,8 +49,27 @@ test
 
 \cpp_code_begin
 ```cpp
-template<typename T>
-void test();
+#include <include/test.hpp>
+struct State
+{
+    Window window;
+}
+static inline State state = new State(Window());
+
+// test
+const auto app = Application("test.app")
+
+void activate(Application* app)
+{
+    state = State(Window(app)) 
+    present(state.window)
+    return nothing
+}
+
+true == false + 2;
+
+app.connect_signal_activate(activate) 
+run(app) 
 ```
 \cpp_code_ned
 
