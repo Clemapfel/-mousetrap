@@ -1,1 +1,2 @@
+rm -r doxygen
 doxygen

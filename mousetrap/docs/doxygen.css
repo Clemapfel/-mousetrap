@@ -2679,6 +2679,10 @@ code.hljs{
     color:var(--cpp-color);
 }
 
+.hljs-quote {
+    color:lime;
+}
+
 /* unused in cpp and julia */
 .hljs-variable.language,
 .hljs-operator,
@@ -2691,7 +2695,6 @@ code.hljs{
 .hljs-code,
 .hljs-formula,
 .hljs-name,
-.hljs-quote,
 .hljs-selector-pseudo,
 .hljs-selector-tag,
 .hljs-subst,
