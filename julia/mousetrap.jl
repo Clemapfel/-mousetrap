@@ -60,7 +60,7 @@ end
 const state = Ref{Union{State, Nothing}}(nothing)
 
 app = Application("test.app")
-
+sym = :test
 function activate(app)
     state = State(Window(app)) # this needs to be delayed so it happens after run(app)
     present(state.window)
