@@ -1314,8 +1314,8 @@ div.fragment span.preprocessor {
 
 div.fragment span.lineno {
     display: inline-block;
-    width: 27px;
-    border-right: none;
+    /*width: 27px;*/
+    margin-right: 20px;
     background: var(--fragment-linenumber-background);
     color: var(--fragment-linenumber-color);
 }
@@ -1565,6 +1565,10 @@ table.mlabels > tbody > tr:first-child {
 
 .memname, .memitem span.mlabels {
     margin: 0
+}
+
+.mlabel {
+    margin-left: 10px;
 }
 
 /*

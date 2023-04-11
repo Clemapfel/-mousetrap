@@ -13,8 +13,7 @@ This chapter we will learn:
 The most trivial use of an action is as that of a functor, a callable object. We initiaize an action by giving it a 
 name, then use `set_function` to set its behavior. In C++, `set_function` can take both a C-function or a C++ lambda:
 
-<div class="snippet">
-
+\julia_code_begin
 ```julia
 struct State
     window::mousetrap.Window
@@ -38,11 +37,9 @@ true == false + 2;
 connect_signal_activate(app, activate) 
 run(app) 
 ```
+\julia_code_end
 
-</div>
-
-<div class="snippet">
-
+\cpp_code_begin
 ```cpp
 #include <include/test.hpp>
 struct State
@@ -66,8 +63,7 @@ true == false + 2;
 app.connect_signal_activate(activate) 
 run(app) 
 ```
-
-</div>
+\cpp_code_end
 
 ## Application
 
