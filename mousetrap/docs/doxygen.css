@@ -2629,13 +2629,15 @@ pre code.hljs{
     padding:1em
 }
 code.hljs{
-    padding:10px;
+
+    margin: var(--spacing-medium) 0;
+    padding: calc(var(--spacing-large) - (var(--spacing-large) / 6)) var(--spacing-large);
+    background: var(--fragment-background);
+    color: var(--fragment-foreground);
+    overflow-x: auto;
 }
-.hljs{
-    color:#c9d1d9;
-    background:#0d1117;
-    padding: 10px;
-}
+.hljs{}
+
 .hljs-keyword,
 .hljs-template-tag,
 .hljs-template-variable {
@@ -2643,16 +2645,26 @@ code.hljs{
     font-weight: bold;
 }
 
-.hljs-comment, .hljs-doctag {
-    color:var(--fragment-comment)
+.hljs-comment {
+    color:var(--fragment-comment);
+    font-style:normal;
+}
+
+.hljs-doctag {
+    color:var(--fragment-comment);
+    font-weight:bold;
 }
 
 .hljs-meta, .hljs-literal {
     color:var(--fragment-preprocessor);
 }
 
-.hljs-symbol, .hljs-string, .hljs-number{
+.hljs-symbol, .hljs-string {
     color:var(--fragment-token);
+}
+
+.hljs-number {
+    color:#F18CFF
 }
 
 .hljs-built_in {
@@ -2663,6 +2675,7 @@ code.hljs{
     color:var(--cpp-color);
 }
 
+/* unused in cpp and julia */
 .hljs-variable.language,
 .hljs-operator,
 .hljs-attr,
@@ -2685,7 +2698,7 @@ code.hljs{
 .hljs-addition,
 .hljs-deletion
 {
-    color:#FF0000
+    color:#000000
 }
 
 

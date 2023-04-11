@@ -27,9 +27,9 @@ $extrastylesheet
 <script src="$relpath^julia.min.js"></script>
     <script>
     $(function() {
-        hljs.configure({useBR: false});
-        $(".fragment").each(function(i,node) {
-            $(node).removeClass(".fragment");
+        hljs.configure({languages: ["julia", "cpp"]});
+        $(".snippet").each(function(i,node) {
+            $(node).removeClass(".snippet");
             hljs.highlightBlock(node);
         });
     });
