@@ -65,6 +65,11 @@ int main()
             Window(*app)
         };
 
+        auto action = Action("example.action");
+        action.set_function([](){
+
+        });
+
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 
         static auto spin = SpinButton(0, 1, 0.001);

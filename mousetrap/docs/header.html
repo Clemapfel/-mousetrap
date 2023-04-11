@@ -22,6 +22,19 @@ $mathjax
 $darkmode
 <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
 $extrastylesheet
+<!--HIGHLIGHT.JS INSTALL BEGIN-->
+<link rel="stylesheet" href="$relpath^github-dark.min.css">
+<script src="$relpath^highlight.min.js"></script>
+<script>
+    $(function() {
+        hljs.configure({useBR: true});
+        $(".fragment").each(function(i,node) {
+            $(node).removeClass("fragment");
+            hljs.highlightBlock(node);
+        });
+    });
+</script>
+<!--HIGHLIGHT.JS INSTALL END-->
 </head>
 <body>
 <!--BEGIN DISABLE_INDEX-->

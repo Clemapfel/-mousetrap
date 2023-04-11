@@ -101,8 +101,8 @@ html {
     --invariant-color-darker: #265532;
 
     /* blockquote colors */
-    --blockquote-background: #f8f9fa;
-    --blockquote-foreground: #636568;
+    --blockquote-background: var(--page-foreground-color);
+    --blockquote-foreground: var(--page-foreground-color);
 
     /* table colors */
     --tablehead-background: #f1f1f1;
@@ -206,7 +206,7 @@ html {
         --tablehead-background: #2a2c2f;
 
         --blockquote-background: #222325;
-        --blockquote-foreground: #7e8c92;
+        --blockquote-foreground: var(--page-foreground-color);
 
         --warning-color: #2e1917;
         --warning-color-dark: #ad2617;
@@ -267,7 +267,7 @@ html.dark-mode {
     --tablehead-background: #2a2c2f;
 
     --blockquote-background: #222325;
-    --blockquote-foreground: #7e8c92;
+    --blockquote-foreground: var(--page-foreground-color);
 
     --warning-color: #2e1917;
     --warning-color-dark: #ad2617;
@@ -1623,7 +1623,7 @@ table.markdownTable tbody,
 table.doxtable tbody {
     border: none;
     margin: var(--spacing-medium) 0;
-    box-shadow: 0 0 0 1px var(--separator-color);
+    /*box-shadow: 0 0 0 1px var(--separator-color);*/
     border-radius: var(--border-radius-small);
 }
 
@@ -2524,25 +2524,31 @@ html.dark-mode .tabs-overview button.tab-button:hover .tab-title {
     color: var(--page-foreground-color);
 }
 
-/* collapsible cpp */
+/* collapsible code */
+
+html {
+    --cpp-color: #00D6FE;
+    --julia-color: #df81fc;
+    --hint-color: #f7db77;
+}
 
 .cpp-code {}
 
 .cpp-code > details {
     background-color: var(--blockquote-background);
     padding: 10px;
-    border: var(--icon-background-color) solid 1px;
+    border: var(--cpp-color) solid 1px;
     border-radius: 10px;
     margin-bottom: 10px
 }
 
-.cpp-code > details div.fragment,p {
+.cpp-code > details > p {
     margin-left: 10px;
     margin-right: 10px;
 }
 
 .cpp-code > details > summary {
-    color: var(--primary-color);
+    color: var(--cpp-color);
     font-weight: bold;
     font-size: large;
     cursor: pointer;
@@ -2551,23 +2557,48 @@ html.dark-mode .tabs-overview button.tab-button:hover .tab-title {
 
 /* collapsible julia */
 
-.cpp-code {}
+.julia-code {}
 
-.cpp-code > details {
+.julia-code > details {
     background-color: var(--blockquote-background);
     padding: 10px;
-    border: var(--icon-background-color) solid 1px;
+    border: var(--julia-color) solid 1px;
     border-radius: 10px;
     margin-bottom: 10px
 }
 
-.cpp-code > details div.fragment,p {
+.julia-code > details > p {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.cpp-code > details > summary {
-    color: var(--primary-color);
+.julia-code > details > summary {
+    color: var(--julia-color);
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* collapsible hint */
+
+.hint {}
+
+.hint > details {
+    background-color: var(--blockquote-background);
+    padding: 10px;
+    border: var(--hint-color) solid 1px;
+    border-radius: 10px;
+    margin-bottom: 10px
+}
+
+.hint > details > p {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.hint > details > summary {
+    color: var(--hint-color);
     font-weight: bold;
     font-size: large;
     cursor: pointer;

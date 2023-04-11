@@ -8,19 +8,22 @@
 
 ### Credits
 
-\cpp_code_start
+\cpp_code_begin
+test
 ```cpp
 TEST
 ```
+test
 \cpp_code_end
 
-<details><summary>Julia Code</summary>
+\julia_code_begin
+test
+<code>
+test() = begin end
+</code>
+test
+\julia_code_end
 
-foo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabove
-```julia
-foo
-
-```
-foo below
-</details>
-
+\hint_begin
+HINT
+\hint_end
