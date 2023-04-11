@@ -28,8 +28,8 @@ $extrastylesheet
 <script>
     $(function() {
         hljs.configure({useBR: true});
-        $(".fragment").each(function(i,node) {
-            $(node).removeClass("fragment");
+        $(".julia").each(function(i,node) {
+            $(node).removeClass(".julia");
             hljs.highlightBlock(node);
         });
     });

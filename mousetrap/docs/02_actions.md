@@ -13,9 +13,21 @@ This chapter we will learn:
 The most trivial use of an action is as that of a functor, a callable object. We initiaize an action by giving it a 
 name, then use `set_function` to set its behavior. In C++, `set_function` can take both a C-function or a C++ lambda:
 
+
+\julia_code_begin
 ```julia
 function() begin end
 ```
+\julia_code_end
+
+test
+
+\cpp_code_begin
+```cpp
+template<typename T>
+void test();
+```
+\cpp_code_ned
 
 ## Application
 
