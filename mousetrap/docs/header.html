@@ -25,11 +25,12 @@ $extrastylesheet
 <!--HIGHLIGHT.JS INSTALL BEGIN-->
 <link rel="stylesheet" href="$relpath^doxygen.css">
 <script src="$relpath^highlight.min.js"></script>
-<script>
+<script src="$relpath^julia.min.js"></script>
+    <script>
     $(function() {
-        hljs.configure({useBR: true});
-        $(".fragment").each(function(i,node) {
-            $(node).removeClass(".fragment");
+        hljs.configure({useBR: false});
+        $(".julia").each(function(i,node) {
+            $(node).removeClass(".julia");
             hljs.highlightBlock(node);
         });
     });

@@ -15,6 +15,9 @@ name, then use `set_function` to set its behavior. In C++, `set_function` can ta
 
 
 \julia_code_begin
+
+<div class="julia">
+
 ```julia
 struct State
     window::mousetrap.Window
@@ -24,15 +27,16 @@ const state = Ref{Union{State, Nothing}}(nothing)
 app = Application("test.app")
 sym = :test
 function activate(app)
-    state = State(Window(app)) # this needs to be delayed so it happens after run(app)
+    state = State(Window(app)) 
     present(state.window)
     return nothing
 end
 
-connect_signal_activate(app, activate) #set behavior but does not execute it
-run(app) # this triggers activate at an unknown future point
-
+connect_signal_activate(app, activate) 
+run(app) 
 ```
+</div>
+
 \julia_code_end
 
 test
