@@ -44,17 +44,18 @@ namespace mousetrap
         MOVED_OUT = G_FILE_MONITOR_EVENT_MOVED_OUT
     };
 
+
     /// @brief monitors changes to a file that may or may not yet exist
-    class FileMonitor :  public SignalEmitter
+    class FileMonitor //:  public SignalEmitter
     {
         friend class FileDescriptor;
 
         public:
             /// @brief default ctor deleted, use FileDescriptor::create_monitor
-            FileMonitor() = delete;
+            FileMonitor() = default;
 
             /// @brief default dtor, this removes any connected signals
-            ~FileMonitor();
+            ~FileMonitor() = default;
 
             /// @brief copy ctor deleted, use FileDescriptor::create_monitor to create an additional monitor to the same file
             FileMonitor(const FileMonitor&) = delete;
@@ -72,7 +73,7 @@ namespace mousetrap
             FileMonitor& operator=(FileMonitor&&) noexcept;
 
             /// @brief expose as GObject \internal
-            operator GObject*() const override;
+            //operator GObject*() const override;
 
             /// @brief cancel the file monitor, cannot be undone
             void cancel();
@@ -90,7 +91,7 @@ namespace mousetrap
             void on_file_changed(Function_t f);
 
         protected:
-            FileMonitor(GFileMonitor*);
+            FileMonitor(GFileMonitor*) {};
 
         private:
             GFileMonitor* _native;
@@ -99,3 +100,4 @@ namespace mousetrap
 
     };
 }
+

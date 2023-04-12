@@ -30,7 +30,7 @@ namespace mousetrap
             stack_internal_init(self);
             self->native = native;
             self->selection_model = new SelectionModel(gtk_stack_get_pages(native));
-            self->children = new std::map<std::string, Widget*>();
+            self->children = new std::map<std::string, std::reference_wrapper<const Widget>>();
             return self;
         }
     }
@@ -62,16 +62,31 @@ namespace mousetrap
         return _internal->selection_model;
     }
 
-    Stack::ID Stack::add_child(Widget* widget, const std::string& title)
+    Widget* Stack::get_child(Stack::ID id)
     {
-        if (widget != nullptr and widget->operator GtkWidget*() == this->operator GtkWidget*())
+        auto it = _internal->children->find(id);
+        if (it == _internal->children->end())
+            return nullptr;
+        else
+            return const_cast<Widget*>(&(it->second.get()));
+    }
+
+    Stack::ID Stack::add_child(const Widget& widget, const std::string& title)
+    {
+        auto* ptr = &widget;
+        if (widget.operator GtkWidget*() == this->operator GtkWidget*())
         {
             log::critical("In Stack::add_child: Attempting to insert Stack into itself. This would cause an infinite loop");
-            widget = nullptr;
+            gtk_stack_add_titled(get_native(), nullptr, title.c_str(), title.c_str());
+            return title;
         }
 
-        gtk_stack_add_titled(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*(), title.c_str(), title.c_str());
-        _internal->children->insert({title, widget});
+        auto it = _internal->children->find(title);
+        if (it != _internal->children->end())
+            log::critical("In Stack::add_child: Child with title `" + title + "` already exist. This may cause the original child to become inaccesible.");
+
+        gtk_stack_add_titled(get_native(), widget.operator NativeWidget(), title.c_str(), title.c_str());
+        _internal->children->insert({title, std::ref(widget)});
         return title;
     }
 
@@ -85,7 +100,7 @@ namespace mousetrap
             return;
         }
 
-        gtk_stack_remove(get_native(), _internal->children->at(id)->operator GtkWidget *());
+        gtk_stack_remove(get_native(), _internal->children->at(id).get().operator GtkWidget *());
         _internal->children->erase(id);
     }
 

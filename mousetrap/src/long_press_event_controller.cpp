@@ -19,6 +19,6 @@ namespace mousetrap
 
     float LongPressEventController::get_delay_factor() const
     {
-        return gtk_gesture_long_press_get_delay_factor(GTK_GESTURE_LONG_PRESS(_native), v);
+        return gtk_gesture_long_press_get_delay_factor(GTK_GESTURE_LONG_PRESS(_native));
     }
 }

@@ -48,15 +48,6 @@ inline struct State {
 
 int main()
 {
-    TestSuper* test_super;
-    {
-        auto* test = new Test(1234);
-        test_super = (TestSuper*) test;
-    }
-    auto test_new = static_cast<Test*>(test_super);
-    std::cout << test_new->i << std::endl;
-    exit(0);
-
     auto app = Application("mousetrap.debug");
 
     app.connect_signal_activate([&](Application* app) -> void
@@ -65,10 +56,12 @@ int main()
             Window(*app)
         };
 
-        auto action = Action("example.action");
-        action.set_function([](){
-
-        });
+        auto action = Action("test.action");
+        auto instance = std::string("Data");
+        action.set_function([](auto data){
+            std::cout << "Activated with: " << data << std::endl;
+        }, instance);
+        action.activate();
 
         log::set_surpress_debug(MOUSETRAP_DOMAIN, false);
 

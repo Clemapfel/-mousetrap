@@ -91,6 +91,10 @@ namespace mousetrap
             /// @param action pointer to action, the user is responsible for making sure the action stays in scope
             void add_action(const Action&);
 
+            /// @brief convenience function, creates new actino, set its behavior, then immediately add it to the application
+            template<typename Function_t>
+            Action* add_new_action(const std::string& action_id, Function_t f);
+
             /// @brief remove an action from application
             /// @param id
             void remove_action(const ActionID&);

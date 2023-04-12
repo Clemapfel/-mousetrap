@@ -21,7 +21,7 @@ namespace mousetrap
             GObject parent;
             GtkStack* native;
             SelectionModel* selection_model;
-            std::map<std::string, Widget*>* children;
+            std::map<std::string, std::reference_wrapper<const Widget>>* children;
         };
         using StackInternal = _StackInternal;
     }
@@ -49,7 +49,7 @@ namespace mousetrap
             /// @param widget may be nullptr to create an empty page
             /// @param title title of the page, usually used to identify pages in widgets allowed user interaction with the stack
             /// @return id of the page, the user is responsible for keeping track of this id to be able to refer to specific pages
-            [[nodiscard]] Stack::ID add_child(Widget*, const std::string& child_title);
+            [[nodiscard]] Stack::ID add_child(const Widget&, const std::string& child_title);
 
             /// @brief get page widget for page with given id
             /// @param id obtained from mousetrap::Stack::add_child

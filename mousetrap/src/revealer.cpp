@@ -15,11 +15,18 @@ namespace mousetrap
         set_transition_type(type);
     }
 
-    void Revealer::set_child(Widget* widget)
+    void Revealer::set_child(const Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Revealer::set_child, this, widget);
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Revealer::set_child, this, ptr);
 
-        gtk_revealer_set_child(get_native(), widget == nullptr ? nullptr : widget->operator GtkWidget*());
+        gtk_revealer_set_child(get_native(), widget.operator GtkWidget*());
+        _child = ptr;
+    }
+
+    Widget* Revealer::get_child() const
+    {
+        return const_cast<Widget*>(_child);
     }
 
     void Revealer::set_revealed(bool b)

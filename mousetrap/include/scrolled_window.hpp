@@ -126,14 +126,14 @@ namespace mousetrap
 
             /// @brief set the windows child
             /// @param widget
-            void set_child(Widget*);
+            void set_child(const Widget&);
 
             /// @brief get the windows child
             /// @returns child
             Widget* get_child() const;
 
         private:
-            Widget* _child = nullptr;
+            const Widget* _child = nullptr;
             Adjustment* _h_adjustment = nullptr;
             Adjustment* _v_adjustment = nullptr;
     };

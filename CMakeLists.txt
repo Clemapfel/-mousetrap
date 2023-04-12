@@ -253,11 +253,7 @@ if(MOUSETRAP_BUILD_TESTING)
         add_test(NAME "${TEST_PREFIX}${name}" COMMAND "${TEST_PREFIX}${name}")
     endfunction()
 
-    declare_test(application)
-    declare_test(action)
-
-    add_executable(docs_screenshots mousetrap/docs/widgets/widgets.cpp)
-    target_link_libraries(docs_screenshots PRIVATE mousetrap)
+    declare_test(docs)
 endif()
 
 ## JULIA BINDING

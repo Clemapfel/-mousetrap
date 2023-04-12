@@ -125,14 +125,15 @@ namespace mousetrap
 
     Widget* ScrolledWindow::get_child() const
     {
-        return _child;
+        return const_cast<Widget*>(_child);
     }
 
-    void ScrolledWindow::set_child(Widget* child)
+    void ScrolledWindow::set_child(const Widget& child)
     {
-        WARN_IF_SELF_INSERTION(ScrolledWindow::set_child, this, child);
+        auto* ptr = &child;
+        WARN_IF_SELF_INSERTION(ScrolledWindow::set_child, this, ptr);
 
-        _child = child;
-        gtk_scrolled_window_set_child(get_native(), _child != nullptr ? _child->operator GtkWidget*() : nullptr);
+        _child = ptr;
+        gtk_scrolled_window_set_child(get_native(), child.operator NativeWidget());
     }
 }

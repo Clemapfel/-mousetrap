@@ -20,7 +20,7 @@ namespace mousetrap
 
             /// @brief set child
             /// @param widget
-            void set_child(Widget*);
+            void set_child(const Widget&);
 
             /// @brief get child
             /// @return child
@@ -51,6 +51,6 @@ namespace mousetrap
             Time get_transition_duration() const;
 
         private:
-            Widget* _child = nullptr;
+            const Widget* _child = nullptr;
     };
 }

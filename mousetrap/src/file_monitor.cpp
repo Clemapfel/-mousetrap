@@ -7,6 +7,7 @@
 
 namespace mousetrap
 {
+    /*
     FileMonitor::FileMonitor(FileMonitor&& other) noexcept
         : CTOR_SIGNAL(FileMonitor, file_changed)
     {
@@ -53,4 +54,5 @@ namespace mousetrap
     {
         return g_file_monitor_is_cancelled(_native);
     }
+     */
 }
