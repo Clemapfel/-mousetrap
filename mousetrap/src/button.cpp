@@ -14,6 +14,12 @@ namespace mousetrap
           CTOR_SIGNAL(Button, clicked)
     {}
 
+    Button::Button(const std::string& label)
+        : Button()
+    {
+        gtk_button_set_label(get_native(), label.c_str());
+    }
+
     void Button::set_has_frame(bool b)
     {
         gtk_button_set_has_frame(get_native(), b);

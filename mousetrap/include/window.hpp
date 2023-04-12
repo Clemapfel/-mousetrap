@@ -82,13 +82,12 @@ namespace mousetrap
             /// @return title
             std::string get_title() const;
 
-            /// @brief set titlebar layout from config string
-            /// @param config config_string formatted according to https://docs.gtk.org/gtk4/property.Settings.gtk-decoration-layout.html
-            void set_titlebar_layout(const char*);
-
-            /// @brief replace the titlebar with a custom widget
+            /// @brief replace the titlebar with a custom widget, usually a mousetrap::HeaderBar
             /// @param widget may be null
-            void set_titlebar_widget(Widget*);
+            void set_titlebar_widget(const Widget&);
+
+            /// @brief replace the titlebar custom widget with the default
+            void remove_titlebar_widget();
 
             /// @brief get custom titlebar widget, or nullptr if there is not widget or the titlebar widget was not set via mousetrap::Window::set_titlebar_widget
             Widget* get_titlebar_widget() const;
@@ -134,7 +133,7 @@ namespace mousetrap
             bool get_focus_visible() const;
 
         private:
-            Widget* _child = nullptr;
-            Widget* _titlebar_widget = nullptr;
+            const Widget* _child = nullptr;
+            const Widget* _titlebar_widget = nullptr;
     };
 }

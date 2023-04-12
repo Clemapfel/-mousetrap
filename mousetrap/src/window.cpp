@@ -77,7 +77,7 @@ namespace mousetrap
 
     Widget* Window::get_child() const
     {
-        return _child;
+        return const_cast<Widget*>(_child);
     }
 
     void Window::set_hide_on_close(bool b)
@@ -105,22 +105,20 @@ namespace mousetrap
         return gtk_window_get_destroy_with_parent(get_native());
     }
 
-    void Window::set_titlebar_layout(const char* layout)
+    void Window::set_titlebar_widget(const Widget& widget)
     {
-        auto* titlebar = GTK_HEADER_BAR(gtk_header_bar_new());
-        gtk_header_bar_set_decoration_layout(titlebar, layout);
-        gtk_window_set_titlebar(get_native(), GTK_WIDGET(titlebar));
+        _titlebar_widget = &widget;
+        gtk_window_set_titlebar(get_native(), widget.operator NativeWidget());
     }
 
-    void Window::set_titlebar_widget(Widget* widget)
+    void Window::remove_titlebar_widget()
     {
-        _titlebar_widget = widget;
-        gtk_window_set_titlebar(get_native(), _titlebar_widget == nullptr ? nullptr : _titlebar_widget->operator GtkWidget*());
+        gtk_window_set_titlebar(get_native(), nullptr);
     }
 
     Widget* Window::get_titlebar_widget() const
     {
-        return _titlebar_widget;
+        return const_cast<Widget*>(_titlebar_widget);
     }
 
     void Window::set_is_modal(bool b)

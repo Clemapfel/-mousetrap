@@ -24,6 +24,9 @@ namespace mousetrap
             /// @brief construct
             Button();
 
+            /// @brief construct with label
+            Button(const std::string&);
+
             /// @brief set whether button should have a black outline
             /// @param b
             void set_has_frame(bool b);

@@ -99,3 +99,4 @@
 #include <include/window.hpp>
 #include <include/wrap_mode.hpp>
 #include <include/shortcut_controller.hpp>
+#include <include/header_bar.hpp>
