@@ -20,7 +20,7 @@ namespace mousetrap
         if (device == nullptr)
             return 0;
 
-        gdk_device_tool_get_hardware_id(device);
+        return gdk_device_tool_get_hardware_id(device);
     }
 
     ToolType StylusEventController::get_device_type() const

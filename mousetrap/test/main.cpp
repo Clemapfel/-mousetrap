@@ -2,10 +2,15 @@
 // Created by clem on 4/12/23.
 //
 
-#include <mousetrap.hpp>
+#include <include/window.hpp>
+#include <include/header_bar.hpp>
+#include <include/scrolled_window.hpp>
+#include <include/revealer.hpp>
+#include <include/box.hpp>
+#include <include/button.hpp>
+#include <include/application.hpp>
 
-#include "test_component.hpp"
-#include "label_test.hpp"
+#include "signals_chapter.hpp"
 
 using namespace mousetrap;
 
@@ -37,7 +42,7 @@ void add_test(TestComponent* test)
 {
     assert(state != nullptr);
     state->tests.push_back(test);
-    state->stack.add_child(*test, test->get_title());
+    auto _ = state->stack.add_child(*test, test->get_title());
 }
 
 /// @brief main
@@ -49,9 +54,7 @@ int main()
         state = new State{Window(*app)};
 
         // setup children
-
-        add_test(new LabelTest());
-
+        add_test(new SignalsChapter());
 
         // action to hide gui element other than stack child
 

@@ -18,8 +18,10 @@ namespace mousetrap
             /// @return title
             virtual std::string get_title() const = 0;
     };
+}
 
-    /// @brief test API, for internal use only
+#ifdef UNDEF
+/// @brief test API, for internal use only
     struct Test
     {
         static inline std::map<std::string, std::string> _failed = {};
@@ -131,4 +133,4 @@ namespace mousetrap
     #define BEGIN_TEST(name) Test::test(name, [&](){
     #define CONTINUE_TEST(name) }); Test::test(name, [&](){
     #define END_TEST });
-}
+#endif

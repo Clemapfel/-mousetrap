@@ -247,13 +247,12 @@ if(MOUSETRAP_BUILD_TESTING)
         add_executable(
             "${TEST_PREFIX}${name}"
             "mousetrap/test/${name}.cpp"
-            "mousetrap/test/test.hpp"
         )
         target_link_libraries("${TEST_PREFIX}${name}" PRIVATE mousetrap)
         add_test(NAME "${TEST_PREFIX}${name}" COMMAND "${TEST_PREFIX}${name}")
     endfunction()
 
-    declare_test(docs)
+    declare_test(main)
 endif()
 
 ## JULIA BINDING
