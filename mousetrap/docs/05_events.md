@@ -56,28 +56,271 @@ state->window.add_controller(focus_controller);
 ```
 \julia_code_end
 
-## Gaining / Loosing Focus
+
+## Gaining / Loosing Focus: FocusEventController
 
 While the controller is now able to receive events, nothing will happen as a result of them. This is because we haven't connected to the controllers signals yet.
 
 `FocusEventController` has two signals:
-+ `focus_gained`, signature `(FocusEventController*) -> void`
-+ `focus_lost`, signaure `(FocusEventController*) -> void`
-+ 
-## Action Shortcuts
-## Keyboard Key Presses
 
-## Cursor Motion
-## Mouse Button Presses
-## Long-Presses
-## Click-Dragging
-## Scrolling
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+| `focus_gained` | `(FocusEventController*) -> void` | widget which currently does not have focus, gains focus |
+| `focus_lost`   | `(FocusEventController*) -> void` | widget which currently does have focus, looses focus    |
 
-## Touchscreen: Panning
-## Touchscreen: Pinch-Zoom
-## Touchscreen: 2-Finger Rotate
-## Touchscreen: Swipe
+After connecting to these signals:
 
-## Touchpad Stylus
+\cpp_code_begin
+```cpp
+auto focus_controller = FocusEventController();
 
+focus_controller.connect_signal_focus_gained([](FocusEventController*){
+    std::cout << "focus gained" << std::endl;
+});
+
+focus_controller.connect_signal_focus_lost([](FocusEventController*) {
+    std::cout << "focus lost" << std::endl;
+});
+
+state->window.add_controller(focus_controller);
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+we are able to easily monitor when a widget gains/looses input focus.
+
+---
+
+## Keyboard Key Presses: KeyEventController
+
+To react to keyboard pressed, we use `mousetrap::KeyEventController`. This controller has 3 signals:
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+| `key_pressed`  | 
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Cursor Motion: MotionEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Mouse Button Presses: ClickEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Long-Presses: LongPressEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Mousewheel-Scrolling: ScrollEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Click-Dragging: DragEventController
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Action Shortcuts: ShortcutController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Touchscreen Panning: PanEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Touchscreen Pinch-Zoom: PinchZoomEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Touchscreen 2-Finger Rotate: RotateEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Touchscreen Swipe: SwipeEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
+
+## Touchpad Stylus: StylusEventController
+
+
+| id             | signature | emitted when...                                         |
+|----------------|-----------|---------------------------------------------------------|
+
+\cpp_code_begin
+```cpp
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# TODO
+```
+\julia_code_end
+
+---
 
