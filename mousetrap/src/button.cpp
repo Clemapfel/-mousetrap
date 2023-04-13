@@ -17,7 +17,9 @@ namespace mousetrap
     Button::Button(const std::string& label)
         : Button()
     {
-        gtk_button_set_label(get_native(), label.c_str());
+        auto* widget = gtk_label_new(label.c_str());
+        gtk_label_set_use_markup(GTK_LABEL(widget), true);
+        gtk_button_set_child(get_native(), widget);
     }
 
     void Button::set_has_frame(bool b)

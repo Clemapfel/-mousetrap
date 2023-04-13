@@ -59,6 +59,10 @@ namespace mousetrap
             /// @param id obtained from mousetrap::Stack::add_child
             void remove_child(Stack::ID);
 
+            /// @brief get number of children
+            /// @return n
+            size_t get_n_children() const;
+
             /// @brief get id of page that is currently displayed
             /// @return id
             Stack::ID get_visible_child();

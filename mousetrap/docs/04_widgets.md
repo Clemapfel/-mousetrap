@@ -1,6 +1,10 @@
 # Chapter 4: Widgets
 
+Widgets are central to any GUI application. Usually, a widget is 
+
 ## mousetrap::Widget
+
+All widgets inherit from `mousetrap::Widget`. When creating a custom widget, 
 
 ### Widget Properties
 

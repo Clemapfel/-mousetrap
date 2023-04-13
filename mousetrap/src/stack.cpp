@@ -109,6 +109,11 @@ namespace mousetrap
         return gtk_stack_get_visible_child_name(get_native());
     }
 
+    size_t Stack::get_n_children() const
+    {
+        return g_list_model_get_n_items(G_LIST_MODEL(gtk_stack_get_pages(get_native())));
+    }
+
     void Stack::set_visible_child(Stack::ID id)
     {
         gtk_stack_set_visible_child_name(get_native(), id.c_str());
