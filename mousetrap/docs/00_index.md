@@ -2,9 +2,10 @@
 
 ## Introduction
 
-GTK4 is extremely powerful, well-optimized and utterly inscrutable. mousetrap aims to address this wrapping most of GTK4
-in an easy-to-use, easy-to-understand new coat. It furthermore adds fully abstract, native OpenGL capabilities and the abilitiy
-to do audio playback. User will be able to create applications within a few minutes, as opposed to days.
+GTK4 is extremely powerful, well-optimized, and utterly inscrutable. Mousetrap aims to address this wrapping most of GTK4
+in an easy-to-use, easy-to-understand, comfortable new coat. It adds fully abstracted native OpenGL capabilities, and the abilitiy
+to do audio playback, making mousetrap a fully capable multi-media GUI engine, empowering users to create applications within a 
+few minutes, as opposed to days.
 
 Mousetrap features a step-by-step manual introducing readers to GUI programming, installation and troubleshooting guide, 
 and full index of functions/classes - all written by a human.
