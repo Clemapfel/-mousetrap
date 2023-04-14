@@ -12,19 +12,21 @@ namespace mousetrap
         : WidgetImplementation<GtkOverlay>(GTK_OVERLAY(gtk_overlay_new()))
     {}
 
-    void Overlay::set_child(Widget* in)
+    void Overlay::set_child(const Widget& in)
     {
-        WARN_IF_SELF_INSERTION(Overlay::set_child, this, in);
+        auto* ptr = &in;
+        WARN_IF_SELF_INSERTION(Overlay::set_child, this, ptr);
 
-        _child = in;
-        gtk_overlay_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget*());
+        _child = ptr;
+        gtk_overlay_set_child(get_native(), in.operator GtkWidget*());
     }
 
-    void Overlay::add_overlay(Widget* widget, bool included_in_measurement, bool clip)
+    void Overlay::add_overlay(const Widget& widget, bool included_in_measurement, bool clip)
     {
-        WARN_IF_SELF_INSERTION(Overlay::add_overlay, this, widget);
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Overlay::add_overlay, this, ptr);
 
-        auto* gtk_widget = widget != nullptr ? widget->operator GtkWidget*() : nullptr;
+        auto* gtk_widget = widget.operator GtkWidget*();
         if (gtk_widget == nullptr)
             return;
 
@@ -33,12 +35,9 @@ namespace mousetrap
         gtk_overlay_set_clip_overlay(get_native(), gtk_widget, clip);
     }
 
-    void Overlay::remove_overlay(Widget* in)
+    void Overlay::remove_overlay(const Widget& in)
     {
-        if (in == nullptr)
-            return;
-
-        gtk_overlay_remove_overlay(get_native(), in->operator GtkWidget*());
+        gtk_overlay_remove_overlay(get_native(), in.operator GtkWidget*());
     }
 
     void Overlay::remove_child()
@@ -48,6 +47,6 @@ namespace mousetrap
 
     Widget* Overlay::get_child() const
     {
-        return _child;
+        return const_cast<Widget*>(_child);
     }
 }

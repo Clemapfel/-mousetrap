@@ -18,7 +18,10 @@ namespace mousetrap
 
             /// @brief set the child
             /// @param child
-            void set_child(Widget*);
+            void set_child(const Widget&);
+
+            /// @brief remove child, frame is now empty
+            void remove_child();
 
             /// @brief get child
             /// @return child
@@ -26,7 +29,10 @@ namespace mousetrap
 
             /// @brief set label widget
             /// @param widget
-            void set_label_widget(Widget*);
+            void set_label_widget(const Widget&);
+
+            /// @brief remove label widget, frame no longer has a label
+            void remove_label_widget();
 
             /// @brief get label widget
             /// @return widget
@@ -41,7 +47,7 @@ namespace mousetrap
             float get_label_x_alignment() const;
 
         private:
-            Widget* _child = nullptr;
-            Widget* _label_widget = nullptr;
+            const Widget* _child = nullptr;
+            const Widget* _label_widget = nullptr;
     };
 }

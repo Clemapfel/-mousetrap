@@ -56,17 +56,18 @@ state->window.add_controller(focus_controller);
 ```
 \julia_code_end
 
-
 ## Gaining / Loosing Focus: FocusEventController
 
 While the controller is now able to receive events, nothing will happen as a result of them. This is because we haven't connected to the controllers signals yet.
 
+### Signals
+
 `FocusEventController` has two signals:
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
-| `focus_gained` | `(FocusEventController*) -> void` | widget which currently does not have focus, gains focus |
-| `focus_lost`   | `(FocusEventController*) -> void` | widget which currently does have focus, looses focus    |
+| id             | signature                                   | emitted when...                                         |
+|----------------|---------------------------------------------|---------------------------------------------------------|
+| `focus_gained` | `(FocusEventController*, (Data_t)) -> void` | widget which currently does not have focus, gains focus |
+| `focus_lost`   | `(FocusEventController*, (Data_t)) -> void` | widget which currently does have focus, looses focus    |
 
 After connecting to these signals:
 
@@ -96,15 +97,57 @@ we are able to easily monitor when a widget gains/looses input focus.
 
 ---
 
-## Keyboard Key Presses: KeyEventController
+## Keyboard Keys: KeyEventController
 
-To react to keyboard pressed, we use `mousetrap::KeyEventController`. This controller has 3 signals:
+To react to keyboard pressed, we use `mousetrap::KeyEventController`. This is one of the most commonly used controllers, so it is pertinent to talk about keys first.
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
-| `key_pressed`  | 
+
+### Modifiers
+
+Mousetrap is based on GTK4, which splites keys into two groups: regular keys and *modifiers*.
+
+A modifier is one of the following:
++ `Shift`
++ `Control`
++ `Alt`
+
+These keys are not tracked directly, rather they are modifiers to the state of a key. For example, the key `C` can be pressed, not pressed, pressed while only shift is held, pressed while shift and alt are held, etc. To express all these options, mousetrap provides `mousetrap::ModifierState`, which holds information about which modifier keys are pressed.
+
+To query the modifier state, we use static function of `KeyEventController`. A static function is a function that can be invoked without instantiating the class, meaning we do not need a `KeyEventController` to call them. The functions
+
++ \link mousetrap::KeyEventController::shift_pressed shift_pressed <br>
++ \link mousetrap::KeyEventController::control_pressed control_pressed <br>
++ \link mousetrap::KeyEventController::alt_pressed alt_pressed <br>
+
+query whether the corresponding modifier key is currently down.
+
+### Key Identification
+
+Mousetrap uses two kinds of identifiers for keys, `KeyValue`s and `KeyCode`s. For most purposes, only the first is relevant for most users. `KeyCode` is a 32-bit int
+designating the internal identifier of the key, as the users OS designates it. `KeyValue` identifies the key in an platform-independent manner, which is why testing against it should be preferred.
+
+GTK4 provides key identifiers for almost every keyboard layout, a list of identifiers can be found [here](https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h#L38).
+
+### Signals
+
+Now that we know how to identify a code, we can look at the 3 signals of `KeyEventController:
+
+| id                                                                                                                                               | signature                                                                    | emitted when...                                      |
+|--------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|------------------------------------------------------|
+| `key_pressed`                                                                                   `(T*, KeyValue, KeyCode, ModifierState) -> bool` | user presses a key that is currently up                                      |                                                      |
+| `key_released`                                                                                                                                   | `(T*, KeyValue, KeyCode, ModifierState) -> void`                             | user releases a key that is currently down           | 
+ | `modifiers_changed`                                                                                                                              | `(T*, KeyValue key_value, KeyCode key_code, ModifierState modifier) -> bool` | a modifier key is pressed or released\cpp_code_begin |
+               
+Pressing and releasing a regular key are separate events, they can be used to keep track of whether a key is currently down. For each signal, we get access to the keyvalue, the less relevant key code and the modifier state, which we can query using the `KeyEventController` instance. For example, to test whether the user presses the space key while `state->window` holds input focus:
+       
 \cpp_code_begin
 ```cpp
+auto key_controller = KeyEventController();
+key_controller.connect_signal_key_pressed([](KeyEventController* instance, int32_t key_value, int32_t _, ModifierState state){
+    if (key_value == GDK_KEY_space)
+        std::cout << "space pressed" << std::endl;
+});
+state->window.add_controller(key_controller);
 ```
 \cpp_code_end
 
@@ -113,14 +156,33 @@ To react to keyboard pressed, we use `mousetrap::KeyEventController`. This contr
 # TODO
 ```
 \julia_code_end
+                   
+Where we choose `_` as the variable name for the key code to signifiy that it will go unused.
+
+Not that `KeyEventController` should not be used to detect whether the user pressed a common key binding, for example `<Control>c`, mousetrap provides a special 
+event controller called `ShortcutEventController` for this, which we will learn about shortly. 
+`KeyEventController` is intended to monitor both key presses and key releases of individual keys, not to trigger actions based on common keybinding shortcuts.
 
 ---
 
 ## Cursor Motion: MotionEventController
+                                                                 
+Now that we know how to handle keyboard events, we will turn our attention to mouse-based events. There are two types 
+of events a mouse can emit, *cursor motion*  and *mouse button presses*. These are handled in different controllers, we 
+will deal with cursor motion first.
 
+The corresponding event controller `MotionEventController` has 3 signals:
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
+| id             | signature                                                             | emitted when...                                              |
+|----------------|-----------------------------------------------------------------------|--------------------------------------------------------------|
+| `motion_enter` | `(MotionEventController*, double x, double y, (Data_t) -> void`       | Cursor enters the allocated space of the controlled widget   |
+ | `motion` | `T*, double x, double y) -> void`                                     | Cursor moves inside allocated space of the controlled widget |
+| `motion_leave` | `(MotionEventController*, (Data_t)) -> void`                          | Cursor leaves allocated space ot he controlled widget        |
+
+`motion_enter` and `motion` supply the signal handler with 2 addition arguments, `x` and `y`. These are the absolute position of the cursor, in pixels.
+For example, if the widget is a `Box` and it has allocated 500x200 pixels on screen, when the cursor is exactly at the center of the box, `x` will have a value of `250`, `y` will have a value of `100`.
+
+Note that `motion` is only emitted when the cursor already entered the controlled widget. We cannot track a cursor that is outside the widget. To track all cursor movement, we would have to connect the controll to a window and make that window cover the entire desktop screen.
 
 \cpp_code_begin
 ```cpp

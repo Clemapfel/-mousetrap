@@ -244,4 +244,49 @@ The two buttons will now exhibit the correct behavior.
 
 ## Finding a Signals Signature
 
-mousetrap has dozens of different signals, all with their unique signature. It can be hard remembering which signal emitter has which signals and what functions can be connected to which signal. To help with this, remember to simply check the documentation. Only classes inherting from `mousetrap::SignalEmitter` can have signals. Each signal has its own class, the documentation for that class will have the signals signature noted. Furthermore, the next chapter will state, in plain english, which widget has which signals and what each signal is for.
+mousetrap has dozens of different signals, all with their unique signature. It can be hard remembering which class has which 
+signals, and which signals take which signatures. 
+
+All of this information is accessible in mousetraps documentation, to aid users who are less familiar with reading documentation,
+it may appropriate to work through an example.
+
+@todo linke
+
+Let's say we want to check which signals `mousetrap::Window` has. Navigating to [its documentation page](TODO), we see that inherits multipel signal components:
+
+From it's base `Widget`, `Window` inherits:
++ `realize`
++ `unrealize`
++ `destroy`
++ `hide`
++ `show`
++ `map`
++ `unmap`
+
+We are not concerned with these, we want to check which signals `Window`, specifically, provides.
+
+From the inheritance diagram at the top of the page, we see that `Window` directly inherits from the following signal components:
+
++ `close_request`
++ `activate_default_widget`
++ `activate_focused_widget`
+
+Let's say we are interested in `close_request`, navigating to the page for `mousetrap::has_signal_close_request` we can gather information about when the window is triggered at the very top of the page:
+
+> \copydoc mousetrap::has_signal_close_request
+
+If we want to find out which signature we have to use for this signal, we check the documentation for `connect_signal_close_request`. It has two overloads, one with and one without `Data_t`, the arbitrary data. 
+
+For the overload with `Data_t`, it says:
+
+> \copydoc mousetrap::has_signal_close_request::connect_signal_close_request(Function_t, Data_t)
+
+Which states the signature for the signal handler next to the argument description.
+
+```
+(T*, Data_t) -> mousetrap::WindowCloseRequestResult
+```
+
+Where `T` is the class inheriting from this signal component, `Window` in this case, `Data_t` is the type of our data, this is deduced automatically at runtime. Lastly the return type is `mousetrap::WindowCloseRequestResult`, which decides whether the window should close or stay open. 
+
+We will learn more about each of these signals in the next few chapters, for now just remember how to access this information if you need it later.

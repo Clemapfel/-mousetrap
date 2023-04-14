@@ -722,22 +722,26 @@ namespace mousetrap
     /// @fn has_signal_unmap::has_signal_unmap
     /// \signal_ctor
 
+    /// @brief Result of mousetrap::has_signal_close_request
     enum WindowCloseRequestResult : bool
     {
+        /// @brief Allow the default handler to be invoked, this means that the window will close after the signal handler has exited
         ALLOW_CLOSE = false,
+
+        /// @brief Prevent the default handler to be invoked, this means the window will stay open after the signal handler function has exited
         PREVENT_CLOSE = true
     };
 
     DECLARE_SIGNAL(CloseRequest, close_request, CLOSE_REQUEST, "close-request", WindowCloseRequestResult);
     /// @class has_signal_close_request
-    /// @brief signal emitted when a window is requested to close, usually by calling Window::close or when a user presses the `x` button in the windows title bar
+    /// @brief signal emitted when a window is requested to close, usually by calling mousetrap::Window::close or when a user presses the `x` button in the windows title bar
     /// @tparam T instance type
     ///
     /// @fn void has_signal_close_request::connect_signal_close_request(Function_t)
-    /// \signal_connect{(T*) -> WindowCloseRequestResult}
+    /// \signal_connect{(T*) -> mousetrap::WindowCloseRequestResult}
     ///
     /// @fn void has_signal_close_request::connect_signal_close_request(Function_t, Data_t)
-    /// \signal_connect_data{(T*, Data_t) -> WindowCloseRequestResult}
+    /// \signal_connect_data{(T*, Data_t) -> mousetrap::WindowCloseRequestResult}
     ///
     /// @fn void has_signal_close_request::emit_signal_close_request()
     /// \signal_emit_brief
@@ -2713,11 +2717,19 @@ namespace mousetrap
     /// @fn has_signal_press_cancelled::has_signal_press_cancelled
     /// \signal_ctor
 
+    /// @brief Touch-screen pan direction
     enum class PanDirection
     {
+        /// @brief pan right to left
         LEFT = GTK_PAN_DIRECTION_LEFT,
+
+        /// @brief pan left to right
         RIGHT = GTK_PAN_DIRECTION_RIGHT,
+
+        /// @brief pan bottom to top
         TOP = GTK_PAN_DIRECTION_UP,
+
+        /// @brief pan top to bottom
         DOWN = GTK_PAN_DIRECTION_DOWN
     };
 

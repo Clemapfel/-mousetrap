@@ -433,4 +433,18 @@ namespace mousetrap
     {
         return Clipboard(this);
     }
+
+    void Widget::set_hide_on_overflow(bool b)
+    {
+        gtk_widget_set_overflow(operator GtkWidget*(), b ? GTK_OVERFLOW_HIDDEN : GTK_OVERFLOW_VISIBLE);
+    }
+
+    bool Widget::get_hide_on_overflow() const
+    {
+        auto overflow = gtk_widget_get_overflow(operator GtkWidget*());
+        if (overflow == GTK_OVERFLOW_HIDDEN)
+            return true;
+        else
+            return false;
+    }
 }

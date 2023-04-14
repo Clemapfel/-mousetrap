@@ -11,6 +11,7 @@
 #include <include/application.hpp>
 
 #include "signals_chapter.hpp"
+#include "motion_controller_test.hpp"
 
 using namespace mousetrap;
 
@@ -54,7 +55,9 @@ int main()
         state = new State{Window(*app)};
 
         // setup children
+        add_test(new MotionControllerTest());
         add_test(new SignalsChapter());
+
 
         // action to hide gui element other than stack child
 

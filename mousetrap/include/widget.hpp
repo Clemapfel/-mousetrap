@@ -311,6 +311,14 @@ namespace mousetrap
             /// @return clipboard
             Clipboard get_clipboard() const;
 
+            /// @brief set whether a child widget inside this widget should be cutoff when it leaves this widgets boundary
+            /// @param b true if child shut be cutoff, true if it should be fully visible
+            void set_hide_on_overflow(bool);
+
+            /// @brief get whether a child widget inside this widget should be cutoff when it leaves this widgets boundary
+            /// @return true if child shut be cutoff, true if it should be fully visible
+            bool get_hide_on_overflow() const;
+
         protected:
             /// @brief default ctor, protected. Only inheriting classes should call this
             Widget();

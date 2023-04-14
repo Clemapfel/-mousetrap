@@ -11,33 +11,45 @@ namespace mousetrap
     Frame::Frame()
         : WidgetImplementation<GtkFrame>(GTK_FRAME(gtk_frame_new("")))
     {
-        set_label_widget(nullptr);
+        remove_label_widget();
     }
 
-    void Frame::set_child(Widget* in)
+    void Frame::set_child(const Widget& in)
     {
-        WARN_IF_SELF_INSERTION(Frame::set_child, this, in);
+        auto ptr = &in;
+        WARN_IF_SELF_INSERTION(Frame::set_child, this, ptr);
 
-        _child = in;
-        gtk_frame_set_child(get_native(), _child == nullptr ? nullptr : _child->operator GtkWidget *());
+        _child = ptr;
+        gtk_frame_set_child(get_native(), in.operator GtkWidget *());
     }
 
     Widget* Frame::get_child() const
     {
-        return _child;
+        return const_cast<Widget*>(_child);
     }
 
-    void Frame::set_label_widget(Widget* widget)
+    void Frame::remove_child()
     {
-        WARN_IF_SELF_INSERTION(Frame::set_label_widget, this, widget);
+        gtk_frame_set_child(get_native(), nullptr);
+    }
 
-        _label_widget = widget;
-        gtk_frame_set_label_widget(get_native(), _label_widget == nullptr ? nullptr : _label_widget->operator GtkWidget*());
+    void Frame::set_label_widget(const Widget& widget)
+    {
+        auto* ptr = &widget;
+        WARN_IF_SELF_INSERTION(Frame::set_label_widget, this, ptr);
+
+        _label_widget = ptr;
+        gtk_frame_set_label_widget(get_native(), widget.operator GtkWidget*());
     }
 
     Widget* Frame::get_label_widget() const
     {
-        return _label_widget;
+        return const_cast<Widget*>(_label_widget);
+    }
+
+    void Frame::remove_label_widget()
+    {
+        gtk_frame_set_label_widget(get_native(), nullptr);
     }
 
     void Frame::set_label_x_alignment(float x)
