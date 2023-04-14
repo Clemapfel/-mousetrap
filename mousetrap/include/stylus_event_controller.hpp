@@ -39,7 +39,7 @@ namespace mousetrap
 
     /// @brief handles events emitted by a touchpad stylus
     /// @todo expose high resolution motion history: https://docs.gtk.org/gtk4/method.GestureStylus.get_backlog.html
-    class StylusEventController : public EventController,
+    class StylusEventController : public SingleClickGesture,
         HAS_SIGNAL(StylusEventController, stylus_down),
         HAS_SIGNAL(StylusEventController, stylus_up),
         HAS_SIGNAL(StylusEventController, proximity),

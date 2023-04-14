@@ -58,4 +58,65 @@ namespace mousetrap
             EventController(GtkEventController*);
             GtkEventController* _native;
     };
+
+    /// @brief id of a mouse button
+    enum class ButtonID : guint
+    {
+        /// @brief none, always invalid
+        NONE = guint(-1),
+
+        /// @brief represents any mouse button
+        ANY = 0,
+
+        /// @brief first mouse button, usually left
+        BUTTON_01 = 1,
+
+        /// @brief second mouse button, usually right
+        BUTTON_02 = 2,
+
+        /// @brief third mouse button
+        BUTTON_03 = 3,
+
+        /// @brief fourth mouse button
+        BUTTON_04 = 4,
+
+        /// @brief fifth mouse button
+        BUTTON_05 = 5,
+
+        /// @brief sixth mouse button
+        BUTTON_06 = 6,
+
+        /// @brief seventh mouse button
+        BUTTON_07 = 7,
+
+        /// @brief eighth mouse button
+        BUTTON_08 = 8,
+
+        /// @brief nineth mouse button
+        BUTTON_09 = 9,
+    };
+
+    /// @brief single-click gesture, can be activated by a mouse button press or touchscreen tap
+    class SingleClickGesture : public EventController
+    {
+        /// @brief get the button for the current event
+        /// @return ButtonID, may be mousetrap::ButtonID::NONE if no event is currently bound
+        ButtonID get_current_button() const;
+
+        /// @brief set which button the event controller should listen to
+        /// @param id button, ButtonID::ANY to listen to any, ButtonID::NONE to listen to no button
+        void set_only_listens_to_button(ButtonID);
+
+        /// @brief get which button the event controller should listen to
+        /// @return button id, or ButtonID::ANY if listening to any, ButtonID::NONE if listening to no button
+        ButtonID get_only_listens_to_button() const;
+
+        /// @brief get whether the controller should only list to touch events
+        /// @param b true if only listening to touch events, false otherwise
+        bool get_touch_only() const;
+
+        /// @brief set whether the controller should only listen to touch events
+        /// @param b true if it should only consider touch events, false otherwise
+        void set_touch_only(bool);
+    };
 }

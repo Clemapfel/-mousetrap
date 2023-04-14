@@ -184,8 +184,15 @@ For example, if the widget is a `Box` and it has allocated 500x200 pixels on scr
 
 Note that `motion` is only emitted when the cursor already entered the controlled widget. We cannot track a cursor that is outside the widget. To track all cursor movement, we would have to connect the controll to a window and make that window cover the entire desktop screen.
 
+To track cursor position as the cursor moves over a window, we can do the following:
+
 \cpp_code_begin
 ```cpp
+auto motion_controller = MotionEventController();
+motion_controller.connect_signal_motion([](MotionEventController*, double x, double y){
+   std::cout << "Cursor Position: " << x << " " << y << std::endl;  
+});
+window.add_controller(motion_controller);
 ```
 \cpp_code_end
 
@@ -199,12 +206,56 @@ Note that `motion` is only emitted when the cursor already entered the controlle
 
 ## Mouse Button Presses: ClickEventController
 
+With cursor movement taken care of, we now turn our attention to handling the other type of mouse event: button presses.
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
+### Signals
+
+The corresponding event controller is called `ClickEventController` which has 3 signals:
+
+| id             | signature | emitted when...                                     |
+|----------------|-----------|-----------------------------------------------------|
+ | `click_pressed` | `(ClickEventController*, int32_t n_presses, double x, double y, (Data_t)) -> void` | any mouse button that is current up is pressed      |
+| `click_released` | `(ClickEventController*, int32_t n_presses, double x, double y, (Data_t)) -> void` | any mouse button that is currently down is released |
+| `click_stopped` | `(ClickEventController*, (Data_t)) -> void` | a sequence of multiple clicks stops                 |
+
+Much like with `MotionEventController`, the signals provide the handler with `x` and `y`, the absolute position of the cursor when they click happend, in local widget-space. The first argument for two of the signals, `click_pressed` and `click_released`, `n_presses` is the number of clicks in the current sequence. For example `n_presses = 2` in a `click_pressed` means that this is the second time the mouse button was pressed in sequence. 
+
+`click_stopped` signals that a sequence of clicks has stopped. It may be helpful to consider an example:
+
+Let's say the user clicks the mouse button 2 times total, then stops clicking. This will emit the following events in this order:
+1) `click_pressed` (n = 1)
+2) `click_released` (n = 1)
+3) `click_pressed` (n = 2)
+4) `click_released` (n = 2)
+5) `click_stopped`
+
+This allows us to easily handle double-clicks without any external function keeping track of them. The delay after which a click sequence stops is system-dependent and usually decided by the window manager, not mousetrap.
+
+### Differentiating Mouse Buttons
+
+`ClickEventController` is one of a few event controllers that inherit from `mousetrap::SingleClickGesture`. This interface provides functionality that lets us distinguish between 
+different mouse buttons. mousetrap supports up to 9 different mouse buttons, identified by `mousetrap::ButtonID`:
+
++ ButtonID::BUTTON_01 is usually the left mouse button or a touchpad click
++ ButtonID::BUTTON_02 is usually the right mouse button
++ ButtonID::ANY is used as a catch-all for all possible mouse buttons
++ ButtonID::BUTTON_03 - BUTTON_09 are subsequent hardware-specific buttons
++ ButtonID::NONE represents none of the above
+
+To check which mouse button was pressed when a signal of `ClickEventController` was emitted, we use `get_current_button`, which returns an id above.
+If we only want signals to emitted for certain buttons, we can use `set_only_list_to_button` to restrict the choice of button to one specific button,
+or we can call `set_touch_only` to only listen to touch-event
+
+For example, if we want to activate an action when a widget `some_widget` (that is usually not clickable), is clicked twice with the left mouse button, we can do the following:
 
 \cpp_code_begin
 ```cpp
+auto click_controller = ClickEventController();
+click_controller.connect_signal_click_pressed([](ClickEventController* controller, int32_t n_presses, double x, doubel y){
+    if (n_pressed == 2 and controller->get_current_button() == ButtonID::BUTTON_01)
+        std::cout << "double click registered at: " << x << " " << y << std::endl;
+});
+some_widget.add_controller(click_controller);
 ```
 \cpp_code_end
 
@@ -213,44 +264,63 @@ Note that `motion` is only emitted when the cursor already entered the controlle
 # TODO
 ```
 \julia_code_end
+
+`ClickEventController` gives us full control over one or multiple mouse- / touchscreen clicks. There is a more specialized
+controller dealing with mouse input, thought.
 
 ---
 
 ## Long-Presses: LongPressEventController
 
+`LongPressEventController` reacts to a specific used input of pressing a mouse button or touchpad, keeping it at a spefici position and not releasing the
+button for a long time. This is called a long press, and it is sometimes used to trigger additional behavior not related
+to individual "short" clicks. Not that it is necessary for the cursor to stay in the same position for the entire durtion, if it moves, it is registered as a "pan" gesture, which we will talk about later.
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
+`LongPressEventController` has 2 signals:
 
-\cpp_code_begin
-```cpp
-```
-\cpp_code_end
+| id             | signature                                                          | emitted when...                                                                |
+|----------------|--------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| `pressed` | `(LongPressEventController*, double x, double y, (Data_t) -> void` | emitted when button is held for long enough duration to register as long press |
+| `press_cancelled` | `(LongPressEventController*, (Data_t)) -> void`  | emitted when button is released or moved too much before `pressed` was emitted |                   
 
-\julia_code_begin
-```julia
-# TODO
-```
-\julia_code_end
+Similar to `clicked`, `LongPressEventController` provides use with the location of the cursor.
+
+We can modify how long the user has to hold the button for to register as a long-press by 
+multiplying the default amount of time with a factor, which is the argument to `mousetrap::LongPressEventController::set_delay_factor`. Being a factor, a value of `1` means no change, a value of `2` means it will take twice as long and a value of `0.5` means it will take half as long.
+
+`LongPressEventController`, like `ClickEventController`, inherits from `SingleClickGesture`, which allows us to differentiate between different mouse button or touchscreens just like before.
 
 ---
 
 ## Mousewheel-Scrolling: ScrollEventController
 
+We know how to handle mouse buttons, so we now turn our attention to the mouses scroll wheel. This is usually a designated button on the physical mouse, but maybe also be triggered by the OS through a touchpad or touchscreen gesture, such as the "two finger scroll" common for most tablets.
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
+### Signals
 
-\cpp_code_begin
-```cpp
-```
-\cpp_code_end
+No matter how the scroll was inputted, `ScrollEventController` allows us to react to it with its 3+1 signals:
 
-\julia_code_begin
-```julia
-# TODO
-```
-\julia_code_end
+| id             | signature                                  | emitted when...                                         |
+|----------------|--------------------------------------------|---------------------------------------------------------|
+| `scroll_begin` | `(ScrollEventController*, (Data_t)) -> void` | scroll starts |
+| `scroll` | `(ScrollEventController*, double delta_x, double delta_y, (Data_t)) -> void` | once each frame while the scroll is happening |
+| `scroll_end` | `(ScrollEventController*, (Data_t)) -> void` | scroll end |
+
+These three signals are fairly straighforward, when the user starts scrolling `scroll_begin` is emitted. Then, as the user keeps scrolling, `scroll` is emitted every tick to update us on the position of the scroll wheel. Signal `scroll` provides the signal handler with `delta_x` and `delta_y` which is the difference between the current position of the scroll wheel and the position at the start of the scroll (when `scroll_begin` was emitted). This difference is in 2D space, as some mice and most touchscreen allow scrolling in two dimensions. Once the user stops scrolling `scroll_end` is emitted once.
+
+### Kinetic Scrolling
+
+`ScrollEventController` has a fourth signal which reacts to *kinetic scrolling*. Kinetic scrolling is a feature of touchscreens
+where the user can quickly scroll on the screen to make the scrolled widget behave as if it had inertia. The scroll distance of the widget is more than the distance the users actual fingers moved. Not all devices support this kind of scrolling, but if they do most of the event sequence will be the same as with regular scroll: `scroll_begin` once, then `scroll` many times, then `scroll_end` once the users finger leaves the touchscreen. Afterwards, while the widget is still scrolling because of intertia, the following signal is emitted:
+
+| id                          | signature                                                                          | emitted when...                                              |
+|-----------------------------|------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| `kinetic_scroll_decelerate` | `(ScrollEventController*, double x_velocity, double y_velocity, (Data_t)) -> void` | scroll ends but inertia should continue scrolling the widget |
+
+`x_velocity` and `y_velocity` are the read-only current conceptual speed of the scroll. They automatically decay and the "friction" (the speed at which it decelerates) is device-dependent. Either way, for devices/widgets who support kinetic scrolling, we should connect to this signal to monitor the speed of scrolling as it slows down.
+
+`mousetrap::ScrolledWindow`, from the previous chapter, has a default handler that uses kinetic scrolling for a smoother user
+experience, for a widget like this connecting to `kinetic_scroll_decelerate` is highly adviced, regardless of the users hardware.
 
 ---
 

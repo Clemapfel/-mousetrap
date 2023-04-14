@@ -79,6 +79,7 @@ Mousetrap is unsuitable for:
 (In order of priority, from highest to lowest)
 
 + Make list-based widgets (`ListView`, `ColumnView`, `GridView`, etc.) filterable and add searching functionality
++ Expose `GtkSettings` interface
 + Allow SFML-based video game controller input
 + Expose the full `GtkTextView` interface
 + Add 3D capabilities to `RenderArea`
