@@ -126,7 +126,12 @@ set(MOUSETRAP_HEADER_FILES
     mousetrap/include/file_chooser.hpp
     mousetrap/include/shortcut_controller.hpp
     mousetrap/include/menubar.hpp
-        mousetrap/include/long_press_event_controller.hpp mousetrap/include/pan_event_controller.hpp mousetrap/include/swipe_event_controller.hpp mousetrap/include/stylus_event_controller.hpp mousetrap/include/header_bar.hpp)
+    mousetrap/include/long_press_event_controller.hpp
+    mousetrap/include/pan_event_controller.hpp
+    mousetrap/include/swipe_event_controller.hpp
+    mousetrap/include/stylus_event_controller.hpp
+    mousetrap/include/header_bar.hpp
+)
 
 set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/shape.cpp
@@ -213,7 +218,13 @@ set(MOUSETRAP_SOURCE_FILES
     mousetrap/src/file_chooser.cpp
     mousetrap/src/shortcut_controller.cpp
     mousetrap/src/signal_component.cpp
-    mousetrap/src/menu_bar.cpp mousetrap/src/long_press_event_controller.cpp mousetrap/src/pan_event_controller.cpp mousetrap/src/swipe_event_controller.cpp mousetrap/src/stylus_event_controller.cpp mousetrap/src/header_bar.cpp)
+    mousetrap/src/menu_bar.cpp
+    mousetrap/src/long_press_event_controller.cpp
+    mousetrap/src/pan_event_controller.cpp
+    mousetrap/src/swipe_event_controller.cpp
+    mousetrap/src/stylus_event_controller.cpp
+    mousetrap/src/header_bar.cpp
+)
 
 add_library(mousetrap SHARED
    ${MOUSETRAP_HEADER_FILES}
@@ -294,13 +305,13 @@ add_compile_definitions(mousetrap_julia_binding MOUSETRAP_JULIA_BINDING)
 find_library(lua REQUIRED NAMES lua)
 set(SOL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/sol2/include")
 
-add_executable(debug main.cpp)
-target_link_libraries(debug PRIVATE
+add_executable(battle_main battle/main.cpp)
+target_link_libraries(battle_main PRIVATE
     mousetrap
     ${lua}
 )
 
-target_include_directories(debug PRIVATE
+target_include_directories(battle_main PRIVATE
     "${CMAKE_SOURCE_DIR}"
     "${SOL_INCLUDE_DIR}"
 )
