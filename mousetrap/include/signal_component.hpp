@@ -247,18 +247,6 @@ namespace mousetrap
     /// @var has_signal_activate::signal_id
     /// \signal_id{activate}
     ///
-    /// @var has_signal_activate::signal_handler_with_data_f
-    /// \signal_with_data_f{activate}
-    ///
-    /// @var has_signal_activate::signal_handler_without_data_f
-    /// \signal_without_data_f{activate}
-    ///
-    /// @fn void has_signal_activate::connect_signal_activate(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_activate::connect_signal_activate(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_activate::set_signal_activate_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -288,18 +276,6 @@ namespace mousetrap
     /// @var has_signal_startup::signal_id
     /// \signal_id{https://docs.gtk.org/gio/signal.Application.startup.html}
     ///
-    /// @var has_signal_startup::signal_handler_with_data_f
-    /// \signal_with_data_f{startup}
-    ///
-    /// @var has_signal_startup::signal_handler_without_data_f
-    /// \signal_without_data_f{startup}
-    ///
-    /// @fn void has_signal_startup::connect_signal_startup(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_startup::connect_signal_startup(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_startup::set_signal_startup_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -325,21 +301,6 @@ namespace mousetrap
     ///
     /// @fn void has_signal_shutdown::emit_signal_shutdown()
     /// \signal_emit_brief
-    ///
-    /// @var has_signal_shutdown::signal_id
-    /// \signal_id{https://docs.gtk.org/gio/signal.Application.startup.html}
-    ///
-    /// @var has_signal_shutdown::signal_handler_with_data_f
-    /// \signal_with_data_f{shutdown}
-    ///
-    /// @var has_signal_shutdown::signal_handler_without_data_f
-    /// \signal_without_data_f{shutdown}
-    ///
-    /// @fn void has_signal_shutdown::connect_signal_shutdown(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_shutdown::connect_signal_shutdown(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_shutdown::set_signal_shutdown_blocked(bool)
     /// \signal_set_blocked
@@ -370,18 +331,6 @@ namespace mousetrap
     /// @var has_signal_update::signal_id
     /// \signal_id{https://docs.gtk.org/gdk4/signal.FrameClock.update.html}
     ///
-    /// @var has_signal_update::signal_handler_with_data_f
-    /// \signal_with_data_f{update}
-    ///
-    /// @var has_signal_update::signal_handler_without_data_f
-    /// \signal_without_data_f{update}
-    ///
-    /// @fn void has_signal_update::connect_signal_update(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_update::connect_signal_update(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_update::set_signal_update_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -410,18 +359,6 @@ namespace mousetrap
     ///
     /// @var has_signal_paint::signal_id
     /// \signal_id{https://docs.gtk.org/gdk4/signal.FrameClock.paint.html}
-    ///
-    /// @var has_signal_paint::signal_handler_with_data_f
-    /// \signal_with_data_f{paint}
-    ///
-    /// @var has_signal_paint::signal_handler_without_data_f
-    /// \signal_without_data_f{paint}
-    ///
-    /// @fn void has_signal_paint::connect_signal_paint(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_paint::connect_signal_paint(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_paint::set_signal_paint_blocked(bool)
     /// \signal_set_blocked
@@ -452,18 +389,6 @@ namespace mousetrap
     /// @var has_signal_realize::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.realize.html}
     ///
-    /// @var has_signal_realize::signal_handler_with_data_f
-    /// \signal_with_data_f{realize}
-    ///
-    /// @var has_signal_realize::signal_handler_without_data_f
-    /// \signal_without_data_f{realize}
-    ///
-    /// @fn void has_signal_realize::connect_signal_realize(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_realize::connect_signal_realize(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_realize::set_signal_realize_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -490,21 +415,6 @@ namespace mousetrap
     /// @fn void has_signal_unrealize::emit_signal_unrealize()
     /// \signal_emit_brief
     ///
-    /// @var has_signal_unrealize::signal_id
-    /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.unrealize.html}
-    ///
-    /// @var has_signal_unrealize::signal_handler_with_data_f
-    /// \signal_with_data_f{unrealize}
-    ///
-    /// @var has_signal_unrealize::signal_handler_without_data_f
-    /// \signal_without_data_f{unrealize}
-    ///
-    /// @fn void has_signal_unrealize::connect_signal_unrealize(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_unrealize::connect_signal_unrealize(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_unrealize::set_signal_unrealize_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -530,21 +440,6 @@ namespace mousetrap
     ///
     /// @fn void has_signal_destroy::emit_signal_destroy()
     /// \signal_emit_brief
-    ///
-    /// @var has_signal_destroy::signal_id
-    /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.destroy.html}
-    ///
-    /// @var has_signal_destroy::signal_handler_with_data_f
-    /// \signal_with_data_f{destroy}
-    ///
-    /// @var has_signal_destroy::signal_handler_without_data_f
-    /// \signal_without_data_f{destroy}
-    ///
-    /// @fn void has_signal_destroy::connect_signal_destroy(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_destroy::connect_signal_destroy(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_destroy::set_signal_destroy_blocked(bool)
     /// \signal_set_blocked
@@ -575,18 +470,6 @@ namespace mousetrap
     /// @var has_signal_hide::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.hide.html}
     ///
-    /// @var has_signal_hide::signal_handler_with_data_f
-    /// \signal_with_data_f{hide}
-    ///
-    /// @var has_signal_hide::signal_handler_without_data_f
-    /// \signal_without_data_f{hide}
-    ///
-    /// @fn void has_signal_hide::connect_signal_hide(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_hide::connect_signal_hide(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_hide::set_signal_hide_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -615,18 +498,6 @@ namespace mousetrap
     ///
     /// @var has_signal_show::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.show.html}
-    ///
-    /// @var has_signal_show::signal_handler_with_data_f
-    /// \signal_with_data_f{show}
-    ///
-    /// @var has_signal_show::signal_handler_without_data_f
-    /// \signal_without_data_f{show}
-    ///
-    /// @fn void has_signal_show::connect_signal_show(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_show::connect_signal_show(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_show::set_signal_show_blocked(bool)
     /// \signal_set_blocked
@@ -657,18 +528,6 @@ namespace mousetrap
     /// @var has_signal_map::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.map.html}
     ///
-    /// @var has_signal_map::signal_handler_with_data_f
-    /// \signal_with_data_f{map}
-    ///
-    /// @var has_signal_map::signal_handler_without_data_f
-    /// \signal_without_data_f{map}
-    ///
-    /// @fn void has_signal_map::connect_signal_map(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_map::connect_signal_map(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_map::set_signal_map_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -697,18 +556,6 @@ namespace mousetrap
     ///
     /// @var has_signal_unmap::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Widget.unmap.html}
-    ///
-    /// @var has_signal_unmap::signal_handler_with_data_f
-    /// \signal_with_data_f{unmap}
-    ///
-    /// @var has_signal_unmap::signal_handler_without_data_f
-    /// \signal_without_data_f{unmap}
-    ///
-    /// @fn void has_signal_unmap::connect_signal_unmap(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_unmap::connect_signal_unmap(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_unmap::set_signal_unmap_blocked(bool)
     /// \signal_set_blocked
@@ -749,18 +596,6 @@ namespace mousetrap
     /// @var has_signal_close_request::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Window.close-request.html}
     ///
-    /// @var has_signal_close_request::signal_handler_with_data_f
-    /// \signal_with_data_f{close_request}
-    ///
-    /// @var has_signal_close_request::signal_handler_without_data_f
-    /// \signal_without_data_f{close_request}
-    ///
-    /// @fn void has_signal_close_request::connect_signal_close_request(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_close_request::connect_signal_close_request(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_close_request::set_signal_close_request_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -789,18 +624,6 @@ namespace mousetrap
     ///
     /// @var has_signal_activate_default_widget::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Window.activate-default.html}
-    ///
-    /// @var has_signal_activate_default_widget::signal_handler_with_data_f
-    /// \signal_with_data_f{activate_default_widget}
-    ///
-    /// @var has_signal_activate_default_widget::signal_handler_without_data_f
-    /// \signal_without_data_f{activate_default_widget}
-    ///
-    /// @fn void has_signal_activate_default_widget::connect_signal_activate_default_widget(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_activate_default_widget::connect_signal_activate_default_widget(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_activate_default_widget::set_signal_activate_default_widget_blocked(bool)
     /// \signal_set_blocked
@@ -831,18 +654,6 @@ namespace mousetrap
     /// @var has_signal_activate_focused_widget::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Window.activate-focus.html}
     ///
-    /// @var has_signal_activate_focused_widget::signal_handler_with_data_f
-    /// \signal_with_data_f{activate_focused_widget}
-    ///
-    /// @var has_signal_activate_focused_widget::signal_handler_without_data_f
-    /// \signal_without_data_f{activate_focused_widget}
-    ///
-    /// @fn void has_signal_activate_focused_widget::connect_signal_activate_focused_widget(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_activate_focused_widget::connect_signal_activate_focused_widget(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_activate_focused_widget::set_signal_activate_focused_widget_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -871,18 +682,6 @@ namespace mousetrap
     ///
     /// @var has_signal_clicked::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Button.activate.html}
-    ///
-    /// @var has_signal_clicked::signal_handler_with_data_f
-    /// \signal_with_data_f{clicked}
-    ///
-    /// @var has_signal_clicked::signal_handler_without_data_f
-    /// \signal_without_data_f{clicked}
-    ///
-    /// @fn void has_signal_clicked::connect_signal_clicked(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_clicked::connect_signal_clicked(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_clicked::set_signal_clicked_blocked(bool)
     /// \signal_set_blocked
@@ -913,18 +712,6 @@ namespace mousetrap
     /// @var has_signal_toggled::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.ToggleButton.toggled.html}
     ///
-    /// @var has_signal_toggled::signal_handler_with_data_f
-    /// \signal_with_data_f{toggled}
-    ///
-    /// @var has_signal_toggled::signal_handler_without_data_f
-    /// \signal_without_data_f{toggled}
-    ///
-    /// @fn void has_signal_toggled::connect_signal_toggled(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_toggled::connect_signal_toggled(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_toggled::set_signal_toggled_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -953,18 +740,6 @@ namespace mousetrap
     ///
     /// @var has_signal_text_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Editable.changed.html}
-    ///
-    /// @var has_signal_text_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{text_changed}
-    ///
-    /// @var has_signal_text_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{text_changed}
-    ///
-    /// @fn void has_signal_text_changed::connect_signal_text_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_text_changed::connect_signal_text_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_text_changed::set_signal_text_changed_blocked(bool)
     /// \signal_set_blocked
@@ -1000,22 +775,6 @@ namespace mousetrap
     /// @var has_signal_text_inserted::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Editable.insert-text.html}
     ///
-    /// @var has_signal_text_inserted::signal_handler_with_data_f
-    /// \signal_with_data_f{text_inserted}
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @var has_signal_text_inserted::signal_handler_without_data_f
-    /// \signal_without_data_f{text_inserted}
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_text_inserted::connect_signal_text_inserted(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_text_inserted::connect_signal_text_inserted(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_text_inserted::set_signal_text_inserted_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1050,22 +809,6 @@ namespace mousetrap
     /// @var has_signal_text_deleted::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Editable.delete-text.html}
     ///
-    /// @var has_signal_text_deleted::signal_handler_with_data_f
-    /// \signal_with_data_f{text_deleted}
-    /// \signal_see_emit_for_parameters{text_deleted}
-    ///
-    /// @var has_signal_text_deleted::signal_handler_without_data_f
-    /// \signal_without_data_f{text_deleted}
-    /// \signal_see_emit_for_parameters{text_deleted}
-    ///
-    /// @fn void has_signal_text_deleted::connect_signal_text_deleted(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_text_deleted::connect_signal_text_deleted(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_text_deleted::set_signal_text_deleted_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1095,18 +838,6 @@ namespace mousetrap
     /// @var has_signal_undo::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.TextBuffer.undo.html}
     ///
-    /// @var has_signal_undo::signal_handler_with_data_f
-    /// \signal_with_data_f{undo}
-    ///
-    /// @var has_signal_undo::signal_handler_without_data_f
-    /// \signal_without_data_f{undo}
-    ///
-    /// @fn void has_signal_undo::connect_signal_undo(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_undo::connect_signal_undo(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_undo::set_signal_undo_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1135,18 +866,6 @@ namespace mousetrap
     ///
     /// @var has_signal_redo::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.TextBuffer.redo.html}
-    ///
-    /// @var has_signal_redo::signal_handler_with_data_f
-    /// \signal_with_data_f{redo}
-    ///
-    /// @var has_signal_redo::signal_handler_without_data_f
-    /// \signal_without_data_f{redo}
-    ///
-    /// @fn void has_signal_redo::connect_signal_redo(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_redo::connect_signal_redo(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_redo::set_signal_redo_blocked(bool)
     /// \signal_set_blocked
@@ -1181,22 +900,6 @@ namespace mousetrap
     ///
     /// @var has_signal_selection_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.SelectionModel.selection-changed.html}
-    ///
-    /// @var has_signal_selection_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{selection_changed}
-    /// \signal_see_emit_for_parameters{selection_changed}
-    ///
-    /// @var has_signal_selection_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{selection_changed}
-    /// \signal_see_emit_for_parameters{selection_changed}
-    ///
-    /// @fn void has_signal_selection_changed::connect_signal_selection_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_selection_changed::connect_signal_selection_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_selection_changed::set_signal_selection_changed_blocked(bool)
     /// \signal_set_blocked
@@ -1237,22 +940,6 @@ namespace mousetrap
     /// @var has_signal_key_pressed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerKey.key-pressed.html}
     ///
-    /// @var has_signal_key_pressed::signal_handler_with_data_f
-    /// \signal_with_data_f{key_pressed}
-    /// \signal_see_emit_for_parameters{key_pressed}
-    ///
-    /// @var has_signal_key_pressed::signal_handler_without_data_f
-    /// \signal_without_data_f{key_pressed}
-    /// \signal_see_emit_for_parameters{key_pressed}
-    ///
-    /// @fn void has_signal_key_pressed::connect_signal_key_pressed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_key_pressed::connect_signal_key_pressed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_key_pressed::set_signal_key_pressed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1287,22 +974,6 @@ namespace mousetrap
     ///
     /// @var has_signal_key_released::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerKey.key-released.html}
-    ///
-    /// @var has_signal_key_released::signal_handler_with_data_f
-    /// \signal_with_data_f{key_released}
-    /// \signal_see_emit_for_parameters{key_released}
-    ///
-    /// @var has_signal_key_released::signal_handler_without_data_f
-    /// \signal_without_data_f{key_released}
-    /// \signal_see_emit_for_parameters{key_released}
-    ///
-    /// @fn void has_signal_key_released::connect_signal_key_released(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_key_released::connect_signal_key_released(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_key_released::set_signal_key_released_blocked(bool)
     /// \signal_set_blocked
@@ -1340,22 +1011,6 @@ namespace mousetrap
     /// @var has_signal_modifiers_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerKey.modifiers.html}
     ///
-    /// @var has_signal_modifiers_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{modifiers_changed}
-    /// \signal_see_emit_for_parameters{modifiers_changed}
-    ///
-    /// @var has_signal_modifiers_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{modifiers_changed}
-    /// \signal_see_emit_for_parameters{modifiers_changed}
-    ///
-    /// @fn void has_signal_modifiers_changed::connect_signal_modifiers_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_modifiers_changed::connect_signal_modifiers_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_modifiers_changed::set_signal_modifiers_changed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1389,22 +1044,6 @@ namespace mousetrap
     ///
     /// @var has_signal_motion_enter::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerMotion.enter.html}
-    ///
-    /// @var has_signal_motion_enter::signal_handler_with_data_f
-    /// \signal_with_data_f{motion_enter}
-    /// \signal_see_emit_for_parameters{motion_enter}
-    ///
-    /// @var has_signal_motion_enter::signal_handler_without_data_f
-    /// \signal_without_data_f{motion_enter}
-    /// \signal_see_emit_for_parameters{motion_enter}
-    ///
-    /// @fn void has_signal_motion_enter::connect_signal_motion_enter(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_motion_enter::connect_signal_motion_enter(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_motion_enter::set_signal_motion_enter_blocked(bool)
     /// \signal_set_blocked
@@ -1440,22 +1079,6 @@ namespace mousetrap
     /// @var has_signal_motion::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerMotion.motion.html}
     ///
-    /// @var has_signal_motion::signal_handler_with_data_f
-    /// \signal_with_data_f{motion}
-    /// \signal_see_emit_for_parameters{motion}
-    ///
-    /// @var has_signal_motion::signal_handler_without_data_f
-    /// \signal_without_data_f{motion}
-    /// \signal_see_emit_for_parameters{motion}
-    ///
-    /// @fn void has_signal_motion::connect_signal_motion(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_motion::connect_signal_motion(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_motion::set_signal_motion_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1484,18 +1107,6 @@ namespace mousetrap
     ///
     /// @var has_signal_motion_leave::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerMotion.leave.html}
-    ///
-    /// @var has_signal_motion_leave::signal_handler_with_data_f
-    /// \signal_with_data_f{motion_leave}
-    ///
-    /// @var has_signal_motion_leave::signal_handler_without_data_f
-    /// \signal_without_data_f{motion_leave}
-    ///
-    /// @fn void has_signal_motion_leave::connect_signal_motion_leave(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_motion_leave::connect_signal_motion_leave(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_motion_leave::set_signal_motion_leave_blocked(bool)
     /// \signal_set_blocked
@@ -1532,22 +1143,6 @@ namespace mousetrap
     /// @var has_signal_click_pressed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pressed.html}
     ///
-    /// @var has_signal_click_pressed::signal_handler_with_data_f
-    /// \signal_with_data_f{click_pressed}
-    /// \signal_see_emit_for_parameters{click_pressed}
-    ///
-    /// @var has_signal_click_pressed::signal_handler_without_data_f
-    /// \signal_without_data_f{click_pressed}
-    /// \signal_see_emit_for_parameters{click_pressed}
-    ///
-    /// @fn void has_signal_click_pressed::connect_signal_click_pressed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_click_pressed::connect_signal_click_pressed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_click_pressed::set_signal_click_pressed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1583,22 +1178,6 @@ namespace mousetrap
     /// @var has_signal_click_released::signal_id
     /// \signal_id{ https://docs.gtk.org/gtk4/signal.GestureClick.released.html}
     ///
-    /// @var has_signal_click_released::signal_handler_with_data_f
-    /// \signal_with_data_f{click_released}
-    /// \signal_see_emit_for_parameters{click_released}
-    ///
-    /// @var has_signal_click_released::signal_handler_without_data_f
-    /// \signal_without_data_f{click_released}
-    /// \signal_see_emit_for_parameters{click_released}
-    ///
-    /// @fn void has_signal_click_released::connect_signal_click_released(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_click_released::connect_signal_click_released(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_click_released::set_signal_click_released_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1627,18 +1206,6 @@ namespace mousetrap
     ///
     /// @var has_signal_click_stopped::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.stopped.html}
-    ///
-    /// @var has_signal_click_stopped::signal_handler_with_data_f
-    /// \signal_with_data_f{click_stopped}
-    ///
-    /// @var has_signal_click_stopped::signal_handler_without_data_f
-    /// \signal_without_data_f{click_stopped}
-    ///
-    /// @fn void has_signal_click_stopped::connect_signal_click_stopped(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_click_stopped::connect_signal_click_stopped(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_click_stopped::set_signal_click_stopped_blocked(bool)
     /// \signal_set_blocked
@@ -1674,22 +1241,6 @@ namespace mousetrap
     /// @var has_signal_kinetic_scroll_decelerate::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerScroll.decelerate.html}
     ///
-    /// @var has_signal_kinetic_scroll_decelerate::signal_handler_with_data_f
-    /// \signal_with_data_f{kinetic_scroll_decelerate}
-    /// \signal_see_emit_for_parameters{kinetic_scroll_decelerate}
-    ///
-    /// @var has_signal_kinetic_scroll_decelerate::signal_handler_without_data_f
-    /// \signal_without_data_f{kinetic_scroll_decelerate}
-    /// \signal_see_emit_for_parameters{kinetic_scroll_decelerate}
-    ///
-    /// @fn void has_signal_kinetic_scroll_decelerate::connect_signal_kinetic_scroll_decelerate(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_kinetic_scroll_decelerate::connect_signal_kinetic_scroll_decelerate(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_kinetic_scroll_decelerate::set_signal_kinetic_scroll_decelerate_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1718,18 +1269,6 @@ namespace mousetrap
     ///
     /// @var has_signal_scroll_begin::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll-begin.html}
-    ///
-    /// @var has_signal_scroll_begin::signal_handler_with_data_f
-    /// \signal_with_data_f{scroll_begin}
-    ///
-    /// @var has_signal_scroll_begin::signal_handler_without_data_f
-    /// \signal_without_data_f{scroll_begin}
-    ///
-    /// @fn void has_signal_scroll_begin::connect_signal_scroll_begin(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_scroll_begin::connect_signal_scroll_begin(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_scroll_begin::set_signal_scroll_begin_blocked(bool)
     /// \signal_set_blocked
@@ -1765,22 +1304,6 @@ namespace mousetrap
     /// @var has_signal_scroll::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll.html}
     ///
-    /// @var has_signal_scroll::signal_handler_with_data_f
-    /// \signal_with_data_f{scroll}
-    /// \signal_see_emit_for_parameters{scroll}
-    ///
-    /// @var has_signal_scroll::signal_handler_without_data_f
-    /// \signal_without_data_f{scroll}
-    /// \signal_see_emit_for_parameters{scroll}
-    ///
-    /// @fn void has_signal_scroll::connect_signal_scroll(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_scroll::connect_signal_scroll(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_scroll::set_signal_scroll_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1809,18 +1332,6 @@ namespace mousetrap
     ///
     /// @var has_signal_scroll_end::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerScroll.scroll-begin.html}
-    ///
-    /// @var has_signal_scroll_end::signal_handler_with_data_f
-    /// \signal_with_data_f{scroll_end}
-    ///
-    /// @var has_signal_scroll_end::signal_handler_without_data_f
-    /// \signal_without_data_f{scroll_end}
-    ///
-    /// @fn void has_signal_scroll_end::connect_signal_scroll_end(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_scroll_end::connect_signal_scroll_end(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_scroll_end::set_signal_scroll_end_blocked(bool)
     /// \signal_set_blocked
@@ -1851,18 +1362,6 @@ namespace mousetrap
     /// @var has_signal_focus_gained::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerFocus.enter.html}
     ///
-    /// @var has_signal_focus_gained::signal_handler_with_data_f
-    /// \signal_with_data_f{focus_gained}
-    ///
-    /// @var has_signal_focus_gained::signal_handler_without_data_f
-    /// \signal_without_data_f{focus_gained}
-    ///
-    /// @fn void has_signal_focus_gained::connect_signal_focus_gained(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_focus_gained::connect_signal_focus_gained(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_focus_gained::set_signal_focus_gained_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1891,18 +1390,6 @@ namespace mousetrap
     ///
     /// @var has_signal_focus_lost::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.EventControllerFocus.leave.html}
-    ///
-    /// @var has_signal_focus_lost::signal_handler_with_data_f
-    /// \signal_with_data_f{focus_lost}
-    ///
-    /// @var has_signal_focus_lost::signal_handler_without_data_f
-    /// \signal_without_data_f{focus_lost}
-    ///
-    /// @fn void has_signal_focus_lost::connect_signal_focus_lost(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_focus_lost::connect_signal_focus_lost(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_focus_lost::set_signal_focus_lost_blocked(bool)
     /// \signal_set_blocked
@@ -1938,22 +1425,6 @@ namespace mousetrap
     /// @var has_signal_drag_begin::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureDrag.drag-begin.html}
     ///
-    /// @var has_signal_drag_begin::signal_handler_with_data_f
-    /// \signal_with_data_f{drag_begin}
-    /// \signal_see_emit_for_parameters{drag_begin}
-    ///
-    /// @var has_signal_drag_begin::signal_handler_without_data_f
-    /// \signal_without_data_f{drag_begin}
-    /// \signal_see_emit_for_parameters{drag_begin}
-    ///
-    /// @fn void has_signal_drag_begin::connect_signal_drag_begin(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_drag_begin::connect_signal_drag_begin(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_drag_begin::set_signal_drag_begin_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -1987,22 +1458,6 @@ namespace mousetrap
     ///
     /// @var has_signal_drag::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureDrag.drag-update.html}
-    ///
-    /// @var has_signal_drag::signal_handler_with_data_f
-    /// \signal_with_data_f{drag}
-    /// \signal_see_emit_for_parameters{drag}
-    ///
-    /// @var has_signal_drag::signal_handler_without_data_f
-    /// \signal_without_data_f{drag}
-    /// \signal_see_emit_for_parameters{drag}
-    ///
-    /// @fn void has_signal_drag::connect_signal_drag(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_drag::connect_signal_drag(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_drag::set_signal_drag_blocked(bool)
     /// \signal_set_blocked
@@ -2038,22 +1493,6 @@ namespace mousetrap
     /// @var has_signal_drag_end::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureDrag.drag-end.html}
     ///
-    /// @var has_signal_drag_end::signal_handler_with_data_f
-    /// \signal_with_data_f{drag_end}
-    /// \signal_see_emit_for_parameters{drag_end}
-    ///
-    /// @var has_signal_drag_end::signal_handler_without_data_f
-    /// \signal_without_data_f{drag_end}
-    /// \signal_see_emit_for_parameters{drag_end}
-    ///
-    /// @fn void has_signal_drag_end::connect_signal_drag_end(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_drag_end::connect_signal_drag_end(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_drag_end::set_signal_drag_end_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2086,22 +1525,6 @@ namespace mousetrap
     ///
     /// @var has_signal_scale_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureZoom.scale-changed.html}
-    ///
-    /// @var has_signal_scale_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{scale_changed}
-    /// \signal_see_emit_for_parameters{scale_changed}
-    ///
-    /// @var has_signal_scale_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{scale_changed}
-    /// \signal_see_emit_for_parameters{scale_changed}
-    ///
-    /// @fn void has_signal_scale_changed::connect_signal_scale_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_scale_changed::connect_signal_scale_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_scale_changed::set_signal_scale_changed_blocked(bool)
     /// \signal_set_blocked
@@ -2137,22 +1560,6 @@ namespace mousetrap
     /// @var has_signal_rotation_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureRotate.angle-changed.html}
     ///
-    /// @var has_signal_rotation_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{rotation_changed}
-    /// \signal_see_emit_for_parameters{rotation_changed}
-    ///
-    /// @var has_signal_rotation_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{rotation_changed}
-    /// \signal_see_emit_for_parameters{rotation_changed}
-    ///
-    /// @fn void has_signal_rotation_changed::connect_signal_rotation_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_rotation_changed::connect_signal_rotation_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_rotation_changed::set_signal_rotation_changed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2183,18 +1590,6 @@ namespace mousetrap
     /// @var has_signal_properties_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Adjustment.changed.html}
     ///
-    /// @var has_signal_properties_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{properties_changed}
-    ///
-    /// @var has_signal_properties_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{properties_changed}
-    ///
-    /// @fn void has_signal_properties_changed::connect_signal_properties_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_properties_changed::connect_signal_properties_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_properties_changed::set_signal_properties_changed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2224,18 +1619,6 @@ namespace mousetrap
     /// @var has_signal_value_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Adjustment.value-changed.html}
     ///
-    /// @var has_signal_value_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{value_changed}
-    ///
-    /// @var has_signal_value_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{value_changed}
-    ///
-    /// @fn void has_signal_value_changed::connect_signal_value_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_value_changed::connect_signal_value_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    ///
     /// @fn void has_signal_value_changed::set_signal_value_changed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2264,18 +1647,6 @@ namespace mousetrap
     ///
     /// @var has_signal_render::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GLArea.render.html}
-    ///
-    /// @var has_signal_render::signal_handler_with_data_f
-    /// \signal_with_data_f{render}
-    ///
-    /// @var has_signal_render::signal_handler_without_data_f
-    /// \signal_without_data_f{render}
-    ///
-    /// @fn void has_signal_render::connect_signal_render(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_render::connect_signal_render(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_render::set_signal_render_blocked(bool)
     /// \signal_set_blocked
@@ -2311,22 +1682,6 @@ namespace mousetrap
     /// @var has_signal_resize::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GLArea.resize.html}
     ///
-    /// @var has_signal_resize::signal_handler_with_data_f
-    /// \signal_with_data_f{resize}
-    /// \signal_see_emit_for_parameters{resize}
-    ///
-    /// @var has_signal_resize::signal_handler_without_data_f
-    /// \signal_without_data_f{resize}
-    /// \signal_see_emit_for_parameters{resize}
-    ///
-    /// @fn void has_signal_resize::connect_signal_resize(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_resize::connect_signal_resize(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_resize::set_signal_resize_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2360,22 +1715,6 @@ namespace mousetrap
     ///
     /// @var has_signal_page_added::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Notebook.page-added.html}
-    ///
-    /// @var has_signal_page_added::signal_handler_with_data_f
-    /// \signal_with_data_f{page_added}
-    /// \signal_see_emit_for_parameters{page_added}
-    ///
-    /// @var has_signal_page_added::signal_handler_without_data_f
-    /// \signal_without_data_f{page_added}
-    /// \signal_see_emit_for_parameters{page_added}
-    ///
-    /// @fn void has_signal_page_added::connect_signal_page_added(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_page_added::connect_signal_page_added(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_page_added::set_signal_page_added_blocked(bool)
     /// \signal_set_blocked
@@ -2411,22 +1750,6 @@ namespace mousetrap
     /// @var has_signal_page_removed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Notebook.page-removed.html}
     ///
-    /// @var has_signal_page_removed::signal_handler_with_data_f
-    /// \signal_with_data_f{page_removed}
-    /// \signal_see_emit_for_parameters{page_removed}
-    ///
-    /// @var has_signal_page_removed::signal_handler_without_data_f
-    /// \signal_without_data_f{page_removed}
-    /// \signal_see_emit_for_parameters{page_removed}
-    ///
-    /// @fn void has_signal_page_removed::connect_signal_page_removed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_page_removed::connect_signal_page_removed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_page_removed::set_signal_page_removed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2460,22 +1783,6 @@ namespace mousetrap
     ///
     /// @var has_signal_page_reordered::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Notebook.page-reordered.html}
-    ///
-    /// @var has_signal_page_reordered::signal_handler_with_data_f
-    /// \signal_with_data_f{page_reordered}
-    /// \signal_see_emit_for_parameters{page_reordered}
-    ///
-    /// @var has_signal_page_reordered::signal_handler_without_data_f
-    /// \signal_without_data_f{page_reordered}
-    /// \signal_see_emit_for_parameters{page_reordered}
-    ///
-    /// @fn void has_signal_page_reordered::connect_signal_page_reordered(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_page_reordered::connect_signal_page_reordered(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_page_reordered::set_signal_page_reordered_blocked(bool)
     /// \signal_set_blocked
@@ -2511,22 +1818,6 @@ namespace mousetrap
     /// @var has_signal_page_selection_changed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.Notebook.switch-page.html}
     ///
-    /// @var has_signal_page_selection_changed::signal_handler_with_data_f
-    /// \signal_with_data_f{page_selection_changed}
-    /// \signal_see_emit_for_parameters{page_selection_changed}
-    ///
-    /// @var has_signal_page_selection_changed::signal_handler_without_data_f
-    /// \signal_without_data_f{page_selection_changed}
-    /// \signal_see_emit_for_parameters{page_selection_changed}
-    ///
-    /// @fn void has_signal_page_selection_changed::connect_signal_page_selection_changed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_page_selection_changed::connect_signal_page_selection_changed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_page_selection_changed::set_signal_page_selection_changed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2555,18 +1846,6 @@ namespace mousetrap
     ///
     /// @var has_signal_wrapped::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.SpinButton.wrapped.html}
-    ///
-    /// @var has_signal_wrapped::signal_handler_with_data_f
-    /// \signal_with_data_f{wrapped}
-    ///
-    /// @var has_signal_wrapped::signal_handler_without_data_f
-    /// \signal_without_data_f{wrapped}
-    ///
-    /// @fn void has_signal_wrapped::connect_signal_wrapped(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_wrapped::connect_signal_wrapped(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_wrapped::set_signal_wrapped_blocked(bool)
     /// \signal_set_blocked
@@ -2597,22 +1876,6 @@ namespace mousetrap
     ///
     /// @var has_signal_response::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.NativeDialog.response.html}
-    ///
-    /// @var has_signal_response::signal_handler_with_data_f
-    /// \signal_with_data_f{response}
-    /// \signal_see_emit_for_parameters{response}
-    ///
-    /// @var has_signal_response::signal_handler_without_data_f
-    /// \signal_without_data_f{response}
-    /// \signal_see_emit_for_parameters{response}
-    ///
-    /// @fn void has_signal_response::connect_signal_response(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_response::connect_signal_response(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_response::set_signal_response_blocked(bool)
     /// \signal_set_blocked
@@ -2648,22 +1911,6 @@ namespace mousetrap
     /// @var has_signal_pressed::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pressed.html}
     ///
-    /// @var has_signal_pressed::signal_handler_with_data_f
-    /// \signal_with_data_f{pressed}
-    /// \signal_see_emit_for_parameters{pressed}
-    ///
-    /// @var has_signal_pressed::signal_handler_without_data_f
-    /// \signal_without_data_f{pressed}
-    /// \signal_see_emit_for_parameters{pressed}
-    ///
-    /// @fn void has_signal_pressed::connect_signal_pressed(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_pressed::connect_signal_pressed(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_pressed::set_signal_pressed_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2692,18 +1939,6 @@ namespace mousetrap
     ///
     /// @var has_signal_press_cancelled::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureLongPress.cancelled.html}
-    ///
-    /// @var has_signal_press_cancelled::signal_handler_with_data_f
-    /// \signal_with_data_f{press_cancelled}
-    ///
-    /// @var has_signal_press_cancelled::signal_handler_without_data_f
-    /// \signal_without_data_f{press_cancelled}
-    ///
-    /// @fn void has_signal_press_cancelled::connect_signal_press_cancelled(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    ///
-    /// @fn void has_signal_press_cancelled::connect_signal_press_cancelled(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
     ///
     /// @fn void has_signal_press_cancelled::set_signal_press_cancelled_blocked(bool)
     /// \signal_set_blocked
@@ -2755,22 +1990,6 @@ namespace mousetrap
     /// @var has_signal_pan::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.pan.html}
     ///
-    /// @var has_signal_pan::signal_handler_with_data_f
-    /// \signal_with_data_f{pan}
-    /// \signal_see_emit_for_parameters{pan}
-    ///
-    /// @var has_signal_pan::signal_handler_without_data_f
-    /// \signal_without_data_f{pan}
-    /// \signal_see_emit_for_parameters{pan}
-    ///
-    /// @fn void has_signal_pan::connect_signal_pan(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_pan::connect_signal_pan(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_pan::set_signal_pan_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2806,22 +2025,6 @@ namespace mousetrap
     /// @var has_signal_swipe::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.swipe.html}
     ///
-    /// @var has_signal_swipe::signal_handler_with_data_f
-    /// \signal_with_data_f{swipe}
-    /// \signal_see_emit_for_parameters{swipe}
-    ///
-    /// @var has_signal_swipe::signal_handler_without_data_f
-    /// \signal_without_data_f{swipe}
-    /// \signal_see_emit_for_parameters{swipe}
-    ///
-    /// @fn void has_signal_swipe::connect_signal_swipe(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_swipe::connect_signal_swipe(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_swipe::set_signal_swipe_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2855,22 +2058,6 @@ namespace mousetrap
     ///
     /// @var has_signal_stylus_down::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.stylus_down.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.down.html}
-    ///
-    /// @var has_signal_stylus_down::signal_handler_with_data_f
-    /// \signal_with_data_f{stylus_down}
-    /// \signal_see_emit_for_parameters{stylus_down}
-    ///
-    /// @var has_signal_stylus_down::signal_handler_without_data_f
-    /// \signal_without_data_f{stylus_down}
-    /// \signal_see_emit_for_parameters{stylus_down}
-    ///
-    /// @fn void has_signal_stylus_down::connect_signal_stylus_down(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_stylus_down::connect_signal_stylus_down(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_stylus_down::set_signal_stylus_down_blocked(bool)
     /// \signal_set_blocked
@@ -2906,22 +2093,6 @@ namespace mousetrap
     /// @var has_signal_stylus_up::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.stylus_up.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.up.html}
     ///
-    /// @var has_signal_stylus_up::signal_handler_with_data_f
-    /// \signal_with_data_f{stylus_up}
-    /// \signal_see_emit_for_parameters{stylus_up}
-    ///
-    /// @var has_signal_stylus_up::signal_handler_without_data_f
-    /// \signal_without_data_f{stylus_up}
-    /// \signal_see_emit_for_parameters{stylus_up}
-    ///
-    /// @fn void has_signal_stylus_up::connect_signal_stylus_up(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_stylus_up::connect_signal_stylus_up(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
     /// @fn void has_signal_stylus_up::set_signal_stylus_up_blocked(bool)
     /// \signal_set_blocked
     ///
@@ -2955,22 +2126,6 @@ namespace mousetrap
     ///
     /// @var has_signal_proximity::signal_id
     /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.proximity.htmlhttps://docs.gtk.org/gtk4/signal.GestureStylus.up.html}
-    ///
-    /// @var has_signal_proximity::signal_handler_with_data_f
-    /// \signal_with_data_f{proximity}
-    /// \signal_see_emit_for_parameters{proximity}
-    ///
-    /// @var has_signal_proximity::signal_handler_without_data_f
-    /// \signal_without_data_f{proximity}
-    /// \signal_see_emit_for_parameters{proximity}
-    ///
-    /// @fn void has_signal_proximity::connect_signal_proximity(const signal_handler_with_data_f<Data_t>& function, Data_t data)
-    /// \signal_connect_data
-    /// \signal_see_emit_for_parameters{text_inserted}
-    ///
-    /// @fn void has_signal_proximity::connect_signal_proximity(const signal_handler_without_data_f&)
-    /// \signal_connect_no_data
-    /// \signal_see_emit_for_parameters{text_inserted}
     ///
     /// @fn void has_signal_proximity::set_signal_proximity_blocked(bool)
     /// \signal_set_blocked
