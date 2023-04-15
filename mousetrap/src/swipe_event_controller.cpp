@@ -7,7 +7,7 @@
 namespace mousetrap
 {
     SwipeEventController::SwipeEventController(Orientation orientation)
-        : EventController(GTK_EVENT_CONTROLLER(gtk_gesture_swipe_new())),
+        : SingleClickGesture(GTK_GESTURE_SINGLE(gtk_gesture_swipe_new())),
           CTOR_SIGNAL(SwipeEventController, swipe)
     {}
 

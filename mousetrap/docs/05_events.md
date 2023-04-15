@@ -159,9 +159,83 @@ state->window.add_controller(key_controller);
                    
 Where we choose `_` as the variable name for the key code to signifiy that it will go unused.
 
-Not that `KeyEventController` should not be used to detect whether the user pressed a common key binding, for example `<Control>c`, mousetrap provides a special 
-event controller called `ShortcutEventController` for this, which we will learn about shortly. 
-`KeyEventController` is intended to monitor both key presses and key releases of individual keys, not to trigger actions based on common keybinding shortcuts.
+Note that `KeyEventController` should not be used to detect whether the user pressed a common key binding, for example `<Control>c`, as mousetrap offers a specialized, more convenient event controller for this purpose:
+
+## Detecting Key Bindings: ShortcutController
+
+We learned in chapter 2 that any funcionality of an application should be wrapped in an action. We can trigger actions using `Action::activate()` or by connecting them to certain widgets, such as `Button`. There is a third way to trigger actions, however, through **shortcuts**.
+
+A shortcut, or keybinding, has the intuitive meaning of "any button combination". A shortcut in mousetrap is more limited however.
+
+### Shortcut Trigger Syntax
+
+Recall that keys in mousetrap are split into two groups, modifiers and non-modifiers. A 
+shortcut is a button combination of any number of modifiers, including none, following by exactly one non-modifiers key. A few examples:
+
++ `a` (that is the `A` keyboard key) is a shortcut
++ `<Control><Shift>plus` (that is the `+` keyboard key) is a shortcut
++ `<Alt><Control><Shift>` is **not** a shortcut, because it does not contain a non-modifiers
++ `<Control>xy` (that is the `x` key *and* the `y` key) is **not** a shortcut, because it contains more than non-modifier key
+
+Shortcuts are represented as a string which has a specific syntax. As seen above each modifier is enclosed in `<``>`. After the group of modifiers, the non-modifier keys identifier is place after the last modifiers `>` (if there is one). Which key has which string representation is viewable [here](https://docs.gtk.org/gdk4/#constants). Some more examples:
+
++ "Control + C" is `<Control>c`
++ "Alt + LeftArrow" is written as `<Alt>Left`
++ "Shift + 1" is written as `exclam`
+
+That last one need explanation. On most keyboard layouts, to type `!` the user has to press the shift modifier, then press the `1` key. When "Shift + 1" is pressed, mousetrap does not retrieve this keyboard key event as is, instead it receive "exlamation mark without any modifiers". The identification of `!` is `exclam`.
+
+To account for different keyboard layouts it is recommendable to only assign shortcuts that either have no modifiers, or if they have modifiers, only have the `a` to `z` as the non-modifier. If the keyboard layout of the end-user is known, more specialized shortcuts are allowed.
+
+### Assigning a Shortcut to an Action
+
+Unlike `KeyEventController`, `ShortcutEventController` does not have an signals to connect to. Instead, it will monitor or key events a widget it is controlling receives and trigger an *action* if that actions shortcut machtes the key event.
+
+We already learned in the previous section on menus how to assign an action a shortcut. To create a shortcut controller that listens for that shortcut and triggers that action, the following steps are necessary:
+
+1) create an action `action`
+2) use `action.set_function` to assign behavior to an action
+3) add a shortcut via `action.add_shortcut`
+4) register the action with the application
+5) instantiate a shortcut controller `shortcut_controller`
+6) call `shortcut_controller.add_action`
+7) add `shortcut_controller` as an event controller to a widget, usually a `Window`
+
+From that point onwards, anytime the user presses an actions shortcut while the controlled widget has input focus, the action will trigger (unless it was disabled using `Action::set_enabled).
+
+In code:
+
+\cpp_code_begin
+```cpp
+// 1, 2: initialize action
+auto action = Action("example.action");
+action.set_function([](){
+   std::cout << "triggered" << std::endl; 
+});
+
+// 3: assign action a shortcut
+action.add_shortcut("<Control>t");
+
+// 4: add action to application
+app.add_action(action);
+
+// 5: create shortcut controller
+auto shortcut_controller = ShortcutController();
+
+// make shortcut controller listen for shortcut of our action
+shortcut_controller.add_action(actoin);
+
+// add shortcut controller to a widget to start receiving events
+window.add_controller(controller);
+```
+\cpp_code_end
+
+\julia_code_begin
+```julia
+# todo
+```
+\julia_code_end
+
 
 ---
 
@@ -527,10 +601,41 @@ window.add(swipe_controller);
 
 ## Touchpad Stylus: StylusEventController
 
-\todo
+Common in illustration/animation related apps is the use of a touchpad stylus, this is a pen-like device that lets user control much more than just the position of the cursor, most basic models have a pressure sensor that detects how hard the user pressing the pens tip down, more advanced models have multiple extra buttons, tilt-sensor, etc..
 
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
+All pens will have a detection mechanism for whether the pen is currently touching, currently not touching, or about to touch its track pad. `StylusEventController`, the
+event controller handling these events, has 4 signals for this purpose:
+
+### Signals
+
+| id             | signature                                                        | emitted when...                                                                 |
+|----------------|------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| `stylus_down` | `(StylusEventController*, double x, double y, (Data_t)) -> void` | stylus that is currently not touching the trackpad, touches it                  |
+| `motion` | `(StylusEventController*, double x, double y, (Data_t)) -> void` | stylus in range of trackpad detection moves                                     |
+| `stylus_up` | `(StylusEventController*, double x, double y, (Data_t)) -> void` | stylus that is currently touching the trackpad is lifter, no longer touching it |
+| `proximity` | `(StylusEventController*, double x, double y, (Data_t)) -> void` | stylus enters range of trackpad without touching or not touching it             |
+
+We recognize signal `motion` from `MotionEventController`. It behaves exactly the same, the two arguments `x` and `y` it forwards to the signal handle contain the current position of the cursor. 
+
+Actually, `x` and `y` are provided by all 4 signals of `StylusEventController`, all of them also describe the position of the cursor.
+
+### Querying Stylus Axis
+
+None of the signals provide information about the before mentioned additional sensors of a stylus, such as pressure, tilte, etc.. This is because not all stylus devices come with these sensor, but all of them can communicate the pens position to the device.
+
+Values of other sensors are called *axis*, the enum `DeviceAxis` describes all axes recognized by mousetrap:
+
+\copydoc mousetrap::DeviceAxis
+
+We can query the value of each axis using `mousetrap::StylusEventController::get_axis_value`. This function will return 0 if the axis is not present, to check whether a device has a specific axis we use `mousetrap::StylusEventController::has_axis`. This latter function is preferred to test whether an axis is present, as a valid, present axis may return a value of 0 (for example the pressue axis when a pen is not touching the touchpad).
+
+### Querying Stylus Tool
+
+Some stylus' have a "mode" function, where the user can choose between differen pen modes. This is driver specific, and not all devices support this feature. For those that do, we can use `StylusEventController::get_device_type` to check which mode is currently selected. The recognized modes are:
+
+\copydoc mousetrap::ToolType
+
+For devices without this feature, `ToolType::UNKNOWN` will be returned.
 
 \cpp_code_begin
 ```cpp
@@ -544,28 +649,3 @@ window.add(swipe_controller);
 \julia_code_end
 
 ---
-
-
----
-
-## Action Shortcuts: ShortcutController
-
-We noted in the section on `KeyEventController` that it is not advice to use it when just wanting to trigger something when a button is pressed. The most common scenario this will come up in is in that of **keyboard shortcuts**. 
-
-A typical keyboard shortcut is `<Control>s`, which usually saves something to the disk. We could connect a `KeyEventController` to the toplevel window and manually check whether both the `Control` and `S` key where pressed every a button is pressed, but this would be highly tedious and not very scalable. Instead mousetrap offers a specialized interface for this, which is part of the `Action` interface.
-
-### Assigning an Action a Shortcut
-
-| id             | signature | emitted when...                                         |
-|----------------|-----------|---------------------------------------------------------|
-
-\cpp_code_begin
-```cpp
-```
-\cpp_code_end
-
-\julia_code_begin
-```julia
-# TODO
-```
-\julia_code_end

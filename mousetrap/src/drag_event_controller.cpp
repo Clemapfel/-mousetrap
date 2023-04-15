@@ -7,7 +7,7 @@
 namespace mousetrap
 {
     DragEventController::DragEventController()
-    : EventController(GTK_EVENT_CONTROLLER(gtk_gesture_drag_new())),
+    : SingleClickGesture(GTK_GESTURE_SINGLE(gtk_gesture_drag_new())),
       CTOR_SIGNAL(DragEventController, drag_begin),
       CTOR_SIGNAL(DragEventController, drag),
       CTOR_SIGNAL(DragEventController, drag_end)

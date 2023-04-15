@@ -7,73 +7,24 @@
 
 using namespace mousetrap;
 
-template<typename T>
-struct Super
-{
-    struct Internal
-    {
-        Internal(T* in)
-            : hold(std::make_shared<T*>(in))
-        {
-            std::cout << "internal ctor: " << hold.get() << std::endl;
-        }
-
-        ~Internal()
-        {
-            std::cout << "internal dtor: " << hold.get() << std::endl;
-        }
-        std::shared_ptr<T*> hold;
-    };
-
-    Internal* _internal;
-
-    Super(T* in)
-    {
-        _internal = new Internal(in);
-    }
-
-    ~Super()
-    {
-        std::cout << "supet dtor: " << _internal->hold.get() << std::endl;
-    }
-};
-
-struct Test : public Super<Test>
-{
-    Test(size_t n)
-        : Super<Test>(this), n(n)
-    {}
-
-    ~Test()
-    {
-        std::cout << "test dtor: " << n << std::endl;
-    }
-
-    size_t n;
-};
-
 int main()
 {
-    Test* test = nullptr;
-    Super<Test>::Internal* internal = nullptr;
-    {
-        test = new Test(1234);
-        internal = test->_internal;
-        delete test;
-    }
+    auto app = Application("app.debug");
+    app.connect_signal_activate([](Application* app){
 
-    std::cout << ((Test*) internal->hold.get())->n << std::endl;
-    return 0;
+        static auto window = Window(*app);
+        static auto controller = ShortcutController();
 
+        static auto action = Action("test");
+        action.set_function([](ShortcutController* controller){
+           std::cout << "called" << std::endl;
+           controller->remove_action(action);
+        }, &controller);
+        action.add_shortcut("<Control>c");
+        app->add_action(action);
 
-    auto app = Application("mousetrap.debug");
-    app.connect_signal_activate([&](Application* app) -> void
-    {
-        auto window = Window(*app);
-        auto label = Label("hello world");
-
-
-        window.set_child(label);
+        controller.add_action(action);
+        window.add_controller(controller);
         window.present();
     });
 

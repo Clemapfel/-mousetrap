@@ -7,7 +7,7 @@
 namespace mousetrap
 {
     ClickEventController::ClickEventController()
-        : EventController(GTK_EVENT_CONTROLLER(gtk_gesture_click_new())),
+        : SingleClickGesture(GTK_GESTURE_SINGLE(gtk_gesture_click_new())),
           CTOR_SIGNAL(ClickEventController, click_pressed),
           CTOR_SIGNAL(ClickEventController, click_released),
           CTOR_SIGNAL(ClickEventController, click_stopped)

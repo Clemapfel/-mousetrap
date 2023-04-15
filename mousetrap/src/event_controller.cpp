@@ -66,4 +66,8 @@ namespace mousetrap
     {
         return gtk_gesture_single_get_touch_only(GTK_GESTURE_SINGLE(_native));
     }
+
+    SingleClickGesture::SingleClickGesture(GtkGestureSingle* gesture)
+        : EventController(GTK_EVENT_CONTROLLER(gesture))
+    {}
 }

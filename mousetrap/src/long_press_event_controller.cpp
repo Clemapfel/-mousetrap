@@ -7,7 +7,7 @@
 namespace mousetrap
 {
     LongPressEventController::LongPressEventController()
-        : EventController(GTK_EVENT_CONTROLLER(gtk_gesture_long_press_new())),
+        : SingleClickGesture(GTK_GESTURE_SINGLE(gtk_gesture_long_press_new())),
          CTOR_SIGNAL(LongPressEventController, pressed),
          CTOR_SIGNAL(LongPressEventController, press_cancelled)
     {}

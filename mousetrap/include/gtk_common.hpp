@@ -68,9 +68,15 @@ namespace mousetrap::detail
     }
 
     template<typename T>
-    static void set_data(GObject* object, const std::string& key, T* data)
+    static void add_data(GObject* object, const std::string& key, T* data)
     {
         g_object_set_qdata_full(object, g_quark_from_string(key.c_str()), new T(data), destroy_notify_delete<T>);
+    }
+
+    template<typename T>
+    static void set_data(GObject* object, const std::string& key, T* data)
+    {
+        g_object_set_qdata_full(object, g_quark_from_string(key.c_str()), data, nullptr);
     }
 
     template<typename T>

@@ -99,24 +99,28 @@ namespace mousetrap
     /// @brief single-click gesture, can be activated by a mouse button press or touchscreen tap
     class SingleClickGesture : public EventController
     {
-        /// @brief get the button for the current event
-        /// @return ButtonID, may be mousetrap::ButtonID::NONE if no event is currently bound
-        ButtonID get_current_button() const;
+        public:
+            /// @brief get the button for the current event
+            /// @return ButtonID, may be mousetrap::ButtonID::NONE if no event is currently bound
+            ButtonID get_current_button() const;
 
-        /// @brief set which button the event controller should listen to
-        /// @param id button, ButtonID::ANY to listen to any, ButtonID::NONE to listen to no button
-        void set_only_listens_to_button(ButtonID);
+            /// @brief set which button the event controller should listen to
+            /// @param id button, ButtonID::ANY to listen to any, ButtonID::NONE to listen to no button
+            void set_only_listens_to_button(ButtonID);
 
-        /// @brief get which button the event controller should listen to
-        /// @return button id, or ButtonID::ANY if listening to any, ButtonID::NONE if listening to no button
-        ButtonID get_only_listens_to_button() const;
+            /// @brief get which button the event controller should listen to
+            /// @return button id, or ButtonID::ANY if listening to any, ButtonID::NONE if listening to no button
+            ButtonID get_only_listens_to_button() const;
 
-        /// @brief get whether the controller should only list to touch events
-        /// @param b true if only listening to touch events, false otherwise
-        bool get_touch_only() const;
+            /// @brief get whether the controller should only list to touch events
+            /// @param b true if only listening to touch events, false otherwise
+            bool get_touch_only() const;
 
-        /// @brief set whether the controller should only listen to touch events
-        /// @param b true if it should only consider touch events, false otherwise
-        void set_touch_only(bool);
+            /// @brief set whether the controller should only listen to touch events
+            /// @param b true if it should only consider touch events, false otherwise
+            void set_touch_only(bool);
+
+        protected:
+            SingleClickGesture(GtkGestureSingle*);
     };
 }

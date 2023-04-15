@@ -23,7 +23,8 @@ wrapping GTK4 in a way that is much easier to understand and use, allowing begin
 ## Disadvantages over GTK4
 + many of the gio and glib functionality is not yet exposed, file I/O and anything related to images is present in 
   mousetrap, however
-+ GTK Builder is ommitted completely, all objects are defined and initializes in a C++ file
++ GTK Builder was ommitted completely, all objects are defined and initializes in a C++ file
++ mnemonics of any kind were ommitted
 + a hand-full of widgets are not yet exposed, or where intentionally ommitted, the latter category includes `FlowBox`,
   `ScaleButton`, and any widget marked for deprecation since GTK4.10
 
