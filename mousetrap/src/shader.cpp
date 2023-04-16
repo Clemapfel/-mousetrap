@@ -73,6 +73,7 @@ namespace mousetrap
 
         return create_from_string(str.str(), type);
         file.close();
+        return true;
     }
 
     GLNativeHandle Shader::get_program_id() const

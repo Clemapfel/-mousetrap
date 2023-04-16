@@ -164,3 +164,11 @@ int main()
 ```jl
 begin test end break
 ```
+
+cmake
+git
+libglew-dev
+libsfml-dev
+libglm-dev
+
+git clone https://github.com/Clemapfel/mousetrap
