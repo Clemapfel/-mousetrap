@@ -1,6 +1,6 @@
 --- @class StatModifier
 rt.StatModifier = meta.new_enum({
-    MIN = -5,
+    MIN = NEGATIVE_INFINITY,
     MINUS_4 = -4,
     MINUS_3 = -3,
     MINUS_2 = -2,

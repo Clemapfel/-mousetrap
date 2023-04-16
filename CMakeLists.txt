@@ -266,9 +266,11 @@ if(MOUSETRAP_BUILD_TESTING)
     declare_test(main)
 endif()
 
+return()
+
 ## JULIA BINDING
 
-find_package(JlCxx REQUIRED)
+find_package(JlCxx)
 get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
 get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
@@ -302,7 +304,7 @@ add_compile_definitions(mousetrap_julia_binding MOUSETRAP_JULIA_BINDING)
 
 ## RAT_GAME
 
-find_library(lua REQUIRED NAMES lua)
+find_library(lua NAMES lua)
 set(SOL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/sol2/include")
 
 add_executable(battle_main battle/main.cpp)

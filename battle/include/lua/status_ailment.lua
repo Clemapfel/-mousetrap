@@ -35,7 +35,7 @@ function rt.status_ailment_gained_message(subject, status_ailment)
     elseif status_ailment == rt.StatusAilment.AT_RISK then
         return out .. " is now at risk"
     elseif status_ailment == rt.StatusAilment.STUNNED then
-        return out .. " is stunned"
+        return out .. " is now stunned"
     elseif status_ailment == rt.StatusAilment.ASLEEP then
         return out .. " fell asleep"
     elseif status_ailment == rt.StatusAilment.POISONED then

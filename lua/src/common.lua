@@ -239,4 +239,4 @@ end
 INFINITY = 1/0
 
 --- @brief negative infinity
-NEGATIVE_INFINITY = -1/0
+NEGATIVE_INFINITY = -(1/0)
