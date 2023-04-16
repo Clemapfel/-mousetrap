@@ -1,253 +1,9 @@
---- @brief print, arguments are concatenated
---- @param vararg any
---- @return void
-function print(...)
-    for _, v in pairs({...}) do
-        io.write(tostring(v))
-    end
-end
 
---- @brief print, arguments are concatenade with a newline in between each
---- @param vararg any
---- @return void
-function println(...)
-
-    for _, v in pairs({...}) do
-        io.write(tostring(v))
-        io.write("\n")
-    end
-end
-
---- @brief get number of elements in arbitrary object
---- @param x any
---- @return number
-function sizeof(x)
-    if type(x) == "table" then
-        local n = 0
-        for _ in pairs(x) do
-            n = n + 1
-        end
-        return n
-    elseif type(x) == "string" then
-        return #x
-    else
-        return 1
-    end
-end
-
---- @brief is table empty
---- @param x any
---- @return boolean
-function is_empty(x)
-    if type(x) ~= "table" then
-        return true
-    else
-        return next(x) == nil
-    end
-end
-
---- @brief clamp
---- @param x number
---- @param lower_bound number
---- @param upper_bound number
---- @return number
-function clamp(x, lower_bound, upper_bound)
-
-    if x < lower_bound then
-        x = lower_bound
-    end
-
-    if x > upper_bound then
-        x = upper_bound
-    end
-
-    return x
-end
-
---- @brief convert arbitrary object to string
---- @param id string
---- @param object any
---- @return string
-function serialize(object_identifier, object, inject_sourcecode)
-
-    if inject_sourcecode == nil then
-        inject_sourcecode = false
-    end
-
-    get_indent = function (n_indent_tabs)
-
-        local tabspace = "    "
-        local buffer = {""}
-
-        for i = 1, n_indent_tabs do
-            table.insert(buffer, tabspace)
-        end
-
-        return table.concat(buffer)
-    end
-
-    insert = function (buffer, ...)
-
-        for i, value in pairs({...}) do
-            table.insert(buffer, value)
-        end
-    end
-
-    get_source_code = function (func)
-
-        local info = debug.getinfo(func);
-
-        if string.sub(info.source, 1, 1) ~= "@" then
-            return "[" .. tostring(func) .. "]"
-        end
-
-        local file = io.open(string.sub(info.source, 2), "r");
-
-        if file == nil then return "" end
-
-        local str_buffer = {}
-        local i = 1
-        local end_i = 1
-
-        local first_line = true
-        local single_line_comment_active = false
-        local multi_line_comment_active = false
-
-        for line in file:lines("L") do
-
-            if end_i == 0 then break end
-
-            if (i >= info.linedefined) then
-
-                if not first_line then
-
-                    local first_word = true;
-                    for word in line:gmatch("%g+") do
-
-                        if string.find(word, "%-%-%[%[") then
-                            multi_line_comment_active = true
-                        elseif string.find(word, "%-%-]]") then
-                            multi_line_comment_active = false
-                        elseif string.find(word, "%-%-") then
-                            single_line_comment_active = true
-                        end
-
-                        if not (single_line_comment_active or multi_line_comment_active) then
-
-                            if word == "if" or word == "for" or word == "while" or word == "function" then
-                                end_i = end_i + 1
-                            elseif word == "do" and first_word then     -- do ... end block
-                                end_i = end_i + 1
-                            elseif word == "end" or word == "end," then
-                                end_i = end_i - 1
-                            end
-                        end
-
-                        first_word = false
-                    end
-                end
-
-                table.insert(str_buffer, line)
-                first_line = false
-            end
-
-            single_line_comment_active = false;
-            i = i + 1
-        end
-
-        file:close()
-
-        -- remove last newline
-        local n = #str_buffer
-        str_buffer[n] = string.sub(str_buffer[n], 1, string.len(str_buffer[n]) - 1)
-
-        return table.concat(str_buffer)
-    end
-
-    serialize_inner = function (buffer, object, n_indent_tabs)
-
-        if type(object) == "number" then
-            insert(buffer, object)
-
-        elseif type(object) == "boolean" then
-            if (object) then insert(buffer, "true") else insert(buffer, "false") end
-
-        elseif type(object) == "string" then
-            insert(buffer, string.format("%q", object))
-
-        elseif type(object) == "table" then
-
-            if sizeof(object) > 0 then
-                insert(buffer, "{\n")
-                n_indent_tabs = n_indent_tabs + 1
-
-                local n_entries = sizeof(object)
-                local index = 0
-                for key, value in pairs(object) do
-
-                    if type(key) == "string" then
-                        insert(buffer, get_indent(n_indent_tabs), key, " = ")
-
-                    elseif type(key) == "number" then
-
-                        if key ~= index+1 then
-                            insert(buffer, get_indent(n_indent_tabs), "[", key, "] = ")
-                        else
-                            insert(buffer, get_indent(n_indent_tabs))
-                        end
-                    end
-
-                    serialize_inner(buffer, value, n_indent_tabs)
-                    index = index +1
-
-                    if index < n_entries then
-                        insert(buffer, ",\n")
-                    else
-                        insert(buffer, "\n")
-                    end
-                end
-
-                insert(buffer, get_indent(n_indent_tabs-1), "}")
-            else
-                insert(buffer, "{}")
-            end
-
-        elseif type(object) == "function" and inject_sourcecode then
-            insert(buffer, get_source_code(object))
-        elseif type(object) == "nil" then
-            insert(buffer, "nil")
-        else
-            insert(buffer, "[" .. tostring(object) .. "]")
-        end
-    end
-
-    if object == nil then
-        return serialize("", object_identifier)
-    end
-
-    local buffer = {""}
-
-    if object_identifier ~= "" then
-        table.insert(buffer, object_identifier .. " = ")
-    end
-
-    serialize_inner(buffer, object, 0)
-    return table.concat(buffer, "")
-end
-
---- @brief positive infinity
-INFINITY = 1/0
-
---- @brief negative infinity
-NEGATIVE_INFINITY = -1/0
-
---- ##########################################################
-
---- @brief Type-system, formalizes private and public fields
+--- @module meta basic type system & introspection
 meta = {}
 
 --- @brief default value for function member
-function meta.Function()
+function Function()
     return function() error("[ERROR] In meta.Function: Attempting to call an uninitialized function") end
 end
 
@@ -336,9 +92,7 @@ meta.Enum = "Enum"
 --- @returns meta.Enum
 function meta.new_enum(values)
 
-    local out = {}
-    out.__meta = {}
-    out.__meta.typename = meta.Enum
+    local out = meta._new("Enum")
     out.__meta.values = {}
 
     local used_values = {}
@@ -366,7 +120,11 @@ function meta.new_enum(values)
     end
 
     out.__meta.__index = function(instance, key)
-        return instance.__meta.values[key]
+        local res = instance.__meta.values[key]
+        if res == nil then
+            error("In Enum.__index: No key with name `" .. key .. "`")
+        end
+        return res
     end
 
     out.__meta.__pairs = function(this)
@@ -480,12 +238,12 @@ function meta._new_type(typename)
     end
 
     local x = meta._new("Type")
-    x.__meta.__call = function(this)
-        return meta.new(this)
+    x.__meta.__call = function(this, args)
+        return meta.new(this, args)
     end
 
-    x.name = typename
-    x.properties = {}
+    x.__meta.name = typename
+    x.__meta.properties = {}
     return x
 end
 
@@ -519,7 +277,7 @@ function meta.isa(entity, type)
         return false
     end
 
-    return m.typename == type.name
+    return m.typename == type.__meta.name
 end
 
 --- @brief Add property to meta.Type
@@ -534,7 +292,7 @@ function meta.add_property(type, property_name, initial_value)
         error("[ERROR] In meta.add_property: Object is not a type")
     end
 
-    type.properties[property_name] = initial_value
+    type.__meta.properties[property_name] = initial_value
 end
 
 --- @brief Does meta instance have a property with given id?
@@ -573,21 +331,32 @@ end
 
 --- @brief Instantiate object from a meta.Type
 --- @param type meta.Type
+--- @param args table [optional] constructor arguments
 --- @returns instance
-function meta.new(type)
+function meta.new(type, args)
 
     if not meta.is_type(type) then
         error("[ERROR] In meta.new: Argument is not a type")
     end
 
-    local x = meta._new(type.name)
+    local x = meta._new(type.__meta.name)
 
-    for name, value in pairs(type) do
+    if args == nil then
+        args = {}
+    end
+
+    for name, value in pairs(type.__meta.properties) do
         if (name == "__meta") then
             goto continue
         end
 
-        x[name] = value
+        local ctor_value = args[name]
+        if ctor_value ~= nil then
+            x[name] = ctor_value
+        else
+            x[name] = value
+        end
+
         ::continue::
     end
 

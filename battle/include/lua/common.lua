@@ -64,6 +64,8 @@ function clamp(x, lower_bound, upper_bound)
     return x
 end
 
+--- @brief make first letter in word capitalized
+
 --- @brief convert arbitrary object to string
 --- @param id string
 --- @param object any
@@ -232,7 +234,7 @@ function serialize(object_identifier, object, inject_sourcecode)
     end
 
     serialize_inner(buffer, object, 0)
-    return table.concat(buffer, "") .. "\n}"
+    return table.concat(buffer, "")
 end
 
 --- @brief positive infinity
@@ -240,3 +242,8 @@ INFINITY = 1/0
 
 --- @brief negative infinity
 NEGATIVE_INFINITY = -1/0
+
+--- @brief make first letter capital
+function string.capitalize(str)
+    return string.upper(string.sub(str, 1, 1)) .. string.sub(str, 2, string.len(str))
+end

@@ -26,6 +26,8 @@ int main()
     lua["RESOURCE_PATH"] = RESOURCE_PATH;
     lua.safe_script_file(RESOURCE_PATH + "include.lua");
 
+    return 0;
+
     auto app = Application("rat_game.battle");
     app.connect_signal_activate([](Application* app)
     {

@@ -1,3 +1,4 @@
+--- @module test unit testing
 test = {}
 test._tests = {}
 test._current_name = ""

@@ -1,12 +1,20 @@
 -- RESOURCE_PATH = ""
 package.path = package.path .. ";" .. RESOURCE_PATH .. "include/lua/?.lua"
+
+require "common"
 require "meta"
 require "test"
 
-test_type = meta.new_type("TestType", {
-    property_01 = 1234
+--- @module rat_game battle module
+rt = {}
+
+require "battle_log"
+require "status_ailment"
+
+id = rt.BattleID({
+    id = "id",
+    name = "Name",
+    gender = rt.GrammaticGender.FEMALE
 })
 
-println(test_type)
-test_instance = meta.new(test_type)
-println(test_instance)
+print(string.capitalize(rt.possesive_pronoun(id)))

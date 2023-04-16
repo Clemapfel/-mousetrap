@@ -117,13 +117,16 @@ function meta.new_enum(values)
     end
 
     out.__meta.__newindex = function(instance, key, value)
-        error("In enum.__newindex: Cannot modify an enum or its values")
+        error("[ERROR] In Enum.__newindex: Cannot modify an enum or its values")
     end
 
     out.__meta.__index = function(instance, key)
-        return instance.__meta.values[key]
+        local res = instance.__meta.values[key]
+        if res == nil then
+            error("[ERROR] In Enum.__index: No key named `" .. key .. " in enum")
+        end
+        return res
     end
-
 
     out.__meta.__pairs = function(this)
         return pairs(this.__meta.values)
