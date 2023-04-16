@@ -39,7 +39,7 @@ namespace mousetrap
     void log::set_file_formatting_function(Function_t function)
     {
         _log_format_function = [f = function](const std::string& message, const std::map<std::string, std::string>& values) -> std::string {
-            f(message, values);
+            return f(message, values);
         };
     }
 
