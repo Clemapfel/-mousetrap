@@ -1,9 +1,9 @@
 --- @class GrammaticGender
 rt.GrammaticGender = meta.new_enum({
-    MALE = 0,
-    FEMALE = 1,
-    NEUTRAL = 2,
-    PLURAL = 3
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    NEUTRAL = "NEUTRAL",
+    PLURAL = "PLURAL"
 })
 
 --- @class BattleID

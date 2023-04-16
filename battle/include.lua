@@ -10,11 +10,6 @@ rt = {}
 
 require "battle_log"
 require "status_ailment"
+require "stat_modifier"
 
-id = rt.BattleID({
-    id = "id",
-    name = "Name",
-    gender = rt.GrammaticGender.FEMALE
-})
-
-print(string.capitalize(rt.possesive_pronoun(id)))
+println(math.abs(rt.StatModifier.MINUS_2 - rt.StatModifier.MINUS_1))

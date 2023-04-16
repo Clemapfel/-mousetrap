@@ -20,7 +20,8 @@ int main()
         sol::lib::os,
         sol::lib::io,
         sol::lib::string,
-        sol::lib::table
+        sol::lib::table,
+        sol::lib::math
     );
 
     lua["RESOURCE_PATH"] = RESOURCE_PATH;
