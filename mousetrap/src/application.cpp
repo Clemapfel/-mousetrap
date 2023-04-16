@@ -25,7 +25,7 @@ namespace mousetrap
 
         static ApplicationInternal* application_internal_new(const std::string& id)
         {
-            auto* native = gtk_application_new(id.c_str(), G_APPLICATION_DEFAULT_FLAGS);
+            auto* native = gtk_application_new(id.c_str(), (GApplicationFlags) gint32(0));
 
             auto* self = (ApplicationInternal*) g_object_new(application_internal_get_type(), nullptr);
             application_internal_init(self);
