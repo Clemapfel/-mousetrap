@@ -49,9 +49,6 @@ void add_test(TestComponent* test)
 /// @brief main
 int main()
 {
-    std::cout << GTK_MINOR_VERSION << std::endl;
-    return 0;
-
     auto app = Application("docs.screenshots");
     app.connect_signal_activate([](Application* app)
     {
