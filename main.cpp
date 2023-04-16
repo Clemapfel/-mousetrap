@@ -9,6 +9,9 @@ using namespace mousetrap;
 
 int main()
 {
+    std::cout << GTK_MINOR_VERSION << std::endl;
+    return 0;
+
     auto app = Application("app.debug");
     app.connect_signal_activate([](Application* app){
 

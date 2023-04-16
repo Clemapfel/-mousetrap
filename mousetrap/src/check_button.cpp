@@ -14,6 +14,8 @@ namespace mousetrap
           CTOR_SIGNAL(CheckButton, toggled)
     {}
 
+    #if GTK_MINOR_VERSION >= 8
+
     void CheckButton::set_child(Widget* child)
     {
         WARN_IF_SELF_INSERTION(CheckButton::set_child, this, child);
@@ -26,6 +28,8 @@ namespace mousetrap
     {
         return _child;
     }
+
+    #endif
 
     void CheckButton::set_state(CheckButtonState state)
     {

@@ -43,6 +43,8 @@ namespace mousetrap
             /// @return mousetrap::CheckButtonState
             CheckButtonState get_state() const;
 
+            #if GTK_MINOR_VERSION >= 8
+
             /// @brief set widget displays next to the button, usually used for a text label
             /// @param widget
             void set_child(Widget*);
@@ -50,6 +52,8 @@ namespace mousetrap
             /// @brief get widget that is displayed next to the button, or nullptr if no such widget was set
             /// @return widget
             Widget* get_child() const;
+
+            #endif
 
         private:
             Widget* _child = nullptr;

@@ -49,6 +49,9 @@ void add_test(TestComponent* test)
 /// @brief main
 int main()
 {
+    std::cout << GTK_MINOR_VERSION << std::endl;
+    return 0;
+
     auto app = Application("docs.screenshots");
     app.connect_signal_activate([](Application* app)
     {
@@ -110,7 +113,7 @@ int main()
 
         // add shortcut binding for all actions
 
-        static auto shortcut_controller = ShortcutController(app);
+        static auto shortcut_controller = ShortcutController();
         shortcut_controller.add_action(hide_show_stack_control_action);
         state->main_window.add_controller(shortcut_controller);
 
