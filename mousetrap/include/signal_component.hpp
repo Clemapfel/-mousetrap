@@ -59,14 +59,14 @@ namespace mousetrap
                     return internal->function(internal->instance); \
                 else \
                     return return_t(); \
-            }                                                                       \
-                                                                                    \
-            void initialize()                                                       \
-            {                                                                       \
-                if (_internal == nullptr)                                           \
-                {                                                                    \
+            } \
+            \
+            void initialize()  \
+            { \
+                if (_internal == nullptr) \
+                { \
                     _internal = detail::snake_case##_new((void*) _instance); \
-                    detail::attach_ref_to(_instance->operator GObject*(), _internal);  \
+                    detail::attach_ref_to(_instance->operator GObject*(), _internal);\
                     g_object_ref(_internal);                                                                    \
                 }                                                                        \
             }\

@@ -29,7 +29,8 @@ namespace mousetrap
             ActionID id;
             std::vector<ShortcutTriggerID> shortcuts;
 
-            GSimpleAction* g_action ;
+            GApplication* g_app;
+            GSimpleAction* g_action;
             GVariant* g_state;
 
             std::function<void()> stateless_f;
@@ -50,6 +51,7 @@ namespace mousetrap
         public:
             /// @brief construct an action with immutable id
             /// @param id string, usually of the form `scope.action_name`
+            /// @param application
             Action(const std::string& id);
 
             /// @brief dtor

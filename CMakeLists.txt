@@ -17,7 +17,7 @@ endif()
 include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX(glm/glm.hpp GLM_FOUND)
 if(NOT GLM_FOUND)
-    message(FATA_ERROR "Missing Dependency: glm headers were not detected")
+    message(FATAL_ERROR "Missing Dependency: glm headers were not detected")
 endif()
 
 ## LIBRARY
@@ -266,8 +266,6 @@ if(MOUSETRAP_BUILD_TESTING)
     declare_test(main)
 endif()
 
-return()
-
 ## JULIA BINDING
 
 find_package(JlCxx)
@@ -276,7 +274,6 @@ get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
 
 add_library(mousetrap_julia_binding SHARED
     julia/julia_binding.cpp
-    julia/julia_interface.cpp
     ${MOUSETRAP_SOURCE_FILES}
 )
 
@@ -286,7 +283,7 @@ target_link_libraries(mousetrap_julia_binding PUBLIC
     ${OpenGL}
     ${GLEW}
     ${GTK_LIBRARIES}
-    ${sfml-audio}
+    sfml-audio
 )
 
 target_include_directories(mousetrap_julia_binding PUBLIC
@@ -314,6 +311,6 @@ target_link_libraries(battle_main PRIVATE
 )
 
 target_include_directories(battle_main PRIVATE
-    "${CMAKE_SOURCE_DIR}"
-    "${SOL_INCLUDE_DIR}"
+    ${CMAKE_SOURCE_DIR}
+    ${SOL_INCLUDE_DIR}
 )

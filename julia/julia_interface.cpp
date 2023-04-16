@@ -1,74 +1,44 @@
 //
-// Created by clem on 4/6/23.
+// Copyright (c) Clemens Cords (mail@clemens-cords.com), created 4/16/23
 //
 
+#pragma once
+
 #include <julia.h>
-#include <mousetrap.hpp>
-#include <jlcxx/jlcxx.hpp>
+#include <string>
 
-namespace mousetrap
+jl_value_t* jl_get_property(jl_value_t* value, const std::string& name)
 {
-    template<typename... Ts>
-    void log_critical(Ts... ts)
-    {
-        std::stringstream str;
-        auto append = [](std::stringstream& str, auto x){
-            str << x;
-        };
-        (append(str, ts), ...);
-        log::critical(str.str(), MOUSETRAP_DOMAIN);
-    }
+    static auto* get_property = jl_get_function(jl_base_module, "getproperty");
+    static auto* has_property = jl_get_function(jl_base_module, "hasproperty");
 
-    template<typename T>
-    inline std::string jl_to_string(T x)
-    {
-        static auto* string = jl_get_function(jl_base_module, "string");
-        auto* out = jl_call1(string, static_cast<jl_value_t*>(x));
-        return out == nullptr ? "" : jl_string_ptr(out);
-    }
+    if (not jl_unbox_bool(jl_call2(has_property, value, (jl_value_t*) jl_symbol(name.c_str()))))
+        return jl_nothing;
 
-    template<typename... Args_t>
-    jl_value_t* jl_safe_call(jl_function_t* function, Args_t... in)
-    {
-        static auto* jl_safe_call = jl_eval_string(R"(
-            function safe_call(f::Function, args...)
+    return jl_call2(get_property, value, (jl_value_t*) jl_symbol(name.c_str()));
+}
 
-                res::Any = undef
+bool jl_assert_type(jl_value_t* value, const std::string& type)
+{
+    auto* type_v = jl_get_global(jl_main_module, jl_symbol(type.c_str()));
+    return jl_isa(value, type_v);
+}
 
-                backtrace::String = ""
-                exception_occurred::Bool = false
-                exception::Union{Exception, UndefInitializer} = undef
+jl_value_t* jl_box_string(const std::string& in)
+{
+    static auto* string = jl_get_global(jl_base_module, jl_symbol("string"));
+    return jl_call1(string, (jl_value_t*) jl_symbol(in.c_str()));
+}
 
-                try
-                    res = f(args...)
-                catch e
-                    exception = e
-                    backtrace = sprint(Base.showerror, exception, catch_backtrace())
-                    exception_occurred = true
-                end
+void jl_throw_exception(const std::string& message)
+{
+    static auto* exception = jl_get_global(jl_base_module, jl_symbol("ErrorException"));
+    jl_throw( jl_call1(exception, jl_box_string(message)));
+}
 
-                return (res, exception_occurred, exception, backtrace)
-            end
-        )");
-
-        static auto* jl_throw = jl_get_function(jl_base_module, "throw");
-
-        static std::array<jl_value_t*, sizeof...(Args_t) + 1> args;
-        static auto set = [&](size_t i, jl_value_t* x) {args[i] = x;};
-
-        args[0] = (jl_value_t*) function;
-
-        size_t i = 1;
-        (set(i++, (jl_value_t*) in), ...);
-
-        auto* tuple_res = jl_call(jl_safe_call, args.data(), args.size());
-
-        if (jl_unbox_bool(jl_get_nth_field(tuple_res, 1)))
-        {
-            log::critical(jl_to_string(jl_get_nth_field(tuple_res, 3)), MOUSETRAP_DOMAIN);
-        }
-
-        auto* res = jl_get_nth_field(tuple_res, 0);
-        return res;
-    }
+template<typename... T>
+jl_value_t* jl_calln(jl_function_t* function, T... args)
+{
+    std::array<jl_value_t*, sizeof...(T)> wrapped = {args...};
+    return jl_call(function, wrapped.data(), wrapped.size());
 }
