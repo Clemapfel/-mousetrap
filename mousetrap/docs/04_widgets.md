@@ -1,10 +1,7 @@
 # Chapter 4: Widgets
 
-Widgets are central to any GUI application. Usually, a widget is 
-
 ## mousetrap::Widget
 
-All widgets inherit from `mousetrap::Widget`. When creating a custom widget, 
 
 #### Signals
 
@@ -42,7 +39,15 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 ### Window
 
+Windows are central to any application. Any `Window` instance takes the application itself as the only argument to its constructor. This is because `Window` and  `Application` are linked internally. For example, if all `Window`s are closed, the application exits.
+
+All widgets are contained in a `Window`, that is, every widget has a sequence of parents that ends with a `Window`. `Window` is therefore what is called the most **toplevel** widget.
+
+Windows are containers, but can only contain a single widget inside of them. We set the windows child using `Window::set_child`. This child will usually be a container that contain more than one widget, so we are not limited by windows 1-child limitation.
+
 #### Signals
+
+`Window` has three signals (on top of those inherited from `Widget`) that we can connect to:
 
 | id                        | signature                                         | emitted when...                                                                             |
 |---------------------------|---------------------------------------------------|---------------------------------------------------------------------------------------------|
@@ -50,9 +55,28 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 | `activate_default_widget` | `(Window*, (Data_t)) -> void`                     | default widget is activate (see below)                                                      |
 | `activate_focused_widget` | `(Window*, (Data_t)) -> void`                      | `activate` emitted on currently focused widget                                              |
 
-\todo default widget
+`activate_default_widget` is emitted when the default widget is activated. This is a widget designated as such via `Window::set_default_widget`. If the user presses the enter key while the window itself holds focus, this widget will be activated. This is useful for small message dialogs that have, for example, an "ok" button.
+
+`activate_focused_widget` is self-explanatory (it is emitted when the widget that is currently in focus emits `activate`). Signal `close_request` is not.
+
+#### Close Request
+
+When the window manager, which is the part of the users operating system that deals with window layout and lifetime, request a window to close, the window does not immediately close. Instead, `close_request` is emitted first. The return value of `close_request` determines what happens next, if the return value is `WindowCloseRequestResult::ALLOW_CLOSE` then the window will close. If the result is `WindowCloseRequestResult::PREVENT_CLOSE`, the window will stay open. We can use this to for example delay closing of a window until a certain filesystem operation is done. 
+
+If no handler is connected to `close_request`, the default handler will always return `ALLOW_CLOSE`.
 
 ### Box
+
+Boxes are the simplest multi-widget container in mousetrap and are used extensively in almost any application. A box aligns its children horizontally or vertically, depending on the argument passed to the boxes constructor. 
+
+We can add widgets to the start, end or after a specific widget using `push_front`, `push_back`, and `insert_after`, respectively.
+
+
+
+\todo screenshot
+
+Between any two children is an optional space, which we can specify using `Box::set_spacing`. This spacing is unrelated to the margins of its child widgets and will be applied between any two consecutive children, but not before the very first and after the very last child.
+
 
 ### CenterBox
 

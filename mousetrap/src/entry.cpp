@@ -10,9 +10,7 @@ namespace mousetrap
     Entry::Entry()
         : WidgetImplementation<GtkEntry>(GTK_ENTRY(gtk_entry_new())),
           CTOR_SIGNAL(Entry, activate),
-          CTOR_SIGNAL(Entry, text_changed),
-          CTOR_SIGNAL(Entry, text_inserted),
-          CTOR_SIGNAL(Entry, text_deleted)
+          CTOR_SIGNAL(Entry, text_changed)
     {}
 
     std::string Entry::get_text() const

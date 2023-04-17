@@ -49,6 +49,8 @@ namespace mousetrap::detail
     DEFINE_SIGNAL(Clicked, clicked, CLICKED, "clicked", void);
     DEFINE_SIGNAL(Toggled, toggled, TOGGLED, "toggled", void);
     DEFINE_SIGNAL(TextChanged, text_changed, TEXT_CHANGED, "changed", void);
+
+    /*
     DEFINE_SIGNAL(TextInserted, text_inserted, TEXT_INSERTED, "insert-text", void,
                               SPLAT(int32_t start_pos, int32_t end_pos),
                               SPLAT(start_pos, end_pos)
@@ -58,6 +60,7 @@ namespace mousetrap::detail
                           SPLAT(int32_t start_pos, int32_t end_pos),
                           SPLAT(start_pos, end_pos)
     );
+     */
 
     DEFINE_SIGNAL(Undo, undo, UNDO, "undo", void);
     DEFINE_SIGNAL(Redo, redo, REDO, "redo", void);

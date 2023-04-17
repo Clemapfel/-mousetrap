@@ -9,8 +9,6 @@ namespace mousetrap
     TextView::TextView()
         : WidgetImplementation<GtkTextView>(GTK_TEXT_VIEW(gtk_text_view_new())),
           CTOR_SIGNAL(TextView, text_changed),
-          CTOR_SIGNAL(TextView, text_inserted),
-          CTOR_SIGNAL(TextView, text_deleted),
           CTOR_SIGNAL(TextView, undo),
           CTOR_SIGNAL(TextView, redo)
     {}

@@ -14,7 +14,7 @@ namespace mousetrap
         : WidgetImplementation<GtkPopoverMenu>(GTK_POPOVER_MENU(
             gtk_popover_menu_new_from_model(model.operator GMenuModel*()))
           ),
-          CTOR_SIGNAL(PopoverMenu, close)
+          CTOR_SIGNAL(PopoverMenu, closed)
     {
         _model = &model;
         refresh_widgets();
