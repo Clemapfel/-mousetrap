@@ -16,12 +16,18 @@ require "stat_modifier"
 
 
 q = Queue()
-push_front(q, 1234)
-push_front(q, 5678)
-push_back(q, 123132)
+
+push_back(q, 1)
+push_back(q, 2)
+push_back(q, 3)
+
+println(q[0])
+println(q[-1])
+println(q[3])
 
 print(q)
-exit(0)
+
+os.exit()
 
 routines = {}
 cr = coroutine.create(function()
