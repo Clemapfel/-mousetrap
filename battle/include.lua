@@ -4,7 +4,7 @@ package.path = package.path .. ";" .. RESOURCE_PATH .. "include/lua/?.lua"
 require "common"
 require "meta"
 require "test"
-require "action_queue"
+require "queue"
 
 --- @module rat_game battle module
 rt = {}
@@ -15,42 +15,30 @@ require "stat_modifier"
 --- require "entity"
 
 
-q = Queue()
+--- ### ACTION QUEUE ###
 
-push_back(q, 1)
-push_back(q, 2)
-push_back(q, 3)
+rt._action_queue = Queue()
 
-println(q[0])
-println(q[-1])
-println(q[3])
+function rt.queue_action(f)
+    rt._action_queue:push_back(coroutine.wrap(f))
+end
 
-print(q)
+function rt.step_action()
 
-os.exit()
-
-routines = {}
-cr = coroutine.create(function()
-    local i = 0
-    while true do
-        if not is_empty(routines) then
-            current = routines[1]
-            current()
-        end
-
-        i = i + 1
-        coroutine.yield(i)
+    if rt._action_queue:is_empty() then
+        return
     end
-end)
-
-function add_routine(f)
-    table.insert(routines, coroutine.wrap())
+    (rt._action_queue:pop_back())()
 end
 
-function step()
-    courinte.resume(cr)
+function rt.flush_actions()
+    while not rt._action_queue:is_empty() do
+        rt.step_action()
+    end
 end
 
-cr()
-cr()
+for i=1,10 do
+    rt.queue_action(function() print(i) end)
+end
 
+rt.flush_actions()

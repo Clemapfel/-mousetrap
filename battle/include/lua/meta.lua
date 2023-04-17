@@ -200,6 +200,8 @@ function meta.export_enum(enum, table)
     end
 end
 
+--- @brief instantiate a new object, for internal use only
+--- @param typename string
 function meta._new(typename)
 
     if not meta.is_string(typename) then
