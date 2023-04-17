@@ -43,7 +43,8 @@ namespace mousetrap
     };
 
     /// @brief viewport that shows part of a widget, controllable by user interaction
-    class ScrolledWindow : public WidgetImplementation<GtkScrolledWindow>
+    class ScrolledWindow : public WidgetImplementation<GtkScrolledWindow>,
+        HAS_SIGNAL(ScrolledWindow, scroll_child)
     {
         public:
             /// @brief create

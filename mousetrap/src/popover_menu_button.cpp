@@ -13,7 +13,8 @@ namespace mousetrap
     PopoverMenu::PopoverMenu(const MenuModel& model)
         : WidgetImplementation<GtkPopoverMenu>(GTK_POPOVER_MENU(
             gtk_popover_menu_new_from_model(model.operator GMenuModel*()))
-          )
+          ),
+          CTOR_SIGNAL(PopoverMenu, close)
     {
         _model = &model;
         refresh_widgets();

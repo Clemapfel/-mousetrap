@@ -16,9 +16,7 @@ namespace mousetrap
     /// @brief a single-line text entry
     class Entry : public WidgetImplementation<GtkEntry>,
         HAS_SIGNAL(Entry, activate),
-        HAS_SIGNAL(Entry, text_changed),
-        HAS_SIGNAL(Entry, text_inserted),
-        HAS_SIGNAL(Entry, text_deleted)
+        HAS_SIGNAL(Entry, text_changed)
     {
         public:
             /// @brief construct

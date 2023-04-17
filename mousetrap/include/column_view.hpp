@@ -30,7 +30,8 @@ namespace mousetrap
     #endif
 
     /// @brief view that displays widget in a table, ordered by column
-    class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable
+    class ColumnView : public WidgetImplementation<GtkColumnView>, public Selectable,
+        HAS_SIGNAL(ColumnView, activate)
     {
         public:
             class Column

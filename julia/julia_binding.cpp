@@ -108,7 +108,6 @@ void add_image(jlcxx::Module& module)
        return box_vector2ui(image.get_size());
     });
 
-    module.add_enum(InterpolationType);
     module.add_enum_value(InterpolationType, INTERPOLATION, NEAREST);
     module.add_enum_value(InterpolationType, INTERPOLATION, TILES);
     module.add_enum_value(InterpolationType, INTERPOLATION, BILINEAR);

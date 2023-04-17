@@ -5,20 +5,15 @@
 #pragma once
 
 #include <mousetrap.hpp>
-#include "test_component.hpp"
 
 using namespace mousetrap;
 
-class SignalsChapter : public TestComponent
+class SignalsChapter : public Widget
 {
     private:
         Button button;
 
     public:
-        std::string get_title() const override {
-            return "Chapter 3: Button HelloWorld";
-        }
-
         operator NativeWidget() const override {
             return button;
         }

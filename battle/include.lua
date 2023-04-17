@@ -11,5 +11,6 @@ rt = {}
 require "battle_log"
 require "status_ailment"
 require "stat_modifier"
+require "entity"
 
 println(math.abs(rt.StatModifier.MINUS_2 - rt.StatModifier.MINUS_1))

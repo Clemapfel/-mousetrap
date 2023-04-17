@@ -132,8 +132,17 @@ namespace mousetrap
             /// @return true if it should be highlighted, false otherwise
             bool get_focus_visible() const;
 
+            /// @brief set default widget
+            /// @param widget
+            void set_default_widget(const Widget& widget);
+
+            /// @brief get default widget
+            /// @return widget, may be nullptr
+            Widget* get_default_widget() const;
+
         private:
             const Widget* _child = nullptr;
             const Widget* _titlebar_widget = nullptr;
+            const Widget* _default_widget = nullptr;
     };
 }

@@ -12,6 +12,7 @@
 
 #include "signals_chapter.hpp"
 #include "motion_controller_test.hpp"
+#include "paned_test.hpp"
 
 using namespace mousetrap;
 
@@ -33,17 +34,17 @@ inline struct State
 
     Box stack_box = Box(Orientation::HORIZONTAL);
 
-    std::vector<TestComponent*> tests;
+    std::vector<Widget*> tests;
 
 }* state = nullptr;
 
 /// @brief add test to state
 /// @param test pointer to TestComponent
-void add_test(TestComponent* test)
+void add_test(Widget* test, const std::string& title)
 {
     assert(state != nullptr);
     state->tests.push_back(test);
-    auto _ = state->stack.add_child(*test, test->get_title());
+    auto _ = state->stack.add_child(*test, title);
 }
 
 /// @brief main
@@ -55,9 +56,9 @@ int main()
         state = new State{Window(*app)};
 
         // setup children
-        add_test(new MotionControllerTest());
-        add_test(new SignalsChapter());
-
+        add_test(new MotionControllerTest(), "MotionEventController");
+        add_test(new PanedTest(), "Paned");
+        add_test(new SignalsChapter(), "Chapter 3: Signals");
 
         // action to hide gui element other than stack child
 
@@ -129,7 +130,6 @@ int main()
             next_child_action.set_enabled(i < int(state->stack.get_n_children()) - 1);
 
             auto* test = state->tests.at(i);
-            state->main_window.set_title(test->get_title());
         });
         state->stack.get_selection_model()->emit_signal_selection_changed(0, 0); // update initial state of actions
 

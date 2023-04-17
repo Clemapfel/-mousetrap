@@ -9,7 +9,8 @@
 namespace mousetrap
 {
     Popover::Popover()
-    : WidgetImplementation<GtkPopover>(GTK_POPOVER(gtk_popover_new()))
+    : WidgetImplementation<GtkPopover>(GTK_POPOVER(gtk_popover_new())),
+      CTOR_SIGNAL(Popover, closed)
     {}
 
     void Popover::popup()

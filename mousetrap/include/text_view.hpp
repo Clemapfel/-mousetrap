@@ -17,8 +17,6 @@ namespace mousetrap
     /// @note obfuscates many of GtkTextViews functionalities for the sake of brevity and simplicity
     class TextView : public WidgetImplementation<GtkTextView>,
         HAS_SIGNAL(TextView, text_changed),
-        HAS_SIGNAL(TextView, text_inserted),
-        HAS_SIGNAL(TextView, text_deleted),
         HAS_SIGNAL(TextView, undo),
         HAS_SIGNAL(TextView, redo)
     {

@@ -17,7 +17,7 @@ rt.BattleID = meta.new_type("BattleID", {
 --- @param id BattleID
 function rt.subject_pronoun(id)
 
-    if not meta.isa(id, rt.BattleID.name) then
+    if not meta.isa(id, "BattleID") then
         error("[ERROR] In subject_pronoun: Argument #1 is not a BattleID")
     end
 
@@ -36,7 +36,7 @@ end
 --- @param id BattleID
 function rt.object_pronoun(id)
 
-    if not meta.isa(id, rt.BattleID.name) then
+    if not meta.isa(id, "BattleID") then
         error("[ERROR] In object_pronoun: Argument #1 is not a BattleID")
     end
 
@@ -74,7 +74,7 @@ end
 --- @param id BattleID
 function rt.reflexive_pronoun(id)
 
-    if not meta.isa(id, rt.BattleID.name) then
+    if not meta.isa(id, "BattleID") then
         error("[ERROR] In object_pronoun: Argument #1 is not a BattleID")
     end
 

@@ -149,7 +149,8 @@ namespace mousetrap
     ///
 
     ColumnView::ColumnView(SelectionMode mode)
-        : WidgetImplementation<GtkColumnView>(GTK_COLUMN_VIEW(gtk_column_view_new(nullptr)))
+        : WidgetImplementation<GtkColumnView>(GTK_COLUMN_VIEW(gtk_column_view_new(nullptr))),
+          CTOR_SIGNAL(ColumnView, activate)
     {
         _internal = detail::column_view_internal_new(get_native(), mode);
         detail::attach_ref_to(G_OBJECT(get_native()), _internal->native);

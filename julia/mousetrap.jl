@@ -27,6 +27,8 @@ module mousetrap
         g::Float32
         b::Float32
         a::Float32
+
+        RGBA(r::Real, g::Real, b::Real, a::Real) = new(Float32(r), Float32(g), Float32(b), Float32(a))
     end
     export RGBA
 
@@ -37,6 +39,8 @@ module mousetrap
         s::Float32
         v::Float32
         a::Float32
+
+        HSVA(h::Real, s::Real, v::Real, a::Real) = new(Float32(h), Float32(s), Float32(v), Float32(a))
     end
     export HSVA
 
@@ -81,7 +85,7 @@ module mousetrap
 
     """
     """
-    create(image::Image, x::Unsigned, y::Unsigned) = detail.create(image, convert(UInt64, x), convert(UInt64, y))
+    create(image::Image, x::Integer, y::Integer, rgba::RGBA) = detail.create(image, x, y, rgba)
     export create
 
     """
@@ -101,21 +105,42 @@ module mousetrap
 
     """
     """
-    const InterpolationType = detail.InterpolationType
+    @enum InterpolationType begin
+        NEAREST = detail.INTERPOLATION_NEAREST
+        TILES = detail.INTERPOLATION_TILES
+        BILINEAR = detail.INTERPOLATION_BILINEAR
+        HYPERBOLIC = detail.INTERPOLATION_HYPERBOLIC
+    end
     @export_enum InterpolationType
 
     """
     """
-    as_scaled(image::Image, new_width::Unsigned, new_height::Unsigned) = detail.as_scaled(image, UInt64(new_with), UInt64(new_height))
+    as_scaled(image::Image, new_width::Integer, new_height::Integer, interpolation::InterpolationType) = detail.as_scaled(image, UInt64(new_with), UInt64(new_height), interpolation)
     export as_scaled
 
     """
     """
-    as_scaled(image::Image, offset_x::Integer, offset_y::Integer, new_width::Unsigned, new_height::Unsigned) = detail.as_cropped(image, Int32(offset_x), Int32(offset_y), UInt64(new_with), UInt64(new_height))
-    export as_scaled
+    as_cropped(image::Image, offset_x::Integer, offset_y::Integer, new_width::Integer, new_height::Integer) = detail.as_cropped(image, Int32(offset_x), Int32(offset_y), UInt64(new_with), UInt64(new_height))
+    export as_cropped
+
+    """
+    """
+    set_pixel(image::Image, x::Integer, y::Integer, rgba::RGBA) = detail.set_pixel(image, UInt64(x), UInt64(y), rgba)
+    set_pixel(image::Image, x::Integer, y::Integer, hsva::HSVA) = detail.set_pixel(image, UInt64(x), UInt64(y), hsva_to_rgba(hsva))
+    export set_pixel
+
+    """
+    """
+    get_pixel(image::Image, x::Integer, y::Integer) ::RGBA = return detail.get_pixel(image, UInt64(x), UInt64(y))
+    export get_pixel
 end
 
 using .mousetrap
 using Test
 
-for n in names(mousetrap) println(n) end
+image = Image()
+create(image, 100, 100, RGBA(1, 0, 0, 0))
+set_pixel(image, 10, 10, RGBA(0, 1, 0, 0)
+@test get_pixel(image, 9, 9) == RGBA(1, 0, 0, 0)
+@test get_pixel(image, 10, 10) == RGBA(0, 1, 0, 0)
+@test get_size(image).x == 100 && get_size(image).y == 100

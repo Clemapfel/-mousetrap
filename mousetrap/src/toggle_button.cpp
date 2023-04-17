@@ -11,7 +11,9 @@ namespace mousetrap
 {
     ToggleButton::ToggleButton()
         : WidgetImplementation<GtkToggleButton>(GTK_TOGGLE_BUTTON(gtk_toggle_button_new())),
-          CTOR_SIGNAL(ToggleButton, toggled)
+          CTOR_SIGNAL(ToggleButton, toggled),
+          CTOR_SIGNAL(ToggleButton, activate),
+          CTOR_SIGNAL(ToggleButton, clicked)
     {}
 
     ToggleButton::ToggleButton(Widget* child)

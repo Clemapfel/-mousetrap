@@ -28,7 +28,7 @@ namespace mousetrap
 
             /// @brief set start child
             /// @param widget
-            void set_start_child(Widget*);
+            void set_start_child(const Widget&);
 
             /// @brief get start child
             /// @return child
@@ -52,7 +52,7 @@ namespace mousetrap
 
             /// @brief set end child
             /// @param widget
-            void set_end_child(Widget*);
+            void set_end_child(const Widget&);
 
             /// @brief get end child
             /// @return child
@@ -89,8 +89,8 @@ namespace mousetrap
             Orientation get_orientation() const override;
 
         private:
-            Widget* _start_child = nullptr;
-            Widget* _end_child = nullptr;
+            const Widget* _start_child = nullptr;
+            const Widget* _end_child = nullptr;
     };
 }
 

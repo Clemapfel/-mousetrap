@@ -5,11 +5,10 @@
 #pragma once
 
 #include <mousetrap.hpp>
-#include "test_component.hpp"
 
 namespace mousetrap
 {
-    class MotionControllerTest : public TestComponent
+    class MotionControllerTest : public Widget
     {
         private:
             Box main = Box(Orientation::VERTICAL);
@@ -62,11 +61,8 @@ namespace mousetrap
                 main.push_back(overlay);
             }
 
-            std::string get_title() const override {
-                return "MotionEventController Test";
-            }
-
-            operator NativeWidget() const override {
+            operator NativeWidget() const override
+            {
                 return main.operator NativeWidget();
             }
     };

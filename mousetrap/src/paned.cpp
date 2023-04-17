@@ -26,17 +26,16 @@ namespace mousetrap
         return gtk_paned_get_position(get_native());
     }
 
-    void Paned::set_start_child(Widget* widget)
+    void Paned::set_start_child(const Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Paned::set_start_child, this, widget);
-
-        _start_child = widget;
+        _start_child = &widget;
+        WARN_IF_SELF_INSERTION(Paned::set_start_child, this, _start_child);
         gtk_paned_set_start_child(get_native(), _start_child == nullptr ? nullptr : _start_child->operator GtkWidget*());
     }
 
     Widget* Paned::get_start_child() const
     {
-        return _start_child;
+        return const_cast<Widget*>(_start_child);
     }
 
     void Paned::set_start_child_resizable(bool b)
@@ -59,17 +58,16 @@ namespace mousetrap
         return gtk_paned_get_shrink_start_child(get_native());
     }
 
-    void Paned::set_end_child(Widget* widget)
+    void Paned::set_end_child(const Widget& widget)
     {
-        WARN_IF_SELF_INSERTION(Paned::set_end_child, this, widget);
-
-        _end_child = widget;
+        _end_child = &widget;
+        WARN_IF_SELF_INSERTION(Paned::set_end_child, this, _end_child);
         gtk_paned_set_end_child(get_native(), _end_child == nullptr ? nullptr : _end_child->operator GtkWidget*());
     }
 
     Widget* Paned::get_end_child() const
     {
-        return _end_child;
+        return const_cast<Widget*>(_end_child);
     }
 
     void Paned::set_end_child_resizable(bool b)

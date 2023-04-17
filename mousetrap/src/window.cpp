@@ -171,4 +171,16 @@ namespace mousetrap
     {
         return gtk_window_get_focus_visible(get_native());
     }
+
+    void Window::set_default_widget(const Widget& widget)
+    {
+        _default_widget = &widget;
+        WARN_IF_SELF_INSERTION(Window::set_child, this, _default_widget);
+        gtk_window_set_default_widget(get_native(), widget.operator GtkWidget*());
+    }
+
+    Widget* Window::get_default_widget() const
+    {
+        return const_cast<Widget*>(_default_widget);
+    }
 }

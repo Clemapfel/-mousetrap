@@ -753,74 +753,6 @@ namespace mousetrap
     /// @fn has_signal_text_changed::has_signal_text_changed
     /// \signal_ctor
 
-    DECLARE_SIGNAL_MANUAL(TextInserted, text_inserted, TEXT_INSERTED, "insert-text", void,
-          SPLAT(int32_t start_pos, int32_t end_pos),
-          SPLAT(start_pos, end_pos)
-    );
-    /// @class has_signal_text_inserted
-    /// @brief signal emitted when text is inserted
-    /// @tparam T instance type
-    ///
-    /// @fn void has_signal_text_inserted::connect_signal_text_inserted(Function_t)
-    /// \signal_connect{(T*, int32_t start_pos, int32_t end_pos) -> void}
-    ///
-    /// @fn void has_signal_text_inserted::connect_signal_text_inserted(Function_t, Data_t)
-    /// \signal_connect_data{(T*, int32_t start_pos, int32_t end_pos, Data_t) -> void}
-    ///
-    /// @fn void has_signal_text_inserted::emit_signal_text_inserted(int32_t start_pos, int32_t end_pos)
-    /// \signal_emit_brief
-    /// @param start_pos index of the first letter of the inserted text
-    /// @param end_pos index after the last letter of the inserted text
-    ///
-    /// @var has_signal_text_inserted::signal_id
-    /// \signal_id{https://docs.gtk.org/gtk4/signal.Editable.insert-text.html}
-    ///
-    /// @fn void has_signal_text_inserted::set_signal_text_inserted_blocked(bool)
-    /// \signal_set_blocked
-    ///
-    /// @fn bool has_signal_text_inserted::get_signal_text_inserted_blocked() const
-    /// \signal_get_blocked
-    ///
-    /// @fn void has_signal_text_inserted::disconnect_signal_text_inserted()
-    /// \signal_disconnect
-    ///
-    /// @fn has_signal_text_inserted::has_signal_text_inserted
-    /// \signal_ctor
-
-    DECLARE_SIGNAL_MANUAL(TextDeleted, text_deleted, TEXT_DELETED, "delete-text", void,
-          SPLAT(int32_t start_pos, int32_t end_pos),
-          SPLAT(start_pos, end_pos)
-    );
-    /// @class has_signal_text_deleted
-    /// @brief signal emitted when text is deleted from a text buffer
-    /// @tparam T instance type
-    ///
-    /// @fn void has_signal_text_deleted::connect_signal_text_deleted(Function_t)
-    /// \signal_connect{(T*, int32_t start_pos, int32_t end_pos) -> void}
-    ///
-    /// @fn void has_signal_text_deleted::connect_signal_text_deleted(Function_t, Data_t)
-    /// \signal_connect_data{(T*, int32_t start_pos, int32_t end_pos, Data_t) -> void}
-    ///
-    /// @fn void has_signal_text_deleted::emit_signal_text_deleted(int32_t start_pos, int32_t end_pos)
-    /// \signal_emit_brief
-    /// @param start_pos index of the first letter of the deleted text
-    /// @param end_pos index after the last letter of the deleted text
-    ///
-    /// @var has_signal_text_deleted::signal_id
-    /// \signal_id{https://docs.gtk.org/gtk4/signal.Editable.delete-text.html}
-    ///
-    /// @fn void has_signal_text_deleted::set_signal_text_deleted_blocked(bool)
-    /// \signal_set_blocked
-    ///
-    /// @fn bool has_signal_text_deleted::get_signal_text_deleted_blocked() const
-    /// \signal_get_blocked
-    ///
-    /// @fn void has_signal_text_deleted::disconnect_signal_text_deleted()
-    /// \signal_disconnect
-    ///
-    /// @fn has_signal_text_deleted::has_signal_text_deleted
-    /// \signal_ctor
-
     DECLARE_SIGNAL(Undo, undo, UNDO, "undo", void);
     /// @class has_signal_undo
     /// @brief signal emitted when the user or application request an `undo` action for a text buffer
@@ -2137,5 +2069,120 @@ namespace mousetrap
     /// \signal_disconnect
     ///
     /// @fn has_signal_proximity::has_signal_proximity
+    /// \signal_ctor
+
+    /// @brief type of scroll, used by mousetrap::ScrolledWindow `scroll_child` signal
+    enum class ScrollType
+    {
+        /// @brief no scrolling
+        NONE = GTK_SCROLL_NONE,
+
+        /// @brief jumped to new location
+        JUMP = GTK_SCROLL_JUMP,
+
+        /// @brief scroll step backwards
+        STEP_BACKWARD = GTK_SCROLL_STEP_BACKWARD,
+
+        /// @brief scroll step forwards
+        STEP_FORWARD = GTK_SCROLL_STEP_FORWARD,
+
+        /// @brief scroll step up
+        STEP_UP = GTK_SCROLL_STEP_UP,
+
+        /// @brief scroll step down
+        STEP_DOWN = GTK_SCROLL_STEP_DOWN,
+
+        /// @brief scroll step left
+        STEP_LEFT = GTK_SCROLL_STEP_LEFT,
+
+        /// @brief scroll step right
+        STEP_RIGHT = GTK_SCROLL_STEP_RIGHT,
+
+        /// @brief page step backwards
+        PAGE_BACKWARD = GTK_SCROLL_PAGE_BACKWARD,
+
+        /// @brief page step forwards
+        PAGE_FORWARD = GTK_SCROLL_PAGE_FORWARD,
+
+        /// @brief page step up
+        PAGE_UP = GTK_SCROLL_PAGE_UP,
+
+        /// @brief page step down
+        PAGE_DOWN = GTK_SCROLL_PAGE_DOWN,
+
+        /// @brief page step left
+        PAGE_LEFT = GTK_SCROLL_PAGE_LEFT,
+
+        /// @brief page step right
+        PAGE_RIGHT = GTK_SCROLL_PAGE_RIGHT,
+
+        /// @brief jump to start
+        SCROLL_START = GTK_SCROLL_START,
+
+        /// @brief jump to end
+        SCROLL_END = GTK_SCROLL_END
+    };
+
+    DECLARE_SIGNAL_MANUAL(ScrollChild, scroll_child, SCROLL_CHILD, "scroll-child", void,
+          SPLAT(ScrollType scroll_type, bool is_horizontal),
+          SPLAT(scroll_type, is_horizontal)
+    );
+    /// @class has_signal_scroll_child
+    /// @brief signal emitted user requests scrolling of a mousetrap::ScrolledWindow via a keybinding
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_scroll_child::connect_signal_scroll_child(Function_t)
+    /// \signal_connect{(T*, ScrollType scroll_type, bool is_horizontal) -> void}
+    ///
+    /// @fn void has_signal_scroll_child::connect_signal_scroll_child(Function_t, Data_t)
+    /// \signal_connect_data{(T*, ScrollType scroll_type, bool is_horizontal, Data_t) -> void}
+    ///
+    /// @fn void has_signal_scroll_child::emit_signal_scroll_child(ScrollType scroll_type, bool is_horizontal)
+    /// \signal_emit_brief
+    /// @param scroll_type type of scroll action
+    /// @param is_horizontal whether the scroll action was invoked horizontally or vertically
+    ///
+    /// @var has_signal_scroll_child::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.GestureClick.scroll_child.html}
+    ///
+    /// @fn void has_signal_scroll_child::set_signal_scroll_child_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_scroll_child::get_signal_scroll_child_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_scroll_child::disconnect_signal_scroll_child()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_scroll_child::has_signal_scroll_child
+    /// \signal_ctor
+
+    DECLARE_SIGNAL(Closed, closed, CLOSED, "closed", void);
+    /// @class has_signal_close
+    /// @brief signal emitted popover is closed
+    /// @tparam T instance type
+    ///
+    /// @fn void has_signal_close::connect_signal_close(Function_t)
+    /// \signal_connect{(T*) -> void}
+    ///
+    /// @fn void has_signal_close::connect_signal_close(Function_t, Data_t)
+    /// \signal_connect_data{(T*, Data_t) -> void}
+    ///
+    /// @fn void has_signal_close::emit_signal_close()
+    /// \signal_emit_brief
+    ///
+    /// @var has_signal_close::signal_id
+    /// \signal_id{https://docs.gtk.org/gtk4/signal.Popover.closed.html}
+    ///
+    /// @fn void has_signal_close::set_signal_close_blocked(bool)
+    /// \signal_set_blocked
+    ///
+    /// @fn bool has_signal_close::get_signal_close_blocked() const
+    /// \signal_get_blocked
+    ///
+    /// @fn void has_signal_close::disconnect_signal_close()
+    /// \signal_disconnect
+    ///
+    /// @fn has_signal_close::has_signal_close
     /// \signal_ctor
 }

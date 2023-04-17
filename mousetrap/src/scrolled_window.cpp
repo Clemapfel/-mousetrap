@@ -9,7 +9,8 @@
 namespace mousetrap
 {
     ScrolledWindow::ScrolledWindow()
-        : WidgetImplementation<GtkScrolledWindow>(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new()))
+        : WidgetImplementation<GtkScrolledWindow>(GTK_SCROLLED_WINDOW(gtk_scrolled_window_new())),
+          CTOR_SIGNAL(ScrolledWindow, scroll_child)
     {
         _h_adjustment = new Adjustment(gtk_scrolled_window_get_hadjustment(get_native()));
         _v_adjustment = new Adjustment(gtk_scrolled_window_get_hadjustment(get_native()));

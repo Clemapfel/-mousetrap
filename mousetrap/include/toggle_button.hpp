@@ -16,7 +16,9 @@ namespace mousetrap
 {
     /// @brief toggle button, allows the user to manipulate a state
     class ToggleButton : public WidgetImplementation<GtkToggleButton>,
-        HAS_SIGNAL(ToggleButton, toggled)
+        HAS_SIGNAL(ToggleButton, toggled),
+        HAS_SIGNAL(ToggleButton, activate),
+        HAS_SIGNAL(ToggleButton, clicked)
     {
         public:
             /// @brief construct
