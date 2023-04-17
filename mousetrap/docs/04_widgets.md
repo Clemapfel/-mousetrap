@@ -54,6 +54,8 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 ### Box
 
+### CenterBox
+
 ### Overlay
 
 ### Frame
@@ -69,6 +71,18 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 | `scroll_child` | `(ScrolledWindow*, ScrollType type, bool is_horizontal, (Data_t)) -> void` | user requests scroll action through with a keybinding |
 
 ### Paned
+
+### Revealer
+
+### Expander
+
+#### Signals
+
+| id         | signature                      | emitted when...                                                       |
+|------------|--------------------------------|-----------------------------------------------------------------------|
+| `activate` | (Expander*, (Data_t)) -> void` | user pressed the enter key or otherwise activated the expander itself |
+
+
 
 ---
 
@@ -87,7 +101,6 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 ## Interactive Widgets
 
 ### Button
-
 
 #### Signals
 
@@ -205,7 +218,7 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 | id                 | signature                                | emitted when...                                      |
 |--------------------|------------------------------------------|------------------------------------------------------|
-| `selection_changed` |  (SelectionModel* , int32_t position, int32_t n_items, (Data_t)) -> void` | selection of widget controlled by this model changes |
+| `selection_changed` |  `(SelectionModel* , int32_t position, int32_t n_items, (Data_t)) -> void` | selection of widget controlled by this model changes |
 
 ### ListView
 
@@ -213,7 +226,7 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 | id         | signature                                                       | emitted when...                                                              |
 |------------|-----------------------------------------------------------------|------------------------------------------------------------------------------|
-| `activate` | (ListView*, (Data_t)) -> void`                                  | user pressed the enter key or otherwise activates view or a widget inside it |
+| `activate` | `(ListView*, (Data_t)) -> void`                                  | user pressed the enter key or otherwise activates view or a widget inside it |
 
 ### GridView
 
@@ -221,15 +234,7 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 | id         | signature                      | emitted when...                                                                  |
 |------------|--------------------------------|----------------------------------------------------------------------------------|
-| `activate` | (GridView*, (Data_t)) -> void` | user pressed the enter key or otherwise activates the view or a widget inside it |
-
-### Column View
-
-#### Signals
-
-| id         | signature                        | emitted when...                                                                  |
-|------------|----------------------------------|----------------------------------------------------------------------------------|
-| `activate` | (ColumnView*, (Data_t)) -> void` | user pressed the enter key or otherwise activates the view or a widget inside it |
+| `activate` | `(GridView*, (Data_t)) -> void` | user pressed the enter key or otherwise activates the view or a widget inside it |
 
 ### Stack
 
@@ -243,17 +248,28 @@ Where `T` is the fully specialized widget class, not `Widget*`. For example, for
 
 ### Notebook
 
+| id                       | signature                                                     | emitted when...                                                                  |
+|--------------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `page_added`             | `(Notebook*, void* _, uint32_t page_index, (Data_t)) -> void` | |
+| `page_removed`           | `(Notebook*, void* _, uint32_t page_index, (Data_t)) -> void`                                                            | |
+| `page_reordered`         | `(Notebook*, void* _, uint32_t page_index, (Data_t)) -> void`                                                            | |
+| `page_selection_changed` | `(Notebook*, void* _, uint32_t page_index, (Data_t)) -> void`                                                            | |
+
+Where `_` is an unused argument.
+
+### Column View
+
+#### Signals
+
+| id         | signature                         | emitted when...                                                                  |
+|------------|-----------------------------------|----------------------------------------------------------------------------------|
+| `activate` | `(ColumnView*, (Data_t)) -> void` | user pressed the enter key or otherwise activates the view or a widget inside it |
+
 ---
 
 ## Additional Widget Container
 
-### Expander
-
-### Revealer
-
 ### Grid
-
-### CenterBox
 
 ### Fixed
 

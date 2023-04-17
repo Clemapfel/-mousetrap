@@ -1627,7 +1627,7 @@ namespace mousetrap
     /// \signal_ctor
 
     DECLARE_SIGNAL_MANUAL(PageAdded, page_added, PAGE_ADDED, "page-added", void,
-        SPLAT(GtkWidget* _, uint32_t page_index),
+        SPLAT(void* _, uint32_t page_index),
         SPLAT(_, page_index)
     );
     /// @class has_signal_page_added
@@ -1635,12 +1635,12 @@ namespace mousetrap
     /// @tparam T instance type
     ///
     /// @fn void has_signal_page_added::connect_signal_page_added(Function_t)
-    /// \signal_connect{(T*, GtkWidget* _, uint32_t page_index) -> void}
+    /// \signal_connect{(T*, void* _, uint32_t page_index) -> void}
     ///
     /// @fn void has_signal_page_added::connect_signal_page_added(Function_t, Data_t)
-    /// \signal_connect_data{(T*, GtkWidget* _, uint32_t page_index, Data_t) -> void}
+    /// \signal_connect_data{(T*, void* _, uint32_t page_index, Data_t) -> void}
     ///
-    /// @fn void has_signal_page_added::emit_signal_page_added(GtkWidget* _, uint32_t page_index)
+    /// @fn void has_signal_page_added::emit_signal_page_added(void* _, uint32_t page_index)
     /// \signal_emit_brief
     /// @param _ pointer to internal widget, can be ignored
     /// @param page_index index of the new page
@@ -1661,7 +1661,7 @@ namespace mousetrap
     /// \signal_ctor
 
     DECLARE_SIGNAL_MANUAL(PageRemoved, page_removed, PAGE_REMOVED, "page-removed", void,
-        SPLAT(GtkWidget* _, uint32_t page_index),
+        SPLAT(void* _, uint32_t page_index),
         SPLAT(_, page_index)
     );
     /// @class has_signal_page_removed
@@ -1669,12 +1669,12 @@ namespace mousetrap
     /// @tparam T instance type
     ///
     /// @fn void has_signal_page_removed::connect_signal_page_removed(Function_t)
-    /// \signal_connect{(T*, GtkWidget* _, uint32_t page_index) -> void}
+    /// \signal_connect{(T*, void* _, uint32_t page_index) -> void}
     ///
     /// @fn void has_signal_page_removed::connect_signal_page_removed(Function_t, Data_t)
-    /// \signal_connect_data{(T*, GtkWidget* _, uint32_t page_index, Data_t) -> void}
+    /// \signal_connect_data{(T*, void* _, uint32_t page_index, Data_t) -> void}
     ///
-    /// @fn void has_signal_page_removed::emit_signal_page_removed(GtkWidget* _, uint32_t page_index)
+    /// @fn void has_signal_page_removed::emit_signal_page_removed(void* _, uint32_t page_index)
     /// \signal_emit_brief
     /// @param _ pointer to internal widget, can be ignored
     /// @param page_index index of the new page
@@ -1695,7 +1695,7 @@ namespace mousetrap
     /// \signal_ctor
 
     DECLARE_SIGNAL_MANUAL(PageReordered, page_reordered, PAGE_REORDERED, "page-reordered", void,
-        SPLAT(GtkWidget* _, uint32_t page_index),
+        SPLAT(void* _, uint32_t page_index),
         SPLAT(_, page_index)
     );
     /// @class has_signal_page_reordered
@@ -1703,12 +1703,12 @@ namespace mousetrap
     /// @tparam T instance type
     ///
     /// @fn void has_signal_page_reordered::connect_signal_page_reordered(Function_t)
-    /// \signal_connect{(T*, GtkWidget* _, uint32_t page_index) -> void}
+    /// \signal_connect{(T*, void* _, uint32_t page_index) -> void}
     ///
     /// @fn void has_signal_page_reordered::connect_signal_page_reordered(Function_t, Data_t)
-    /// \signal_connect_data{(T*, GtkWidget* _, uint32_t page_index, Data_t) -> void}
+    /// \signal_connect_data{(T*, void* _, uint32_t page_index, Data_t) -> void}
     ///
-    /// @fn void has_signal_page_reordered::emit_signal_page_reordered(GtkWidget* _, uint32_t page_index)
+    /// @fn void has_signal_page_reordered::emit_signal_page_reordered(void* _, uint32_t page_index)
     /// \signal_emit_brief
     /// @param _ pointer to internal widget, can be ignored
     /// @param page_index index of the new page
@@ -1729,7 +1729,7 @@ namespace mousetrap
     /// \signal_ctor
 
     DECLARE_SIGNAL_MANUAL(PageSelectionChanged, page_selection_changed, PAGE_SELECTION_CHANGED, "switch-page", void,
-        SPLAT(GtkWidget* _, uint32_t page_index),
+        SPLAT(void* _, uint32_t page_index),
         SPLAT(_, page_index)
     );
     /// @class has_signal_page_selection_changed
@@ -1737,10 +1737,10 @@ namespace mousetrap
     /// @tparam T instance type
     ///
     /// @fn void has_signal_page_selection_changed::connect_signal_page_selection_changed(Function_t)
-    /// \signal_connect{(T*, GtkWidget* _, uint32_t page_index) -> void}
+    /// \signal_connect{(T*, void* _, uint32_t page_index) -> void}
     ///
     /// @fn void has_signal_page_selection_changed::connect_signal_page_selection_changed(Function_t, Data_t)
-    /// \signal_connect_data{(T*, GtkWidget* _, uint32_t page_index, Data_t) -> void}
+    /// \signal_connect_data{(T*, void* _, uint32_t page_index, Data_t) -> void}
     ///
     /// @fn void has_signal_page_selection_changed::emit_signal_page_selection_changed(GtkWidget* _, uint32_t page_index)
     /// \signal_emit_brief
