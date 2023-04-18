@@ -62,6 +62,17 @@ function meta.is_nil(x)
     return type(x) == "nil"
 end
 
+---@brief Is callable
+---@param x and
+---@returns boolean
+function meta.is_function(x)
+    if type(x) == "function" then
+        return true
+    elseif getmetatable(x) ~= nil then
+        return meta.is_function(getmetatable(x).__call)
+    end
+end
+
 --- @brief check if id can be used as a valid lua variable name
 --- @param id string
 function meta.is_valid_name(str)
@@ -244,7 +255,12 @@ function meta._new_type(typename)
         return meta.new(this, args)
     end
 
-    x.__meta.name = typename
+    x.has_property = meta.has_property
+    x.add_property = meta.add_property
+    x.add_constructor = meta.add_construt
+    x.name = typename
+
+    x.__meta.typename = "Type"
     x.__meta.properties = {}
     return x
 end
@@ -309,6 +325,22 @@ function meta.has_property(type, property_name)
     return meta.is_boolean(type.__meta.is_property_private[property_name])
 end
 
+--- @brief create a constructor for a given type T, it is invoked by calling T()
+--- @param type Type
+--- @param function function
+function meta.add_constructor(type, f)
+
+    if not meta.is_type(type) then
+        error("[ERROR] In meta.add_constructor: Argument #1 is not a type")
+    end
+
+    if not meta.is_function(f) then
+        error("[ERROR] In meta.add_constructor: Argumnet #2 is not a callable")
+    end
+
+    getmetatable(type).__call = f
+end
+
 --- @brief Create a new meta.Type from a table, syntactically convenient
 --- @param typename string Name of type
 --- @param table table table with properties
@@ -327,6 +359,11 @@ function meta.new_type(typename, table)
     for name, value in pairs(table) do
         meta.add_property(x, name, value)
     end
+
+    x.add_property = meta.add_property
+    x.remove_property = meta.remove_property
+    x.has_property = meta.has_property
+    x.add_constructor = meta.add_constructor
 
     return x
 end
@@ -363,4 +400,18 @@ function meta.new(type, args)
     end
 
     return x
+end
+
+--- @brief raise an error when input item is not as expected
+function meta.assert_type(type, x, domain, arg_i)
+
+    if not meta.is_type(type) then
+        error("[ERROR] In meta.assert_type: Argument #1 is not a type")
+    end
+
+    if arg_i == nil then arg_i = "?" end
+
+    if not meta.isa(x, type) then
+        error("[ERROR] In " .. domain .. ": Argument Mismatch for parameter #" .. tostring(arg_i) .. ": Expected `" .. type.name .. "`, got `" .. tostring(meta.typeof(x)).. "`")
+    end
 end

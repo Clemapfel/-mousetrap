@@ -5,6 +5,7 @@ require "common"
 require "meta"
 require "test"
 require "queue"
+require "set"
 
 --- @module rat_game battle module
 rt = {}
@@ -23,11 +24,16 @@ function rt.queue_action(f)
     rt._action_queue:push_back(coroutine.wrap(f))
 end
 
+function test()
+end
+
+
 function rt.step_action()
 
     if rt._action_queue:is_empty() then
         return
     end
+
     (rt._action_queue:pop_back())()
 end
 
